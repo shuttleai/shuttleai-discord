@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: shuttleai
+Version: 2
+Summary: Access Shuttle AI's API via a simple and user-friendly lib.
+Author: shuttle
+Author-email: tristan@shuttleproxy.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+
+Access Shuttle AI's API via a simple and user-friendly lib. https://discord.gg/shuttleai
