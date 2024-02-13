@@ -1,7 +1,13 @@
 # The official Python library for the ShuttleAI API
-## Install
-```pip install -U shuttleai```
-### Example
+## Installation
+
+> [!IMPORTANT]
+> We highly recommend using the async client instead of synchronous.
+
+```sh
+pip install shuttleai
+```
+### Usage
 ```py
 import asyncio
 from shuttleai import *
