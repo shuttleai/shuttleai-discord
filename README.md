@@ -1,7 +1,6 @@
 # The official Python library for the ShuttleAI API
 ## Install
-```yml
-pip install -U shuttleai```
+```pip install -U shuttleai```
 ### Example
 ```py
 import asyncio
