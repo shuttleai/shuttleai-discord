@@ -1,48 +1,69 @@
 """
 @Author: ShuttleAI
-@Version: 2
-@Date: 2-7-2024
+@Version: 3
+@Date: 3-3-2024
 """
+
+from typing import Any, Dict, List, Union
+
 import httpx
 from .log import log
 
+
 class ShuttleClient:
-    def __init__(self, api_key):
-        self.api_key = api_key 
+    """
+    A synchronous client for interacting with the ShuttleAI API using Python.
+
+    Use `ShuttleAsyncClient` for asynchronous API calls.
+
+    Args:
+        api_key (str): The ShuttleAI API key to use for authentication.
+    """
+
+    def __init__(self, api_key: str):
+        self.api_key = api_key
         self.base_url = "https://api.shuttleai.app/v1"
-    
+
     @property
-    def models(self):
+    def models(self) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/models"
-            response = httpx.get(url, timeout=60)
-            return response.json()
+            return (response := httpx.get(url, timeout=60)).json() if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
 
-    def chat_completion(self, model, messages, stream=False, plain=False, **kwargs):
-     try:
-        url = f"{self.base_url}/chat/completions"
-        headers = {"Authorization": f"Bearer {self.api_key}"}
+    def chat_completion(
+        self,
+        model: str,
+        messages: Union[str, List[Dict[str, str]]],
+        stream: bool = False,
+        plain: bool = False,
+        **kwargs: Any
+    ) -> Union[Dict[str, Any], str]:
+        try:
+            url = f"{self.base_url}/chat/completions"
+            headers = {"Authorization": f"Bearer {self.api_key}"}
 
-        if plain: # If plain_message is True, convert the plain message to the structured format
-            messages = [{"role": "user", "content": messages}]
+            if plain:
+                messages = [{"role": "user", "content": messages}]
 
-        data = {
-            "model": model,
-            "messages": messages,
-            "stream": stream,
-        }
+            data = {
+                "model": model,
+                "messages": messages,
+                "stream": stream,
+                **{key: value for key, value in kwargs.items() if value is not None},
+            }
 
-        for key, value in kwargs.items():
-                data[key] = value if value is not None else data[key]  # Set default value if None
+            return (response := httpx.post(url, json=data, headers=headers, timeout=60)).json() if not stream else response.text
+        except Exception as e:
+            log.error(f"[ShuttleAI] Error: {e}")
 
-        response = httpx.post(url, json=data, headers=headers, timeout=60)
-        return response.json() if not stream else response.text
-     except Exception as e:
-         log.error(f"[ShuttleAI] Error: {e}")
-
-    def images_generations(self, model, prompt, n=1):
+    def images_generations(
+        self,
+        model: str,
+        prompt: str,
+        n: int = 1
+    ) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/images/generations"
             headers = {"Authorization": f"Bearer {self.api_key}"}
@@ -51,12 +72,16 @@ class ShuttleClient:
                 "prompt": prompt,
                 "n": n
             }
-            response = httpx.post(url, json=data, headers=headers, timeout=60)
-            return response.json()
+            return (response := httpx.post(url, json=data, headers=headers, timeout=60)).json() if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
-    
-    def audio_generations(self, input, voice, model: str = "ElevenLabs",):
+
+    def audio_generations(
+        self,
+        input: str,
+        voice: str,
+        model: str = "ElevenLabs"
+    ) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/audio/generations"
             headers = {"Authorization": f"Bearer {self.api_key}"}
@@ -65,7 +90,6 @@ class ShuttleClient:
                 "input": input,
                 "voice": voice
             }
-            response = httpx.post(url, json=data, headers=headers, timeout=60)
-            return response.json()
+            return (response := httpx.post(url, json=data, headers=headers, timeout=60)).json() if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
