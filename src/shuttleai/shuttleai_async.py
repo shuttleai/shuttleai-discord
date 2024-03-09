@@ -249,7 +249,7 @@ class ShuttleAsyncClient:
     async def moderations(
         self,
         input: str,
-        model: str = 'text-moderation-007'
+        model: str = 'text-moderation-latest'
     ) -> Dict[str, Any]:
         """
         Moderate text using a model.
