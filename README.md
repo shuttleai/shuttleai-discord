@@ -72,7 +72,7 @@ async def main():
         # print(response)
         """Moderation Example"""
         # response = await shuttle.moderations(
-        #     model='text-moderation-007',
+        #     model='text-moderation-latest',
         #     input="I hate you"
         # )
         # print(response)
