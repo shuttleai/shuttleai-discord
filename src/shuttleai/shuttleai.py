@@ -3,11 +3,14 @@
 @Version: 3
 @Date: 3-3-2024
 """
-
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, TYPE_CHECKING
 
 import httpx
 from .log import log
+from .models import Chat, Image, Audio, Embedding
+
+if TYPE_CHECKING:
+    from httpx import Response
 
 
 class ShuttleClient:
@@ -28,7 +31,8 @@ class ShuttleClient:
     def models(self) -> Dict[str, Any]:
         try:
             url = f"{self.base_url}/models"
-            return (response := httpx.get(url, timeout=60)).json() if response.status_code == 200 else {}
+            response = httpx.get(url, timeout=60)
+            return response.json() if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
 
@@ -39,7 +43,7 @@ class ShuttleClient:
         stream: bool = False,
         plain: bool = False,
         **kwargs: Any
-    ) -> Union[Dict[str, Any], str]:
+    ) -> Union[Chat, str]:
         try:
             url = f"{self.base_url}/chat/completions"
             headers = {"Authorization": f"Bearer {self.api_key}"}
@@ -54,7 +58,8 @@ class ShuttleClient:
                 **{key: value for key, value in kwargs.items() if value is not None},
             }
 
-            return (response := httpx.post(url, json=data, headers=headers, timeout=60)).json() if not stream else response.text
+            response = httpx.post(url, json=data, headers=headers, timeout=60)
+            return Chat.parse_obj(response.json()) if not stream else response.text
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
 
@@ -63,7 +68,7 @@ class ShuttleClient:
         model: str,
         prompt: str,
         n: int = 1
-    ) -> Dict[str, Any]:
+    ) -> Image:
         try:
             url = f"{self.base_url}/images/generations"
             headers = {"Authorization": f"Bearer {self.api_key}"}
@@ -72,24 +77,26 @@ class ShuttleClient:
                 "prompt": prompt,
                 "n": n
             }
-            return (response := httpx.post(url, json=data, headers=headers, timeout=60)).json() if response.status_code == 200 else {}
+            response = httpx.post(url, json=data, headers=headers, timeout=60)
+            return Image.parse_obj(response.json()) if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
 
     def audio_generations(
         self,
-        input: str,
+        input_str: str,
         voice: str,
         model: str = "ElevenLabs"
-    ) -> Dict[str, Any]:
+    ) -> Audio:
         try:
             url = f"{self.base_url}/audio/generations"
             headers = {"Authorization": f"Bearer {self.api_key}"}
             data = {
                 "model": model,
-                "input": input,
+                "input": input_str,
                 "voice": voice
             }
-            return (response := httpx.post(url, json=data, headers=headers, timeout=60)).json() if response.status_code == 200 else {}
+            response = httpx.post(url, json=data, headers=headers, timeout=60)
+            return Audio.parse_obj(response.json()) if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
