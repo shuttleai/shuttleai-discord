@@ -1,4 +1,4 @@
-from ._models import (
+from .schemas import (
     Item,
     Image,
     Audio,

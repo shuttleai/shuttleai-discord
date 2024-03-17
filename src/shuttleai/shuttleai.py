@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Union, TYPE_CHECKING
 
 import httpx
 from .log import log
-from .models import Chat, Image, Audio, Embedding
+from .schemas import Chat, Image, Audio, Embedding
 
 if TYPE_CHECKING:
     from httpx import Response

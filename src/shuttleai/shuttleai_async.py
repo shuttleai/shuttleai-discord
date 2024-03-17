@@ -13,7 +13,7 @@ from typing import (
     AsyncGenerator
 )
 
-from .models import ChatChunk, Chat, Image, Audio, Embedding
+from .schemas import ChatChunk, Chat, Image, Audio, Embedding
 from .log import log
 
 import aiohttp
