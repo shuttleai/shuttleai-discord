@@ -34,10 +34,7 @@ async def main():
         #     internet=False
         # )
         # async for chunk in response:
-        #     try:
-        #         print(chunk['choices'][0]['delta']['content'])
-        #     except:
-        #         pass
+        #     print(chunk.choices[0].delta.content)
         """Non-Streaming Example"""
         # response = await shuttle.chat_completion(
         #     model="gpt-3.5-turbo",
@@ -85,6 +82,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(main())
+    loop = asyncio.new_event_loop()
+    loop.run_until_complete(main())
 ```

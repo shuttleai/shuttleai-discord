@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='shuttleai', 
-    version='2',
+    version='3.1',
     author='shuttle',
     author_email='tristan@shuttleproxy.com',
     description="Access Shuttle AI's API via a simple and user-friendly lib.",
@@ -16,6 +16,7 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'httpx'
+        'httpx',
+        'aiohttp'
     ],
 )

@@ -1,5 +1,5 @@
 import datetime
-import pytz
+from dateutil import tz
 
 # ANSI escape codes for coloring text output in the terminal
 class TerminalColor:
@@ -21,8 +21,7 @@ class TerminalColor:
   
 class log:
     def _log(self, level, message, color):
-        pst_timezone = pytz.timezone('America/Los_Angeles') # Change this to your timezone, mine is PST so I use America/Los_Angeles
-        timestamp = datetime.datetime.now(pst_timezone).strftime('%I:%M:%S')
+        timestamp = datetime.datetime.now(tz.tzlocal()).strftime('%I:%M:%S')
         formatted_message = f"{TerminalColor.GRAY}{TerminalColor.BOLD}{timestamp} {color}{TerminalColor.BOLD}{level}{TerminalColor.ENDC}  {message}"
         formatted_message = formatted_message.replace(" [", f" {TerminalColor.GRAY}{TerminalColor.BOLD}[{TerminalColor.DARKPURPLE}")
         formatted_message = formatted_message.replace("]", f"{TerminalColor.GRAY}{TerminalColor.BOLD}]{TerminalColor.ENDC}")

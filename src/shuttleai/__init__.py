@@ -6,7 +6,7 @@ from sys import executable
 from os import system
 from httpx import get
 
-__version__ = "3"
+__version__ = "3.1"
 
 try:
     CURRENT_VERSION = get(

@@ -1,7 +1,7 @@
 """
 @Author: ShuttleAI
-@Version: 2
-@Date: 2-7-2024
+@Version: 3.1
+@Date: 3-16-2024
 """
 from __future__ import annotations
 from typing import (
@@ -178,7 +178,7 @@ class ShuttleAsyncClient:
                         try:
                             yield ChatChunk.parse_obj(chunk)
                         except:
-                            print("Failed Chunk", chunk)
+                            pass
                 return streamer()
             else:
                 return Chat.parse_obj(response)

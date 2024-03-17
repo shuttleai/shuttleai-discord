@@ -1,7 +1,7 @@
 """
 @Author: ShuttleAI
-@Version: 3
-@Date: 3-3-2024
+@Version: 3.1
+@Date: 3-16-2024
 """
 from typing import Any, Dict, List, Union, TYPE_CHECKING
 
@@ -59,7 +59,7 @@ class ShuttleClient:
             }
 
             response = httpx.post(url, json=data, headers=headers, timeout=60)
-            return Chat.parse_obj(response.json()) if not stream else response.text
+            return Chat.parse_obj(response.json()) if not stream else response.text # TODO: Use ChatChunk and actually yield the stream live
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
 
