@@ -1,4 +1,6 @@
 from .schemas import (
+    Model,
+    Models,
     Item,
     Image,
     Audio,
@@ -11,17 +13,3 @@ from .schemas import (
     ChatChunk,
     Embedding
 )
-
-slots = [
-    "Item",
-    "Image",
-    "Audio",
-    "Message",
-    "Delta",
-    "StreamChoice",
-    "Choice",
-    "Usage",
-    "Chat",
-    "ChatChunk"
-    "Embedding"
-]

@@ -13,7 +13,15 @@ from typing import (
     AsyncGenerator
 )
 
-from .schemas import ChatChunk, Chat, Image, Audio, Embedding
+from .schemas import (
+    Model,
+    Models,
+    ChatChunk,
+    Chat,
+    Image,
+    Audio,
+    Embedding
+    )
 from .log import log
 
 import aiohttp
@@ -104,7 +112,7 @@ class ShuttleAsyncClient:
         free: bool = False,
         premium: bool = False,
         endpoint: str = "all"
-    ) -> Dict[str, Any]:
+    ) -> Models:
         """
         Get information about available models.
 
@@ -114,12 +122,12 @@ class ShuttleAsyncClient:
             endpoint (str, optional): The specific model endpoint. Defaults to "all".
 
         Returns:
-            Dict[str, Any]: Model information.
+            Models: Model information.
         """
         try:
             params = {"endpoints": endpoint,
                       **({"format": "free"} if free else {"format": "premium"} if premium else {})}
-            return await self._make_request("GET", "models", params=params)
+            return Models.model_validate(await self._make_request("GET", "models", params=params))
         except aiohttp.ClientError as e:
             log.error(f"Failed to retrieve models: {e}")
             raise
@@ -127,7 +135,7 @@ class ShuttleAsyncClient:
     async def get_model(
         self,
         model: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Model | None:
         """
         Get information about a specific model.
 
@@ -135,10 +143,10 @@ class ShuttleAsyncClient:
             model (str): The model name.
 
         Returns:
-            Optional[Dict[str, Any]]: Model information or None if not found.
+            Model: Model information or None if not found.
         """
         try:
-            return await self._make_request("GET", f"models/{model}")
+            return Model.model_validate(await self._make_request("GET", f"models/{model}"))
         except aiohttp.ClientError as e:
             log.error(f"Failed to retrieve model information: {e}")
             return None

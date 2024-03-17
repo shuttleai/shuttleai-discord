@@ -1,6 +1,28 @@
 from typing import List, Any, Optional
 from pydantic import BaseModel
 
+class ModelObj(BaseModel):
+    id: str
+    object: str
+    owned_by: str
+    created: int
+    cost: int
+    premium: Optional[bool] = None
+    tokens: Optional[int] = None
+    info: Optional[str] = None
+    max_images: Optional[int] = None
+    multiple_of: Optional[int] = None
+    endpoint: str
+
+class Models(BaseModel):
+    object: str
+    data: List[ModelObj]
+    total: int
+
+class Model(BaseModel):
+    object: str
+    data: ModelObj
+
 class Item(BaseModel):
     url: str
 
@@ -28,7 +50,7 @@ class Choice(BaseModel):
     message: Message
 
 class StreamChoice(BaseModel):
-    finish_reason: Optional[str] | None
+    finish_reason: Optional[str] = None
     index: int 
     # logprobs: Optional[Dict[str, Any]]
     delta: Delta
