@@ -184,12 +184,12 @@ class ShuttleAsyncClient:
                 async def streamer():
                     async for chunk in response:
                         try:
-                            yield ChatChunk.parse_obj(chunk)
+                            yield ChatChunk.model_validate(chunk)
                         except:
                             pass
                 return streamer()
             else:
-                return Chat.parse_obj(response)
+                return Chat.model_validate(response)
         except aiohttp.ClientError as e:
             log.error(f"Failed to get chat completions: {e}")
             raise
@@ -213,7 +213,7 @@ class ShuttleAsyncClient:
         """
         try:
             data = {"model": model, "prompt": prompt, "n": n}
-            return Image.parse_obj(await self._make_request(
+            return Image.model_validate(await self._make_request(
                 "POST", "images/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             ))
         except aiohttp.ClientError as e:
@@ -239,7 +239,7 @@ class ShuttleAsyncClient:
         """
         try:
             data = {"model": model, "input": input, "voice": voice}
-            return Audio.parse_obj(await self._make_request(
+            return Audio.model_validate(await self._make_request(
                 "POST", "audio/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             ))
         except aiohttp.ClientError as e:
@@ -310,7 +310,7 @@ class ShuttleAsyncClient:
         try:
             input = [input] if isinstance(input, str) else input
             data = {"model": model, "input": input, "encoding_format": "float"}
-            return Embedding.parse_obj(await self._make_request(
+            return Embedding.model_validate(await self._make_request(
                 "POST", "embeddings", data, headers={"Authorization": f"Bearer {self.api_key}"}
             ))
         except aiohttp.ClientError as e:

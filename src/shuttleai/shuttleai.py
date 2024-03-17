@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Union, TYPE_CHECKING
 
 import httpx
 from .log import log
-from .schemas import Chat, Image, Audio, Embedding
+from .schemas import Chat, Image, Audio, Embedding, Models
 
 if TYPE_CHECKING:
     from httpx import Response
@@ -28,11 +28,11 @@ class ShuttleClient:
         self.base_url = "https://api.shuttleai.app/v1"
 
     @property
-    def models(self) -> Dict[str, Any]:
+    def models(self) -> Models:
         try:
             url = f"{self.base_url}/models"
             response = httpx.get(url, timeout=60)
-            return response.json() if response.status_code == 200 else {}
+            return Models.model_validate(response.json()) if response.status_code == 200 else {}
         except Exception as e:
             log.error(f"[ShuttleAI] Error: {e}")
 
