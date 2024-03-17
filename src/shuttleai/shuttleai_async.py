@@ -9,10 +9,11 @@ from typing import (
     Dict,
     Any,
     Union,
-    Optional
+    Optional,
+    AsyncGenerator
 )
 
-from .models import Chat, Image, Audio, Embedding
+from .models import ChatChunk, Chat, Image, Audio, Embedding
 from .log import log
 
 import aiohttp
@@ -41,8 +42,7 @@ class ShuttleAsyncClient:
         """
         Async context manager entry.
         """
-        self.session = aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout))
+        self.session = aiohttp.ClientSession(raise_for_status=True, timeout=aiohttp.ClientTimeout(total=self.timeout))
         return self
 
     async def __aexit__(self, exc_type, exc_value, traceback) -> ShuttleAsyncClient:
@@ -81,14 +81,22 @@ class ShuttleAsyncClient:
                         value in params.items()) if params else ""
         files = {"file": (file, open(file, "rb"))} if file else None
 
-        async with self.session.request(
-            method, url, json=data, headers=headers, params=args, data=files
-        ) as response:
-            response.raise_for_status()
-
-            if stream:
-                return [json.loads(line.replace('data: ', '')) for line in response.content.iter_any()]
-            else:
+        if stream:
+            async def streamer():
+                async with self.session.request(
+                    method, url, json=data, headers=headers, params=args, data=files
+                ) as response:
+                    async for line in response.content.__aiter__():
+                        try:
+                            line = line.decode('utf-8')
+                            yield json.loads(line.replace('data: ', ''))
+                        except:
+                            pass
+            return streamer()
+        else:
+            async with self.session.request(
+                method, url, json=data, headers=headers, params=args, data=files
+            ) as response:
                 return await response.json()
 
     async def get_models(
@@ -142,7 +150,7 @@ class ShuttleAsyncClient:
         stream: bool = False,
         plain: bool = False,
         **kwargs
-    ) -> Chat:
+    ) -> Chat | AsyncGenerator[ChatChunk, None]:
         """
         Get chat completions from a model.
 
@@ -161,9 +169,19 @@ class ShuttleAsyncClient:
                         ] if plain else messages
             data = {"model": model, "messages": messages,
                     "stream": stream, **kwargs}
-            return Chat.parse_obj(await self._make_request(
+            response = await self._make_request(
                 "POST", "chat/completions", data, headers={"Authorization": f"Bearer {self.api_key}"}, stream=stream
-            ))
+            )
+            if stream:
+                async def streamer():
+                    async for chunk in response:
+                        try:
+                            yield ChatChunk.parse_obj(chunk)
+                        except:
+                            print("Failed Chunk", chunk)
+                return streamer()
+            else:
+                return Chat.parse_obj(response)
         except aiohttp.ClientError as e:
             log.error(f"Failed to get chat completions: {e}")
             raise
