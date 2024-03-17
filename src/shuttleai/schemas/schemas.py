@@ -1,7 +1,7 @@
 from typing import List, Any, Optional
 from pydantic import BaseModel
 
-class ModelObj(BaseModel):
+class ShuttleModel(BaseModel):
     id: str
     object: str
     owned_by: str
@@ -16,12 +16,12 @@ class ModelObj(BaseModel):
 
 class Models(BaseModel):
     object: str
-    data: List[ModelObj]
+    data: List[ShuttleModel]
     total: int
 
 class Model(BaseModel):
     object: str
-    data: ModelObj
+    data: ShuttleModel
 
 class Item(BaseModel):
     url: str
