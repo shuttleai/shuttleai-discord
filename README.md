@@ -2,7 +2,7 @@
 ## Installation
 
 > [!IMPORTANT]
-> We highly recommend using the async client instead of synchronous.
+> It is strongly recommended to use the asynchronous client instead of the synchronous client.
 
 ```sh
 pip install shuttleai
