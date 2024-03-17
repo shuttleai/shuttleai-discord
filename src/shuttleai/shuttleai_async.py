@@ -110,10 +110,8 @@ class ShuttleAsyncClient:
         """
         try:
             params = {"endpoints": endpoint,
-                      "format": "free" if free else "premium" if premium else None}
-            args = "&".join(f"{key}={value}" for key,
-                            value in params.items() if value)
-            return await self._make_request("GET", "models", params={"endpoints": endpoint, "format": args})
+                      **({"format": "free"} if free else {"format": "premium"} if premium else {})}
+            return await self._make_request("GET", "models", params=params)
         except aiohttp.ClientError as e:
             log.error(f"Failed to retrieve models: {e}")
             raise
