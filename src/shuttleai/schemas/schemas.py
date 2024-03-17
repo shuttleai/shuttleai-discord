@@ -12,6 +12,11 @@ class ShuttleModel(BaseModel):
     info: Optional[str] = None
     max_images: Optional[int] = None
     multiple_of: Optional[int] = None
+    maintenance: Optional[bool] = None
+    beta: Optional[bool] = None
+    voices: Optional[str] = None
+    file_upload: Optional[bool] = None
+    proxy_to: Optional[str] = None
     endpoint: str
 
 class Models(BaseModel):
