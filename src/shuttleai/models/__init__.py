@@ -3,9 +3,12 @@ from ._models import (
     Image,
     Audio,
     Message,
+    Delta,
+    StreamChoice,
     Choice,
     Usage,
     Chat,
+    ChatChunk,
     Embedding
 )
 
@@ -14,8 +17,11 @@ slots = [
     "Image",
     "Audio",
     "Message",
+    "Delta",
+    "StreamChoice",
     "Choice",
     "Usage",
     "Chat",
+    "ChatChunk"
     "Embedding"
 ]
