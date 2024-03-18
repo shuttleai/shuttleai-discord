@@ -2,11 +2,23 @@
 Access the ShuttleAI API with a simple, user-friendly lib.
 
 > *PRs appreciated 🙂*
-## Installation
+# Installation
+## ShuttleAI
 ```sh
 pip install shuttleai
 ```
-### Usage
+
+## ShuttleAI CLI
+```sh
+pip install shuttleai[cli]
+```
+
+# Usage
+## ShuttleAI CLI
+```sh
+shuttleai-cli --help
+```
+## ShuttleAI
 > [!IMPORTANT]
 > It is strongly recommended to use the asynchronous client instead of the synchronous client.
 ```py
