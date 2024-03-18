@@ -1,1 +1,5 @@
 httpx
+aiohttp
+
+[cli]
+asyncclick

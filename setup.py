@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='shuttleai', 
-    version='3.1',
+    version='3.2',
     author='shuttle',
     author_email='tristan@shuttleproxy.com',
     description="Access Shuttle AI's API via a simple and user-friendly lib.",
@@ -19,4 +19,14 @@ setup(
         'httpx',
         'aiohttp'
     ],
+    extras_require={
+        'cli': [
+            'asyncclick',
+        ]
+    },
+    entry_points={
+        'console_scripts': [
+            'shuttleai-cli = shuttleai.cli:main [cli]'
+        ],
+    },
 )
