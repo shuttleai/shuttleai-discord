@@ -4,9 +4,9 @@ setup(
     name='shuttleai', 
     version='3.2',
     author='shuttle',
-    author_email='tristan@shuttleproxy.com',
+    author_email='noreply@shuttleai.app',
     description="Access Shuttle AI's API via a simple and user-friendly lib.",
-    long_description="Access Shuttle AI's API via a simple and user-friendly lib. https://discord.gg/shuttleai",
+    long_description="Access Shuttle AI's API via a simple and user-friendly lib. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai",
     packages=find_packages("src"),
     package_dir={"": "src"},
     classifiers=[
