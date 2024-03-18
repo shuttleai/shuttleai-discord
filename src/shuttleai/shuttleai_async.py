@@ -14,6 +14,7 @@ from typing import (
 )
 
 from .schemas import (
+    ShuttleError,
     Model,
     Models,
     ChatChunk,
@@ -50,7 +51,7 @@ class ShuttleAsyncClient:
         """
         Async context manager entry.
         """
-        self.session = aiohttp.ClientSession(raise_for_status=True, timeout=aiohttp.ClientTimeout(total=self.timeout))
+        self.session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout))
         return self
 
     async def __aexit__(self, exc_type, exc_value, traceback) -> ShuttleAsyncClient:
@@ -94,6 +95,11 @@ class ShuttleAsyncClient:
                 async with self.session.request(
                     method, url, json=data, headers=headers, params=args, data=files
                 ) as response:
+                    if response.status != 200:
+                        data_to_yield = json.loads(await response.text())
+                        yield data_to_yield
+                        return
+
                     async for line in response.content.__aiter__():
                         try:
                             line = line.decode('utf-8')
@@ -171,6 +177,13 @@ class ShuttleAsyncClient:
 
         Returns:
             Chat: The completed chat.
+
+        Yields:
+            AsyncGenerator[ChatChunk, None]: The chat completion chunks.
+
+        Raises:
+            ShuttleError: If the API request fails.
+            Aiohttp.ClientError: If the API request is invalid.
         """
         try:
             messages = [{"role": "user", "content": messages}
@@ -186,10 +199,23 @@ class ShuttleAsyncClient:
                         try:
                             yield ChatChunk.model_validate(chunk)
                         except:
-                            pass
+                            try:
+                                yield ShuttleError.model_validate(chunk)
+                            except:
+                                try:
+                                    yield chunk
+                                except:
+                                    pass
                 return streamer()
             else:
-                return Chat.model_validate(response)
+                try:
+                    return Chat.model_validate(response)
+                except:
+                    try:
+                        return ShuttleError.model_validate(response)
+                    except:
+                        return response
+
         except aiohttp.ClientError as e:
             log.error(f"Failed to get chat completions: {e}")
             raise

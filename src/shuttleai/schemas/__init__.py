@@ -1,4 +1,7 @@
 from .schemas import (
+    ShuttleModel,
+    ShuttleError,
+    Error,
     Model,
     Models,
     Item,

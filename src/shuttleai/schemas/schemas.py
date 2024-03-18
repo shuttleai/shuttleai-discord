@@ -19,6 +19,18 @@ class ShuttleModel(BaseModel):
     proxy_to: Optional[str] = None
     endpoint: str
 
+class Error(BaseModel):
+    message: str
+    type: str
+    param: Optional[str] = None
+    code: Optional[str] = None
+    hint: Optional[str] = None
+
+class ShuttleError(BaseModel):
+    error: Error
+    status: int
+    docs: str
+
 class Models(BaseModel):
     object: str
     data: List[ShuttleModel]
