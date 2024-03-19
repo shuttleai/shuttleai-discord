@@ -86,7 +86,7 @@ class ShuttleClient:
         self,
         input_str: str,
         voice: str,
-        model: str = "ElevenLabs"
+        model: str = "eleven-labs"
     ) -> Audio:
         try:
             url = f"{self.base_url}/audio/generations"

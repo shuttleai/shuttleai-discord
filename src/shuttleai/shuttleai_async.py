@@ -164,7 +164,7 @@ class ShuttleAsyncClient:
         stream: bool = False,
         plain: bool = False,
         **kwargs
-    ) -> Chat | AsyncGenerator[ChatChunk, None]:
+    ) -> Union[Chat, AsyncGenerator[Union[ChatChunk, ShuttleError, Dict[str, Any]], None]]:
         """
         Get chat completions from a model.
 
@@ -176,10 +176,7 @@ class ShuttleAsyncClient:
             **kwargs: Additional keyword arguments.
 
         Returns:
-            Chat: The completed chat.
-
-        Yields:
-            AsyncGenerator[ChatChunk, None]: The chat completion chunks.
+            Union[Chat, AsyncGenerator[Union[ChatChunk, ShuttleError, Dict[str, Any]], None]]: The completed chat or streamed response.
 
         Raises:
             ShuttleError: If the API request fails.
