@@ -3,7 +3,7 @@ Name: shuttleai
 Version: 3.2
 Summary: Access Shuttle AI's API via a simple and user-friendly lib.
 Author: shuttle
-Author-email: tristan@shuttleproxy.com
+Author-email: noreply@shuttleai.app
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -13,4 +13,4 @@ Requires-Dist: aiohttp
 Provides-Extra: cli
 Requires-Dist: asyncclick; extra == "cli"
 
-Access Shuttle AI's API via a simple and user-friendly lib. https://discord.gg/shuttleai
+Access Shuttle AI's API via a simple and user-friendly lib. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai
