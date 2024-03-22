@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: shuttleai
-Version: 3.2
+Version: 3.3
 Summary: Access Shuttle AI's API via a simple and user-friendly lib.
 Author: shuttle
 Author-email: noreply@shuttleai.app
