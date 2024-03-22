@@ -1,10 +1,25 @@
 import asyncclick as click
 import os
 
+import pystyle
+from pystyle import Colors, Colorate, Box
+
 from .log import log, TerminalColor
 from .shuttleai_async import ShuttleAsyncClient
 
 # os.environ['SHUTTLE_AI_API_KEY'] = "shuttle-YOUR-KEY"
+
+BANNER = r"""
+   _____ _           _   _   _               _____ 
+  / ____| |         | | | | | |        /\   |_   _|
+ | (___ | |__  _   _| |_| |_| | ___   /  \    | |  
+  \___ \| '_ \| | | | __| __| |/ _ \ / /\ \   | |  
+  ____) | | | | |_| | |_| |_| |  __// ____ \ _| |_ 
+ |_____/|_| |_|\__,_|\__|\__|_|\___/_/    \_\_____|
+
+ """
+BOX_BANNER = Box.DoubleCube(BANNER)
+COLOR_BANNER = Colorate.Vertical(Colors.blue_to_purple, BOX_BANNER, 1)
 
 class Messages:
     def __init__(self):
@@ -47,7 +62,7 @@ async def chat(key, model, system, stream):
         if prompt in sub_commands:
             if prompt.lower() == "!clear":
                 messages.clear()
-                log.info("Messages cleared")
+                log.info("Context cleared!")
                 continue
             elif prompt.lower() == "!exit":
                 log.info("Exiting...")
@@ -65,7 +80,7 @@ async def chat(key, model, system, stream):
                 stream=stream
             )
 
-            print(f"{TerminalColor.DARKPURPLE}ShuttleAI{TerminalColor.ENDC}:", end="")
+            print(f"{TerminalColor.DARKPURPLE}ShuttleAI{TerminalColor.ENDC}: ", end="")
             assistant_response = None
             if stream:
                 assistant_chunks = []
@@ -83,6 +98,7 @@ async def chat(key, model, system, stream):
                 messages.add_message(assistant_response, "assistant")
 
 def main():
+    print(COLOR_BANNER)
     shuttleai_cli()
 
 if __name__ == '__main__':

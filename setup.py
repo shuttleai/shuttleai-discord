@@ -22,11 +22,12 @@ setup(
     extras_require={
         'cli': [
             'asyncclick',
+            'pystyle'
         ]
     },
     entry_points={
         'console_scripts': [
-            'shuttleai-cli = shuttleai.cli:main [cli]'
+            'shuttleai = shuttleai.cli:main [cli]'
         ],
     },
 )
