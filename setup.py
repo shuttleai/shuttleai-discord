@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='shuttleai', 
-    version='3.2',
+    version='3.3',
     author='shuttle',
     author_email='noreply@shuttleai.app',
     description="Access Shuttle AI's API via a simple and user-friendly lib.",

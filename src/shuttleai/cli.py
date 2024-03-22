@@ -7,7 +7,7 @@ from pystyle import Colors, Colorate
 from .log import log, TerminalColor
 from .shuttleai_async import ShuttleAsyncClient
 
-# os.environ['SHUTTLE_AI_API_KEY'] = "shuttle-YOUR-KEY"
+# os.environ['SHUTTLEAI_API_KEY'] = "shuttle-YOUR-KEY"
 
 BANNER = r"""
    _____ _           _   _   _               _____ 

@@ -6,7 +6,7 @@ from sys import executable
 from os import system
 from httpx import get
 
-__version__ = "3.2"
+__version__ = "3.3"
 
 try:
     CURRENT_VERSION = get(
@@ -18,6 +18,6 @@ if __version__ < CURRENT_VERSION:
     print("[shuttleai] Version Out-of-Date. Please upgrade by using: \"python.exe -m pip install -U shuttleai\"")
     system(f"{executable} -m pip install -U shuttleai -q")
 
-api_key = os.environ.get("SHUTTLE_API_KEY")
+api_key = os.environ.get("SHUTTLEAI_API_KEY")
 
 __all__ = ['ShuttleClient', 'ShuttleAsyncClient']
