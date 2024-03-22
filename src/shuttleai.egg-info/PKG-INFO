@@ -12,5 +12,6 @@ Requires-Dist: httpx
 Requires-Dist: aiohttp
 Provides-Extra: cli
 Requires-Dist: asyncclick; extra == "cli"
+Requires-Dist: pystyle; extra == "cli"
 
 Access Shuttle AI's API via a simple and user-friendly lib. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai

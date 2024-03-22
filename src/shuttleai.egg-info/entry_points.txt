@@ -1,2 +1,2 @@
 [console_scripts]
-shuttleai-cli = shuttleai.cli:main [cli]
+shuttleai = shuttleai.cli:main [cli]
