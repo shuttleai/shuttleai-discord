@@ -16,8 +16,9 @@ pip install shuttleai[cli]
 # Usage
 ## ShuttleAI CLI
 ```sh
-shuttleai-cli --help
+shuttleai
 ```
+*That's it! Just type `shuttleai` in your terminal!*
 ## ShuttleAI
 > [!IMPORTANT]
 > It is strongly recommended to use the asynchronous client instead of the synchronous client.
