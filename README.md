@@ -4,18 +4,18 @@ Access the ShuttleAI API with a simple, user-friendly lib.
 > *PRs appreciated 🙂*
 # Installation
 ## ShuttleAI
-```sh
+```ShellSession
 pip install shuttleai
 ```
 
 ## ShuttleAI CLI
-```sh
+```ShellSession
 pip install shuttleai[cli]
 ```
 
 # Usage
 ## ShuttleAI CLI
-```sh
+```ShellSession
 shuttleai
 ```
 *That's it! Just type `shuttleai` in your terminal!*
