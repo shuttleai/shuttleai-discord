@@ -1,9 +1,10 @@
-import asyncio, json
-from shuttleai import ShuttleAsyncClient
-from shuttleai.schemas import ChatChunk, Chat, ShuttleError
+from src.shuttleai import ShuttleAsyncClient
+from src.shuttleai.schemas import ChatChunk, Chat, ShuttleError
+import orjson # [way faster than json](https://github.com/herumes/jsons-benchmark)
 
-async def test():
-    async with ShuttleAsyncClient("shuttle-invalid-key", 123) as shuttle:
+async def main():
+    # async context manager example
+    async with ShuttleAsyncClient(timeout=120.0) as shuttle: # if api_key not entered, default from SHUTTLEAI_API_KEY environment variable
         """Stream Test"""
         # response = await shuttle.chat_completion(
         #     model='shuttle-turbo',
@@ -15,7 +16,7 @@ async def test():
         #     if isinstance(chunk, ChatChunk):
         #         result = chunk.choices[0].delta.content
         #     elif isinstance(chunk, ShuttleError):
-        #         result = json.dumps(chunk.model_dump(), indent=4, sort_keys=True)
+        #         result = orjson.dumps(chunk.model_dump(), option=orjson.OPT_INDENT_2)
         #     print(result, flush=True, sep='', end='')
         """Non-Stream Test"""
         # response = await shuttle.chat_completion(
@@ -26,9 +27,16 @@ async def test():
         # if isinstance(response, Chat):
         #     result = response.choices[0].message.content
         # elif isinstance(response, ShuttleError):
-        #     result = json.dumps(response.model_dump(), indent=4, sort_keys=True)
+        #     result = orjson.dumps(response.model_dump(), option=orjson.OPT_INDENT_2)
         # print(result)
 
-if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(test())
+    # no async context manager example
+    shuttle = ShuttleAsyncClient(api_key='shutl-123', silent=False) # if api_key not entered, default from SHUTTLEAI_API_KEY environment variable
+    response = await shuttle.chat_completion(model='shuttle-turbo', messages='Hello, how are you?', plain=True)
+    print(response)
+    await shuttle.close() # remember to close the session manually when not using async context manager
+
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())

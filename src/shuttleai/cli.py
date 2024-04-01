@@ -1,7 +1,6 @@
 import asyncclick as click
 import os
 
-import pystyle
 from pystyle import Colors, Colorate
 
 from .log import log, TerminalColor

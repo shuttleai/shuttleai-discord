@@ -30,6 +30,8 @@ class ShuttleError(BaseModel):
     error: Error
     status: int
     docs: str
+    input: Optional[dict] = None
+    request_id: Optional[str] = None
 
 class Models(BaseModel):
     object: str
@@ -46,6 +48,7 @@ class Item(BaseModel):
 class Image(BaseModel):
     created: int
     data: List[Item]
+    model: str
 
 class Audio(BaseModel):
     chars: int

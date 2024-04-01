@@ -1,12 +1,14 @@
 from setuptools import setup, find_packages
 from pathlib import Path
 
+from src.shuttleai import __version__ as version
+
 base_path = Path(__file__).parent
 long_description = (base_path / "README.md").read_text(encoding="utf-8")
 
 setup(
     name='shuttleai', 
-    version='3.4',
+    version=version,
     author='shuttle',
     author_email='noreply@shuttleai.app',
     description="Access Shuttle AI's API via a simple and user-friendly lib. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai",
