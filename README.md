@@ -4,6 +4,7 @@ Access the ShuttleAI API with a simple, user-friendly lib.
 > *PRs appreciated 🙂*
 # Installation
 ## ShuttleAI
+[![pypi](https://img.shields.io/pypi/v/shuttleai.svg?color=blue)](https://pypi.org/project/shuttleai/)
 ```ShellSession
 pip install shuttleai
 ```
