@@ -4,7 +4,7 @@ import os
 from pystyle import Colors, Colorate
 
 from .log import log, TerminalColor
-from .shuttleai_async import ShuttleAsyncClient
+from .client import ShuttleAsyncClient
 
 # os.environ['SHUTTLEAI_API_KEY'] = "shuttle-YOUR-KEY"
 

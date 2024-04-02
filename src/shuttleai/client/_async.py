@@ -55,7 +55,6 @@ class ShuttleAsyncClient:
 
     def __init__(
             self,
-            *,
             api_key: Optional[str] = None,
             base_url: Optional[str] = None,
             timeout: Union[float, aiohttp.ClientTimeout, None] = 60.0,
@@ -165,7 +164,7 @@ class ShuttleAsyncClient:
         if stream:
             async def streamer():
                 async with self._session.request(
-                    method, url, json=data, headers=headers, params=args, data=files
+                    method, url, data=orjson.dumps(data), headers=headers, params=args, data=files
                 ) as response:
                     if response.status != 200:
                         data_to_yield = orjson.loads(await response.text())
@@ -181,7 +180,7 @@ class ShuttleAsyncClient:
             return streamer()
         else:
             async with self._session.request(
-                method, url, json=data, headers=headers, params=args, data=files
+                method, url, data=orjson.dumps(data), headers=headers, params=args, data=files
             ) as response:
                 return await response.json()
             
