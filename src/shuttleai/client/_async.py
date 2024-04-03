@@ -86,7 +86,7 @@ class ShuttleAsyncClient:
         else:
             if self._session is None:
                 if isinstance(timeout, float):
-                    timeout = aiohttp.ClientTimeout(total=timeout)
+                    timeout = aiohttp.ClientTimeout(total=timeout, json_serialize=lambda x: orjson.dumps(x).decode())
                 elif not isinstance(timeout, aiohttp.ClientTimeout):
                     raise TypeError(
                         f"timeout must be a float or aiohttp.ClientTimeout, not {type(timeout)}"
