@@ -1,5 +1,5 @@
 # The official Python library for the ShuttleAI API
-Access the ShuttleAI API with a simple, user-friendly lib.
+Access the ShuttleAI API with a simple, user-friendly lib; or a sleek command line interface (CLI)
 
 > *PRs appreciated 🙂*
 # Installation

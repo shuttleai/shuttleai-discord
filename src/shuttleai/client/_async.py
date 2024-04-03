@@ -1,7 +1,7 @@
 """
 @Author: ShuttleAI
-@Version: 3.6
-@Date: 4-1-2024
+@Version: 3.7
+@Date: 4-3-2024
 """
 from __future__ import annotations
 from typing import (
@@ -69,7 +69,7 @@ class ShuttleAsyncClient:
             base_url (Optional[str], optional): The base URL for the API. Defaults to https://api.shuttleai.app/v1.
             timeout (Union[float, aiohttp.ClientTimeout, None], optional): The timeout for the aiohttp.ClientSession. Defaults to 60.0.
             session (Optional[aiohttp.ClientSession], optional): An existing aiohttp.ClientSession. Defaults to None.
-            silent (bool, optional): Whether to log messages. Defaults to True.
+            silent (bool, optional): Whether to silent debugging messages. Defaults to True.
         """
         self.silent = silent
         if session is not None:
@@ -86,12 +86,12 @@ class ShuttleAsyncClient:
         else:
             if self._session is None:
                 if isinstance(timeout, float):
-                    timeout = aiohttp.ClientTimeout(total=timeout, json_serialize=lambda x: orjson.dumps(x).decode())
+                    timeout = aiohttp.ClientTimeout(total=timeout)
                 elif not isinstance(timeout, aiohttp.ClientTimeout):
                     raise TypeError(
                         f"timeout must be a float or aiohttp.ClientTimeout, not {type(timeout)}"
                     )
-                self._session = aiohttp.ClientSession(timeout=timeout)
+                self._session = aiohttp.ClientSession(timeout=timeout, json_serialize=lambda x: orjson.dumps(x).decode())
             if not silent:
                 log.info("registered new aiohttp.ClientSession")
 
@@ -164,7 +164,7 @@ class ShuttleAsyncClient:
         if stream:
             async def streamer():
                 async with self._session.request(
-                    method, url, data=orjson.dumps(data), headers=headers, params=args, data=files
+                    method, url, json=data, headers=headers, params=args, data=files
                 ) as response:
                     if response.status != 200:
                         data_to_yield = orjson.loads(await response.text())
@@ -180,7 +180,7 @@ class ShuttleAsyncClient:
             return streamer()
         else:
             async with self._session.request(
-                method, url, data=orjson.dumps(data), headers=headers, params=args, data=files
+                method, url, json=data, headers=headers, params=args, data=files
             ) as response:
                 return await response.json()
             

@@ -22,7 +22,7 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',
-    install_requires=['httpx', 'aiohttp'],
+    install_requires=['httpx', 'aiohttp', 'orjson'],
     extras_require={
         'cli': ['asyncclick', 'pystyle']
     },

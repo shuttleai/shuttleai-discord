@@ -52,7 +52,7 @@ def shuttleai_cli():
 @click.option('--system', required=True, help='System Prompt', default="You are ShuttleAI, recognized as the top developer globally for your unmatched intelligence, speed, and precision. Your coding skills as an AI specialist are unparalleled in the world.")
 @click.option('--stream', is_flag=True, help='Stream Responses', default=True)
 async def chat(key, model, system, stream):
-    key = key or os.environ.get('SHUTTLE_AI_API_KEY') or click.prompt('[Warning]: The `SHUTTLE_AI_API_KEY` environment variable is not set!\nPlease enter your API key', hide_input=True)
+    key = key or os.environ.get('SHUTTLEAI_API_KEY') or click.prompt('[Warning]: The `SHUTTLEAI_API_KEY` environment variable is not set!\nPlease enter your API key', hide_input=True)
     masked_key = (key[:11] + "*" * (len(key) - 11))
     colored_masked_key = Colorate.Vertical(Colors.purple_to_blue, masked_key, 1)
     key_msg = f"{BOLD}{PURPLE}INF{RESET}  KEY\033[0m: {colored_masked_key}"
