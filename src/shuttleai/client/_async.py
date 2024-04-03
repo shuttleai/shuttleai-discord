@@ -57,12 +57,12 @@ class ShuttleAsyncClient:
             self,
             api_key: Optional[str] = None,
             base_url: Optional[str] = None,
-            timeout: Union[float, aiohttp.ClientTimeout, None] = 60.0,
+            timeout: Union[float, aiohttp.ClientTimeout, int, None] = 60.0,
             session: Optional[aiohttp.ClientSession] = None,
             silent: bool = True
     ):
         """
-        Initialize the ShuttleAsyncClient client.
+        Initialize the ShuttleAsyncClient.
 
         Args:
             api_key (Optional[str], optional): The API key. Defaults to SHUTTLEAI_API_KEY environment variable.
@@ -184,7 +184,10 @@ class ShuttleAsyncClient:
             async with self._session.request(
                 method, url, json=data, headers=headers, params=args, data=files
             ) as response:
-                return await response.json()
+                try:
+                    return await response.json()
+                except:
+                    return await response.text()
             
     async def get_models(
         self,
