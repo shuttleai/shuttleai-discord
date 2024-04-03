@@ -88,7 +88,7 @@ async def chat(key, model, system, stream):
         if prompt is not None:
             messages.add_message(prompt, "user")
 
-        async with ShuttleAsyncClient(key, 120) as shuttle:
+        async with ShuttleAsyncClient(key, timeout=120) as shuttle:
             response = await shuttle.chat_completion(
                 model=model,
                 messages=messages.messages,
