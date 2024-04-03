@@ -1,6 +1,6 @@
 """
 @Author: ShuttleAI
-@Version: 3.7
+@Version: 3.8.1
 @Date: 4-3-2024
 """
 from __future__ import annotations
@@ -87,6 +87,8 @@ class ShuttleAsyncClient:
             if self._session is None:
                 if isinstance(timeout, float):
                     timeout = aiohttp.ClientTimeout(total=timeout)
+                elif isinstance(timeout, int):
+                    timeout = aiohttp.ClientTimeout(total=float(timeout))
                 elif not isinstance(timeout, aiohttp.ClientTimeout):
                     raise TypeError(
                         f"timeout must be a float or aiohttp.ClientTimeout, not {type(timeout)}"
