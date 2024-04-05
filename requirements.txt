@@ -2,5 +2,3 @@ httpx
 aiohttp
 orjson
 pydantic
-asyncclick; extra == 'cli'
-pystyle; extra == 'cli'

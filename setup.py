@@ -3,16 +3,6 @@ from pathlib import Path
 
 from src.shuttleai import __version__ as version
 
-def read_requirements(file_path, extras=()):
-    requirements = []
-    with open(file_path, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line and not line.startswith('#'):
-                extras_require = [extra.strip() for extra in line.split(';')[1:]]
-                if not extras_require or any(extra in extras for extra in extras_require):
-                    requirements.append(line.split(';')[0])
-    return requirements
 
 base_path = Path(__file__).parent
 long_description = (base_path / "README.md").read_text(encoding="utf-8")
@@ -33,9 +23,14 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.6',
-    install_requires=read_requirements('requirements.txt'),
+    install_requires=[
+        'aiohttp',
+        'httpx',
+        'orjson',
+        'pydantic'
+    ],
     extras_require={
-        'cli': read_requirements('requirements.txt', extras=('cli',))
+        'cli': ['asyncclick', 'pystyle']
     },
     keywords=['shuttleai', 'ai', 'gpt', 'claude', 'api', 'free', 'chatgpt', 'gpt-4'],
     url='https://github.com/shuttleai/shuttleai-python',
