@@ -1,7 +1,7 @@
 """
 @Author: ShuttleAI
-@Version: 3.8.1
-@Date: 4-3-2024
+@Version: 3.8.2
+@Date: 4-5-2024
 """
 from __future__ import annotations
 from typing import (
