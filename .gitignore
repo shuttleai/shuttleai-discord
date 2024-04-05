@@ -2,3 +2,4 @@ dist
 src/shuttleai.egg-info
 .vscode/
 __pycache__/
+Makefile
