@@ -11,7 +11,7 @@ import hypercorn.asyncio
 from flask import Flask, jsonify
 
 from aiohttp import ClientSession
-from utils import log, mongo, STREAM_NAME, STREAM_URL
+from utils import log, mongo, STREAM_NAME, STREAM_URL, OWNER_IDS
 
 class DiscordBot:
     def __init__(self, BOT_TOKEN):
@@ -23,7 +23,7 @@ class DiscordBot:
             help_command=None,
             intents=intents,
             )
-        self.client.owner_ids = [206162910848745472, 1066613998000291900] # xtristan, thoth
+        self.client.owner_ids = [int(owner_id) for owner_id in OWNER_IDS]
         self.flask_app = Flask(__name__)
         self.setup()
 
