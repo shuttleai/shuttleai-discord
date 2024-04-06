@@ -2,6 +2,8 @@ aiohttp
 aiocron
 orjson
 wavelink
+random
+motor
 python-dotenv
 python-dateutil
 shuttleai
