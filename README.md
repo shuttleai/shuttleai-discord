@@ -77,6 +77,8 @@ STREAM_URL='' # Stream URL, e.g. https://www.twitch.tv/username
 STREAM_NAME='' # Stream Name, e.g. /imagine
 
 MONGO_URI='' # Your MongoDB URI, e.g. mongodb://localhost:27017
+
+OWNER_IDS='' # Bot owner discord IDs, separated by comma (,)
 ```
 
 ### Step 6. 📦 Install the requirements
