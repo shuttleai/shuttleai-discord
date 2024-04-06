@@ -1,0 +1,7 @@
+aiohttp
+aiocron
+orjson
+wavelink
+python-dotenv
+python-dateutil
+shuttleai
