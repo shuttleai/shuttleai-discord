@@ -20,7 +20,7 @@ Welcome to the **#1 Free Discord AI Chatbot** powered by ShuttleAI. This bot bri
 
 ## 📜 Commands
 
-- `/setup`: 🛠️ Run /setup in the channel you want to use ShuttleAI in. Any message sent in that channel will be processed by ShuttleAI. Run /remove to remove the channel.
+- `/setup`: 🛠️ Run /setup in any channel. Any message sent in that channel will be processed by ShuttleAI.
 - `/remove`: 🗑️ Run /remove in the channel you want to remove ShuttleAI from processing messages in.
 - `/reset`: 🔄 Run /reset to reset your conversation history with ShuttleAI.
 - `/imagine`: 🎨 Run /imagine to generate an image. Choose between many models.
