@@ -1,4 +1,4 @@
 httpx
 aiohttp
 orjson
-pydantic
+python-dateutil

@@ -175,7 +175,7 @@ class ShuttleClient:
         try:
             params = {"endpoints": endpoint,
                       **({"format": "free"} if free else {"format": "premium"} if premium else {})}
-            return Models.model_validate(self._make_request("GET", "models", params=params))
+            return Models.from_dict(self._make_request("GET", "models", params=params))
         except httpx.HTTPError as e:
             log.error(f"Failed to retrieve models: {e}")
             raise
@@ -217,10 +217,11 @@ class ShuttleClient:
                 def streamer():
                     for chunk in response:
                         try:
-                            yield ChatChunk.model_validate(chunk)
-                        except:
+                            yield ChatChunk.from_dict(chunk)
+                        except Exception as e:
+                            print(e)
                             try:
-                                yield ShuttleError.model_validate(chunk)
+                                yield ShuttleError(**chunk)
                             except:
                                 try:
                                     yield chunk
@@ -229,10 +230,10 @@ class ShuttleClient:
                 return streamer()
             else:
                 try:
-                    return Chat.model_validate(response)
+                    return Chat.from_dict(response)
                 except:
                     try:
-                        return ShuttleError.model_validate(response)
+                        return ShuttleError(**response)
                     except:
                         return response
 
@@ -267,10 +268,10 @@ class ShuttleClient:
                 "POST", "images/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
-                return Image.model_validate(response)
+                return Image.from_dict(response)
             except:
                 try:
-                    return ShuttleError.model_validate(response)
+                    return ShuttleError(**response)
                 except:
                     return response
         except httpx.HTTPError as e:
@@ -304,10 +305,10 @@ class ShuttleClient:
                 "POST", "audio/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
-                return Audio.model_validate(response)
+                return Audio.from_dict(response)
             except:
                 try:
-                    return ShuttleError.model_validate(response)
+                    return ShuttleError(**response)
                 except:
                     return response
         except httpx.HTTPError as e:
@@ -394,10 +395,10 @@ class ShuttleClient:
                 "POST", "embeddings", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
-                return Embedding.model_validate(response)
+                return Embedding(**response)
             except:
                 try:
-                    return ShuttleError.model_validate(response)
+                    return ShuttleError(**response)
                 except:
                     return response
         except httpx.HTTPError as e:

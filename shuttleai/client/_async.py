@@ -284,10 +284,10 @@ class ShuttleAsyncClient:
                 async def streamer():
                     async for chunk in response:
                         try:
-                            yield ChatChunk.model_validate(chunk)
+                            yield ChatChunk.from_dict(chunk)
                         except:
                             try:
-                                yield ShuttleError.model_validate(chunk)
+                                yield ShuttleError(**chunk)
                             except:
                                 try:
                                     yield chunk
@@ -296,10 +296,10 @@ class ShuttleAsyncClient:
                 return streamer()
             else:
                 try:
-                    return Chat.model_validate(response)
+                    return Chat.from_dict(response)
                 except:
                     try:
-                        return ShuttleError.model_validate(response)
+                        return ShuttleError(**response)
                     except:
                         return response
 
@@ -334,10 +334,10 @@ class ShuttleAsyncClient:
                 "POST", "images/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
-                return Image.model_validate(response)
+                return Image.from_dict(response)
             except:
                 try:
-                    return ShuttleError.model_validate(response)
+                    return ShuttleError(**response)
                 except:
                     return response
         except aiohttp.ClientError as e:
@@ -371,10 +371,10 @@ class ShuttleAsyncClient:
                 "POST", "audio/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
-                return Audio.model_validate(response)
+                return Audio.from_dict(response)
             except:
                 try:
-                    return ShuttleError.model_validate(response)
+                    return ShuttleError(**response)
                 except:
                     return response
         except aiohttp.ClientError as e:
@@ -461,10 +461,10 @@ class ShuttleAsyncClient:
                 "POST", "embeddings", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
-                return Embedding.model_validate(response)
+                return Embedding(**response)
             except:
                 try:
-                    return ShuttleError.model_validate(response)
+                    return ShuttleError(**response)
                 except:
                     return response
         except aiohttp.ClientError as e:
