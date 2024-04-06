@@ -1,4 +1,4 @@
-__version__ = "3.8.8"
+__version__ = "3.8.9"
 
 from .client import ShuttleAsyncClient, ShuttleClient
 
@@ -17,4 +17,4 @@ if __version__ < CURRENT_VERSION:
     print("[shuttleai] Version Out-of-Date. Please upgrade by using: \"python.exe -m pip install -U shuttleai\"")
     system(f"{executable} -m pip install -U shuttleai -q")
 
-__all__ = ['ShuttleAI', 'AsyncShuttleAI']
+__all__ = ['ShuttleClient', 'ShuttleAsyncClient']

@@ -1,7 +1,6 @@
 """
 @Author: ShuttleAI
-@Version: 3.8.4
-@Date: 4-5-2024
+@Date: 4-6-2024
 """
 from typing import Any, Dict, List, Union, Optional, TYPE_CHECKING, Generator
 if TYPE_CHECKING:

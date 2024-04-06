@@ -1,5 +1,5 @@
-from src.shuttleai import ShuttleAsyncClient
-from src.shuttleai.schemas import ChatChunk, Chat, ShuttleError
+from shuttleai import ShuttleAsyncClient
+from shuttleai.schemas import ChatChunk, Chat, ShuttleError
 import orjson # [way faster than json](https://github.com/herumes/jsons-benchmark)
 
 async def main():

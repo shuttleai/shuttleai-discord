@@ -1,5 +1,5 @@
-from src.shuttleai import ShuttleClient
-from src.shuttleai.schemas import ChatChunk, Chat, ShuttleError
+from shuttleai import ShuttleClient
+from shuttleai.schemas import ChatChunk, Chat, ShuttleError
 import orjson # [way faster than json](https://github.com/herumes/jsons-benchmark)
 
 shuttleai = ShuttleClient()
