@@ -4,6 +4,8 @@ orjson
 wavelink
 random
 motor
+flask
+hypercorn
 python-dotenv
 python-dateutil
 shuttleai
