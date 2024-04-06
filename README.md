@@ -1,4 +1,4 @@
-![ShuttleAI Logo](readme.png)
+![ShuttleAI MockUp](https://raw.githubusercontent.com/shuttleai/shuttleai-discord/main/mockup.png)
 # 🚀 ShuttleAI Discord multi-purpose Al
 
 Welcome to the **#1 Free Discord AI Chatbot** powered by ShuttleAI. This bot brings advanced AI capabilities right into your Discord server.
