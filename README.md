@@ -103,6 +103,6 @@ If you encounter any issues or need further assistance, create an issue in this 
 
 Enjoy your new AI-powered Discord bot!
 
-## Star History
+## ⭐ Star History
 
 [![Star History](https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline)](https://star-history.com/#shuttleai/shuttleai-discord&Timeline)
