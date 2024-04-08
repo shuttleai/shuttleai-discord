@@ -105,4 +105,12 @@ Enjoy your new AI-powered Discord bot!
 
 ## ⭐ Star History
 
-[![Star History](https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline)](https://star-history.com/#shuttleai/shuttleai-discord&Timeline)
+## Star History
+
+<a href="https://star-history.com/#shuttleai/shuttleai-discord&Timeline">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline" />
+ </picture>
+</a>
