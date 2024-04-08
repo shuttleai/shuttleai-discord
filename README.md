@@ -105,8 +105,6 @@ Enjoy your new AI-powered Discord bot!
 
 ## ⭐ Star History
 
-## Star History
-
 <a href="https://star-history.com/#shuttleai/shuttleai-discord&Timeline">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline&theme=dark" />
