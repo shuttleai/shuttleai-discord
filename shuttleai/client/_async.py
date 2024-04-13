@@ -1,6 +1,6 @@
 """
 @Author: ShuttleAI
-@Date: 4-6-2024
+@Date: 4-13-2024
 """
 from __future__ import annotations
 from typing import (
@@ -310,7 +310,8 @@ class ShuttleAsyncClient:
         self,
         model: str,
         prompt: str,
-        n: int = 1
+        n: int = 1,
+        **kwargs
     ) -> Union[Image, ShuttleError]:
         """
         Generate images using a model.
@@ -328,7 +329,7 @@ class ShuttleAsyncClient:
             Aiohttp.ClientError: If the API request is invalid.
         """
         try:
-            data = {"model": model, "prompt": prompt, "n": n}
+            data = {"model": model, "prompt": prompt, "n": n, **kwargs}
             response = await self._make_request(
                 "POST", "images/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
@@ -346,8 +347,9 @@ class ShuttleAsyncClient:
     async def audio_generations(
         self,
         input: str,
-        voice: str,
-        model: str = "ElevenLabs"
+        voice: str = None,
+        model: str = "eleven-labs",
+        **kwargs
     ) -> Union[Audio, ShuttleError]:
         """
         Generate audio using a model.
@@ -365,7 +367,7 @@ class ShuttleAsyncClient:
             Aiohttp.ClientError: If the API request is invalid.
         """
         try:
-            data = {"model": model, "input": input, "voice": voice}
+            data = {"model": model, "input": input, **({"voice": voice} if voice else {}), **kwargs}
             response = await self._make_request(
                 "POST", "audio/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
