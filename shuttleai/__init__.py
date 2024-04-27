@@ -5,7 +5,7 @@ import time
 
 import httpx
 
-from .client import ShuttleClient, ShuttleAsyncClient1
+from .client import ShuttleClient, ShuttleAsyncClient
 
 PACKAGE_NAME = "shuttleai"
 CACHE_PATH = f'{PACKAGE_NAME}.json'
