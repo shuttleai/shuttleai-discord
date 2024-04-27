@@ -8,7 +8,7 @@ long_description = (base_path / "README.md").read_text(encoding="utf-8")
 setup(
     include_package_data=True,
     name='shuttleai', 
-    version='3.9.0',
+    version='3.9.2',
     author='shuttle',
     author_email='noreply@shuttleai.app',
     description="Access Shuttle AI's API via a simple and user-friendly lib. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai",
