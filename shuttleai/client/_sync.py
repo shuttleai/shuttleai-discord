@@ -1,6 +1,6 @@
 """
 @Author: ShuttleAI
-@Date: 4-23-2024
+@Date: 5-17-2024
 """
 from typing import Any, Dict, List, Union, Optional, TYPE_CHECKING, Generator
 if TYPE_CHECKING:
@@ -301,7 +301,7 @@ class ShuttleClient:
         try:
             data = {"model": model, "input": input, "voice": voice}
             response = self._make_request(
-                "POST", "audio/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
+                "POST", "audio/speech", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
                 return Audio.from_dict(response)

@@ -1,6 +1,6 @@
 """
 @Author: ShuttleAI
-@Date: 4-23-2024
+@Date: 5-17-2024
 """
 from __future__ import annotations
 from typing import (
@@ -369,7 +369,7 @@ class ShuttleAsyncClient:
         try:
             data = {"model": model, "input": input, **({"voice": voice} if voice else {}), **kwargs}
             response = await self._make_request(
-                "POST", "audio/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
+                "POST", "audio/speech", data, headers={"Authorization": f"Bearer {self.api_key}"}
             )
             try:
                 return Audio.from_dict(response)
