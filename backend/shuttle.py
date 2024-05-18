@@ -4,7 +4,6 @@ from shuttleai.schemas import ChatChunk, ShuttleError, Image
 
 from typing import AsyncGenerator, List, Union, Dict, Any, Literal
 
-
 """
 This class will be to manage the API calls to ShuttleAI.
 
@@ -18,60 +17,60 @@ This one session will be used for all calls, chat and non-chat.
 class ShuttleAIManager:
     def __init__(self):
         self.client: ShuttleAsyncClient = ShuttleAsyncClient()
+        self.session_opened = False
+
+    async def _ensure_session(self):
+        if not self.session_opened:
+            await self.client.__aenter__()
+            self.session_opened = True
 
     async def close(self):
-        await self.client.close()
-        
+        if self.session_opened:
+            await self.client.__aexit__(None, None, None)
+            self.session_opened = False
+
     async def ask(self, model: str, history: List[Dict[str, str]], system: str = None, image: str = None) -> AsyncGenerator[str, None]:
         """
         This method will be used to chat with the ShuttleAI API.
         """
-        if system:
-            messages = [{"content": system, "role": "system"}]
-        else:
-            messages = []
-
-        messages = messages + history
+        await self._ensure_session()
+        
+        messages = [{"content": system, "role": "system"}] if system else []
+        messages += history
 
         if image:
             messages.append({"content": f"Describe {image}", "role": "user"})
 
+        try:
+            async for chunk in await self.client.chat_completion(model=model, messages=messages, stream=True):
+                try:
+                    yield chunk.choices[0].delta.content
+                except:
+                    pass
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            yield "There was an error processing your request."
 
-        async with self.client as client:
-            try:
-                async for chunk in await client.chat_completion(
-                    model=model,
-                    messages=messages,
-                    stream=True
-                ):
-                    try:
-                        yield chunk.choices[0].delta.content
-                    except:
-                        pass
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                yield "There was an error processing your request."
-                pass
-
-    async def imagine(self, model: str, prompt: str, response_format: Literal["url", "raw"]) -> str:
+    async def imagine(self, model: str, prompt: str, response_format: Literal["url", "raw"]) -> Union[str, bytes]:
         """
         This method will be used to generate images with the ShuttleAI API.
         """
-        async with self.client as client:
-            try:
-                response = await client.images_generations(model, prompt)
-                if isinstance(response, Image):
-                    image = response.data[0].url
-                else:
-                    image = "https://as2.ftcdn.net/v2/jpg/00/44/18/83/1000_F_44188314_xoXeYdEqwFYdApmbMSQGMdiMcDm9yb2l.jpg"
-                if response_format == "url":
-                    return image
-                else:
-                    async with client._session.get(image) as resp:
-                        return await resp.read()
-            except Exception as e:
-                print(f"An error occurred: {e}")
-                return "https://as2.ftcdn.net/v2/jpg/00/44/18/83/1000_F_44188314_xoXeYdEqwFYdApmbMSQGMdiMcDm9yb2l.jpg"
+        await self._ensure_session()
+        try:
+            response = await self.client.images_generations(model, prompt)
+            if isinstance(response, Image):
+                image = response.data[0].url
+            else:
+                image = "https://developers.google.com/static/maps/documentation/maps-static/images/error-image-generic.png"
+            
+            if response_format == "url":
+                return image
+            else:
+                async with self.client._session.get(image) as resp:
+                    return await resp.read()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return "https://developers.google.com/static/maps/documentation/maps-static/images/error-image-generic.png"
 
 
 shuttle_client = ShuttleAIManager()
