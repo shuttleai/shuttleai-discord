@@ -98,7 +98,6 @@ poetry run pytest .
 
 > [!IMPORTANT]
 > The tests will fail if the API key is not set. To set the API key, create a file called `.env` in the root of the project and add the following line:
-
 > ```sh
 > SHUTTLEAI_API_KEY=your-api-key
 > ```
