@@ -33,7 +33,7 @@ def serialize_function_to_json(func: Callable) -> dict:
     if required_params:
         function_info["parameters"]["required"] = required_params
 
-    for name, param in params.items():
+    for name, _ in params.items():
         param_type = _get_type_name(type_hints.get(name, type(None)))
         param_desc = param_descriptions.get(name, "Lorem ipsum...").strip()
         param_info = {
@@ -58,7 +58,7 @@ def deserialize_function_from_json(json_obj: dict) -> Callable:
         param_type = param_info["type"]
         try:
             if param_type == "string" and "enum" in param_info:
-                param_types[param_name] = Literal[tuple(param_info["enum"])]
+                param_types[param_name] = Literal.__getitem__(tuple(param_info["enum"]))
             else:
                 param_types[param_name] = eval(param_type)
         except NameError:
