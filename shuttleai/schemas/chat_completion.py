@@ -34,7 +34,7 @@ class ToolChoice(str, Enum):
 
 class ChatMessage(BaseModel):
     role: str
-    content: Union[str, List[str]]
+    content: Optional[Union[str, List[str]]] = None
     name: Optional[str] = None
     tool_calls: Optional[List[ToolCall]] = None
     tool_call_id: Optional[str] = None
