@@ -19,7 +19,7 @@ class AsyncCompletions(BaseCompletions):
     @overload
     async def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: List[ChatMessage] | List[Dict[str, Any]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -33,7 +33,7 @@ class AsyncCompletions(BaseCompletions):
     @overload
     async def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: List[ChatMessage] | List[Dict[str, Any]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -46,7 +46,7 @@ class AsyncCompletions(BaseCompletions):
 
     async def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: List[ChatMessage] | List[Dict[str, Any]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -81,7 +81,8 @@ class SyncCompletions(BaseCompletions):
     @overload
     def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        # messages: List[Union[ChatMessage, Dict[str, Any]]], # original
+        messages: List[ChatMessage] | List[Dict[str, Any]], # modified
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -95,7 +96,7 @@ class SyncCompletions(BaseCompletions):
     @overload
     def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: List[ChatMessage] | List[Dict[str, Any]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -108,7 +109,7 @@ class SyncCompletions(BaseCompletions):
 
     def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: List[ChatMessage] | List[Dict[str, Any]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,

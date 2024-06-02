@@ -4,7 +4,7 @@ from typing import Any, Dict, Iterator, Optional
 
 import orjson
 import pydantic_core
-from httpx import Client, ConnectError, HTTPTransport, RequestError, Response
+from httpx import Client, ConnectError, RequestError, Response
 
 from shuttleai import resources
 from shuttleai.client.base import ClientBase
@@ -34,7 +34,7 @@ class ShuttleAIClient(ClientBase):
             self._client = client
         else:
             self._client = Client(
-                follow_redirects=True, timeout=self._timeout, transport=HTTPTransport(retries=0)
+                follow_redirects=True, timeout=self._timeout
             )
 
         self.chat: resources.Chat = resources.Chat(self, async_mode=False)
