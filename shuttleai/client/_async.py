@@ -70,14 +70,6 @@ class ShuttleAIAsyncClient(ClientBase):
 
         json_response: Dict[str, Any] = orjson.loads(await response.read())
 
-        if "object" not in json_response:
-            raise ShuttleAIException(message=f"Unexpected response: {json_response}")
-        if "error" == json_response["object"]:  # has errors
-            raise ShuttleAIAPIException.from_response(
-                response,
-                message=json_response["message"],
-            )
-
         return json_response
 
     async def _request(

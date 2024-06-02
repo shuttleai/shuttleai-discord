@@ -1,10 +1,15 @@
-from unittest import mock
-
 import pytest
-from shuttleai.client._sync import ShuttleAIClient
+
+from shuttleai.client import ShuttleAIAsyncClient, ShuttleAIClient
 
 
 @pytest.fixture()
 def client():
-    client = ShuttleAIClient(api_key="test_api_key")
+    client = ShuttleAIClient()
+    return client
+
+
+@pytest.fixture()
+def async_client():
+    client = ShuttleAIAsyncClient(api_key="test_api_key")
     return client
