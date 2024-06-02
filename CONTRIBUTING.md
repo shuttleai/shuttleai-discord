@@ -26,7 +26,7 @@ You can submit a pull request without passing checks, but it will be marked as `
 - [Community](#community)
 
 ## Code of Conduct
-This project adheres to the Contributor Covenant [Code of Conduct](CODE_OF_CONDUCT.md). Report unacceptable behavior to [the ShuttleAI team](mailto:chris@shuttleai.ap).
+This project adheres to the Contributor Covenant [Code of Conduct](CODE_OF_CONDUCT.md). Report unacceptable behavior to [the ShuttleAI team](mailto:chris@shuttleai.app).
 
 ## How to Contribute
 
