@@ -6,6 +6,9 @@ Thank you for your interest in contributing to the ShuttleAI project! We welcome
 
 The ShuttleAI Python SDK uses poetry as previously discussed, on top of this, we use [ruff](https://github.com/astral-sh/ruff) for linting and formatting as well as [mypy](https://github.com/python/mypy) for type checking. Please ensure that your code passes all of these checks before submitting a pull request expecting to be merged.
 
+## Benefits
+All contributors are greatly appreciated and highly valued. To show our appreciation and to encourage good coding practices, top contributors will receive a special colored role in the [ShuttleAI Discord Server](https://discord.gg/shuttleai).
+
 ## Lazy Contributing
 
 If you're feeling lazy and don't want to go through the necessary checks such as linting and type checking, you may still submit a pull request. However, it will be marked as `WIP` and will not be merged until all checks have passed. This is to ensure that the codebase remains consistent and clean.
