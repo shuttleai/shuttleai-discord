@@ -9,6 +9,8 @@ The ShuttleAI Python SDK uses poetry as previously discussed, on top of this, we
 ## Benefits
 All contributors are greatly appreciated and highly valued. To show our appreciation and to encourage good coding practices, top contributors will receive a special colored role in the [ShuttleAI Discord Server](https://discord.gg/shuttleai).
 
+![Example of a contributor with a special role](https://cdn.discordapp.com/attachments/1181912564553232444/1246701293523828817/image.png?ex=665d588e&is=665c070e&hm=5f0d1bfad1fbfad95076de6dc8616c177cd73d548c99537c5901d959121c42c8&)
+
 ## Lazy Contributing
 
 If you're feeling lazy and don't want to go through the necessary checks such as linting and type checking, you may still submit a pull request. However, it will be marked as `WIP` and will not be merged until all checks have passed. This is to ensure that the codebase remains consistent and clean.
@@ -34,7 +36,7 @@ If you're feeling lazy and don't want to go through the necessary checks such as
 
 ## Code of Conduct
 
-This project adheres to the Contributor Covenant [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [email@example.com](mailto:email@example.com).
+This project adheres to the Contributor Covenant [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [the ShuttleAI team](mailto:chris@shuttleai.ap).
 
 ## How to Contribute
 
