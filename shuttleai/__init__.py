@@ -9,6 +9,9 @@ __docs_url__ = "https://docs.shuttleai.app"
 __homepage__ = "https://shuttleai.app"
 
 
-from .spy_orjson import _patch_httpx
+from ._patch import _patch_httpx
 
 _patch_httpx()
+
+
+from .client import ShuttleAIAsyncClient, ShuttleAIClient

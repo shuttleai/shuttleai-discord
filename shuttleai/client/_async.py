@@ -7,6 +7,7 @@ import orjson
 import pydantic_core
 from aiohttp import ClientTimeout
 
+from shuttleai import resources
 from shuttleai.client.base import ClientBase
 from shuttleai.exceptions import (
     ShuttleAIAPIException,
@@ -14,7 +15,6 @@ from shuttleai.exceptions import (
     ShuttleAIConnectionException,
     ShuttleAIException,
 )
-from shuttleai.resources._async.chat import Chat
 from shuttleai.schemas.models.models import BaseModelCard, ListModelsResponse, ListVerboseModelsResponse, ProxyCard
 
 
@@ -22,7 +22,6 @@ class ShuttleAIAsyncClient(ClientBase):
     """
     Asynchronous wrapper for the ShuttleAI API
     """
-
     def __init__(
         self,
         api_key: Optional[str] = None,
@@ -33,7 +32,9 @@ class ShuttleAIAsyncClient(ClientBase):
 
         self._timeout = ClientTimeout(total=float(timeout))
         self._session: Optional[aiohttp.ClientSession] = None
-        self.chat = Chat(self)
+
+        self.chat: resources.Chat = resources.Chat(self)
+        self.images: resources.Images = resources.Images(self)
 
     async def __aenter__(self):
         if self._session is None:

@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-
-from shuttleai.client._sync import ShuttleAIClient
-from shuttleai.schemas.chat_completion import ChatMessage
+from shuttleai import ShuttleAIClient
+from shuttleai.schemas.chat_completion import ChatMessage  # Helper for messages
 
 
 def main():
@@ -11,7 +9,7 @@ def main():
 
     chat_response = client.chat.completions.create(
         model=model,
-        messages=[ChatMessage(role="user", content="What is the best French cheese?")],
+        messages=[ChatMessage(role="user", content="what is 5 plus 3")],
     )
     print(chat_response.choices[0].message.content)
 

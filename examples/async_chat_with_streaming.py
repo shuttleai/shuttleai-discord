@@ -1,6 +1,6 @@
 import asyncio
 
-from shuttleai.client._async import ShuttleAIAsyncClient
+from shuttleai import ShuttleAIAsyncClient
 
 
 async def main():

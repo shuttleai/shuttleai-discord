@@ -1,7 +1,5 @@
-#!/usr/bin/env python
-
-from shuttleai.client._sync import ShuttleAIClient
-from shuttleai.schemas.chat_completion import ChatMessage
+from shuttleai import ShuttleAIClient
+from shuttleai.schemas.chat_completion import ChatCompletionStreamResponse, ChatMessage
 
 
 def main():
@@ -16,6 +14,7 @@ def main():
     )
 
     for chat in response:
+        chat: ChatCompletionStreamResponse # type hint for IDEs (only necessary for sync stream? # TODO: fix)
         print(chat.choices[0].delta.content or "", end="", flush=True)
 
 

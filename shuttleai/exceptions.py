@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
+from aiohttp import ClientResponse
 from httpx import Response
 
 
@@ -35,10 +36,10 @@ class ShuttleAIAPIException(ShuttleAIException):
         self.headers = headers or {}
 
     @classmethod
-    def from_response(cls, response: Response, message: Optional[str] = None) -> ShuttleAIAPIException:
+    def from_response(cls, response: Response | ClientResponse, message: Optional[str] = None) -> ShuttleAIAPIException:
         return cls(
             message=message or response.text,
-            http_status=response.status_code,
+            http_status=response.status_code if isinstance(response, Response) else response.status,
             headers=dict(response.headers),
         )
 

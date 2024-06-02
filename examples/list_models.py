@@ -1,8 +1,6 @@
-#!/usr/bin/env python
-
 import random
 
-from shuttleai.client._sync import ShuttleAIClient
+from shuttleai import ShuttleAIClient
 
 
 def main():

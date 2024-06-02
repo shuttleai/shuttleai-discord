@@ -6,6 +6,7 @@ import orjson
 import pydantic_core
 from httpx import Client, ConnectError, HTTPTransport, RequestError, Response
 
+from shuttleai import resources
 from shuttleai.client.base import ClientBase
 from shuttleai.exceptions import (
     ShuttleAIAPIException,
@@ -13,7 +14,6 @@ from shuttleai.exceptions import (
     ShuttleAIConnectionException,
     ShuttleAIException,
 )
-from shuttleai.resources._sync.chat import Chat
 from shuttleai.schemas.models.models import BaseModelCard, ListModelsResponse, ListVerboseModelsResponse, ProxyCard
 
 
@@ -21,7 +21,6 @@ class ShuttleAIClient(ClientBase):
     """
     Synchronous wrapper for the ShuttleAI API
     """
-
     def __init__(
         self,
         api_key: Optional[str] = None,
@@ -34,7 +33,8 @@ class ShuttleAIClient(ClientBase):
             follow_redirects=True, timeout=self._timeout, transport=HTTPTransport(retries=0)
         )
 
-        self.chat = Chat(self)
+        self.chat: resources.Chat = resources.Chat(self, async_mode=False)
+        self.images: resources.Images = resources.Images(self, async_mode=False)
 
     def __del__(self) -> None:
         self._client.close()
