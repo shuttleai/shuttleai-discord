@@ -1,15 +1,12 @@
 [tool.poetry]
 name = "shuttleai"
-version = "3.9.9"
+version = "0"
 description = "Access Shuttle AI's API via an easy-to-use Python wrapper. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai"
 authors = ["Tristan Liu <tristan@shuttleai.app>", "Christian \"Thoth\" Heru <chris@shuttleai.app>"]
-license = "MIT"
 readme = "README.md"
 
-[tool.poetry-dynamic-versioning]
-enable = true
-version_source = "module"
-module = "shuttleai"
+[tool.poetry-version-plugin]
+source = "init"
 
 [tool.ruff]
 select = ["E", "F", "W", "Q", "I"]

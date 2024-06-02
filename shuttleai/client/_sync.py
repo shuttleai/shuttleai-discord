@@ -26,12 +26,16 @@ class ShuttleAIClient(ClientBase):
         api_key: Optional[str] = None,
         base_url: str = "https://api.shuttleai.app",
         timeout: int = 120,
+        client: Optional[Client] = None,
     ):
         super().__init__(base_url, api_key, timeout)
 
-        self._client = Client(
-            follow_redirects=True, timeout=self._timeout, transport=HTTPTransport(retries=0)
-        )
+        if client:
+            self._client = client
+        else:
+            self._client = Client(
+                follow_redirects=True, timeout=self._timeout, transport=HTTPTransport(retries=0)
+            )
 
         self.chat: resources.Chat = resources.Chat(self, async_mode=False)
         self.images: resources.Images = resources.Images(self, async_mode=False)

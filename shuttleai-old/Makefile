@@ -14,7 +14,7 @@ build:
 	@echo Built!
 
 upload:
-	twine upload -r pypi dist/*
+	twine upload dist/*
 
 release: clean build upload
 	@echo Released!

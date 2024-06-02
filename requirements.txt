@@ -1,5 +1,0 @@
-httpx
-aiohttp
-orjson
-python-dateutil
-pydantic
