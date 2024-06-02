@@ -4,6 +4,7 @@ Access the ShuttleAI API with an easy-to-use user-friendly lib.
 
 [![pypi](https://img.shields.io/pypi/v/shuttleai.svg?color=blue)](https://pypi.org/project/shuttleai/)
 [![Downloads](https://pepy.tech/badge/shuttleai)](https://pepy.tech/project/shuttleai)
+[![Downloads/Month](https://static.pepy.tech/badge/shuttleai/month)](https://pepy.tech/project/shuttleai)
 [![License](https://img.shields.io/pypi/l/shuttleai.svg)](https://pypi.org/project/shuttleai/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/shuttleai.svg)](https://pypi.org/project/shuttleai/)
 
