@@ -3,7 +3,17 @@ name = "shuttleai"
 version = "0"
 description = "Access Shuttle AI's API via an easy-to-use Python wrapper. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai"
 authors = ["Tristan Liu <tristan@shuttleai.app>", "Christian \"Thoth\" Heru <chris@shuttleai.app>"]
+maintainers = ["Christian \"Thoth\" Heru <chris@shuttleai.app>"]
+homepage = "https://github.com/shuttleai"
+repository = "https://github.com/shuttleai/shuttleai-python"
+urls = { Documentation = "https://docs.shuttleai.app", Dashboard = "https://shuttleai.app", Discord = "https://discord.gg/shuttleai" }
 readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = ["shuttleai", "ai", "gpt", "claude", "api", "free", "chatgpt", "gpt-4"]
 
 [tool.poetry-version-plugin]
 source = "init"
@@ -34,7 +44,6 @@ python-dateutil = "^2.9.0.post0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.6"
-black = "^24.4.2"
 mypy = "^1.7.1"
 types-requests = "^2.31.0.10"
 pytest = "^7.4.3"

@@ -10,7 +10,7 @@ from shuttleai.exceptions import ShuttleAIException
 from shuttleai.schemas.chat_completion import ChatMessage, Function, ToolChoice
 
 
-class ClientBase(ABC):
+class ClientBase(ABC):  # noqa: B024
     def __init__(
         self,
         base_url: str,
@@ -45,7 +45,9 @@ class ClientBase(ABC):
         top_p: Optional[float],
     ) -> Dict[str, Any]:
         return {
-            k: v for k, v in {"temperature": temperature, "max_tokens": max_tokens, "top_p": top_p}.items() if v is not None
+            k: v for k, v in {
+                "temperature": temperature, "max_tokens": max_tokens, "top_p": top_p
+            }.items() if v is not None
         }
 
     def _parse_tools(self, tools: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
