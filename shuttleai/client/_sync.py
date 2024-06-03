@@ -1,6 +1,6 @@
 import posixpath
 from json import JSONDecodeError
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, Dict, Iterator, Optional, Type, Union
 
 import orjson
 import pydantic_core
@@ -148,7 +148,7 @@ class ShuttleAIClient(ClientBase):
         except (pydantic_core.ValidationError, StopIteration) as e:
             raise ShuttleAIException("No response received") from e
 
-    def list_models(self) -> ListModelsResponse:
+    def list_models(self) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
         """Returns a list of the available models
 
         Returns:
@@ -156,7 +156,7 @@ class ShuttleAIClient(ClientBase):
         """
         return self._fetch_and_process_models("v1/models", ListModelsResponse)
 
-    def list_models_verbose(self) -> ListVerboseModelsResponse:
+    def list_models_verbose(self) -> Union[ListVerboseModelsResponse, ListModelsResponse]:
         """Returns a list of the available models with verbose information
 
         Returns:
@@ -164,7 +164,11 @@ class ShuttleAIClient(ClientBase):
         """
         return self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
 
-    def _fetch_and_process_models(self, endpoint: str, response_class: Any) -> Any:
+    def _fetch_and_process_models(
+        self,
+        endpoint: str,
+        response_class: Type[Union[ListModelsResponse, ListVerboseModelsResponse]]
+    ) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
         singleton_response = self._request("get", {}, endpoint)
         try:
             list_models_response = response_class(**next(singleton_response))
@@ -175,6 +179,9 @@ class ShuttleAIClient(ClientBase):
 
         for model in list_models_response.data:
             if isinstance(model, ProxyCard):
-                model.parent = models_by_id.get(model.proxy_to)
+                model_parent = models_by_id.get(model.proxy_to)
+                assert isinstance(model_parent, BaseModelCard)
+                if model_parent:
+                    model.parent = model_parent
 
         return list_models_response
