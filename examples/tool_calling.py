@@ -52,6 +52,7 @@ def main() -> None:
     message = chat_response.choices[0].message
     print(message)
     tool_calls = message.tool_calls
+    assert tool_calls is not None and len(tool_calls) > 0 # We expect at least one tool call
     first_tool_call = tool_calls[0]
     function_call = first_tool_call.function
 
