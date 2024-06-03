@@ -1,3 +1,5 @@
+from typing import Any
+
 import orjson
 
 from shuttleai import ShuttleAIClient
@@ -26,16 +28,16 @@ get_current_weather_tool = convert_function_json_to_tool_json(serialize_function
 
 tools = [get_current_weather_tool]
 
-
-def invoke_function_call(function: FunctionCall):
+def invoke_function_call(function: FunctionCall) -> Any | None:
     if function.name in globals():
         return globals()[function.name](**(orjson.loads(function.arguments)))
+    return None
 
 history = [
     ChatMessage(role="user", content="what is the weather in scotland? please tell me in fahrenheit")
 ]
 
-def main():
+def main() -> None:
     model = "shuttle-2-turbo"
 
     client = ShuttleAIClient()

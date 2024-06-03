@@ -4,6 +4,8 @@ from abc import ABC
 from typing import Any, Dict, List, Optional, Union
 
 import orjson
+from aiohttp import ClientTimeout
+from httpx import Timeout
 
 from shuttleai import __version__
 from shuttleai.exceptions import ShuttleAIException
@@ -11,11 +13,20 @@ from shuttleai.schemas.chat_completion import ChatMessage, Function, ToolChoice
 
 
 class ClientBase(ABC):  # noqa: B024
+
+    _timeout: Union[Timeout, ClientTimeout, float, int]
+    _api_key: Optional[str]
+    _base_url: str
+    _logger: logging.Logger
+    _default_chat_model: str
+    _default_image_model: str
+    _version: str
+
     def __init__(
         self,
         base_url: str,
         api_key: Optional[str] = None,
-        timeout: int = 120,
+        timeout: Union[Timeout, ClientTimeout, float, int] = 120.0,
     ):
         self._timeout = timeout
         self._api_key = api_key or os.getenv("SHUTTLEAI_API_KEY")

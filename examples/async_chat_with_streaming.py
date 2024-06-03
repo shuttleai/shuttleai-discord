@@ -3,7 +3,7 @@ import asyncio
 from shuttleai import ShuttleAIAsyncClient
 
 
-async def main():
+async def main() -> None:
     client = ShuttleAIAsyncClient()
 
     response = await client.chat.completions.create(

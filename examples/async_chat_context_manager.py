@@ -3,7 +3,7 @@ import asyncio
 from shuttleai import ShuttleAIAsyncClient
 
 
-async def main():
+async def main() -> None:
     async with ShuttleAIAsyncClient() as client:
     # No need to manually close when using context manager
         chat_response = await client.chat.completions.create(

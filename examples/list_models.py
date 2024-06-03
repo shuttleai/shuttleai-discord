@@ -3,7 +3,7 @@ import random
 from shuttleai import ShuttleAIClient
 
 
-def main():
+def main() -> None:
     client = ShuttleAIClient()
 
     list_models_response = client.list_models()

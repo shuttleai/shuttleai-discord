@@ -69,12 +69,12 @@ class ProxyCard(BaseModel):
 
 
     @property
-    def parent(self) -> BaseModelCard:
+    def parent(self) -> BaseModelCard | str:
         """The parent model card that the proxy points to."""
         return f"tmp-{self.proxy_to}"
 
     @parent.setter
-    def parent(self, value: BaseModelCard):
+    def parent(self, value: BaseModelCard) -> None:
         self._parent = value
 
 

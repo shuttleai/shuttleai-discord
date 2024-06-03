@@ -1,12 +1,13 @@
 import inspect
 import re
-from typing import Callable, Literal, get_type_hints
+from typing import Callable, Literal, Type, get_type_hints
 
 
-def _get_type_name(t):
+def _get_type_name(t: Type) -> str:
     if hasattr(t, "__name__"):
         return t.__name__
     if hasattr(t, "_name"):
+        assert isinstance(t._name, str)
         return t._name
     return str(t)
 

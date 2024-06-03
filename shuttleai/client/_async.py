@@ -1,6 +1,6 @@
 import posixpath
 from json import JSONDecodeError
-from typing import Any, AsyncIterable, Dict, Optional
+from typing import Any, AsyncIterator, Dict, Optional, Type, Union
 
 import aiohttp
 import orjson
@@ -26,7 +26,7 @@ class ShuttleAIAsyncClient(ClientBase):
         self,
         api_key: Optional[str] = None,
         base_url: str = "https://api.shuttleai.app",
-        timeout: int = 120,
+        timeout: int | ClientTimeout | float = 120,
         session: Optional[aiohttp.ClientSession] = None,
     ):
         super().__init__(base_url, api_key, timeout)
@@ -40,20 +40,32 @@ class ShuttleAIAsyncClient(ClientBase):
         self.chat: resources.Chat = resources.Chat(self)
         self.images: resources.Images = resources.Images(self)
 
-    async def __aenter__(self):
+    async def __aenter__(
+        self
+    ) -> "ShuttleAIAsyncClient":
         if self._session is None:
             self._session = aiohttp.ClientSession(timeout=self._timeout)
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[Type[BaseException]]
+    ) -> None:
         await self.close()
 
-    async def close(self):
+    async def close(
+        self
+    ) -> None:
         if self._session:
             await self._session.close()
             self._session = None
 
-    async def _check_response_status_codes(self, response: aiohttp.ClientResponse) -> None:
+    async def _check_response_status_codes(
+        self,
+        response: aiohttp.ClientResponse
+    ) -> None:
         if response.status in {429, 500, 502, 503, 504}:
             raise ShuttleAIAPIStatusException.from_response(
                 response,
@@ -69,7 +81,10 @@ class ShuttleAIAsyncClient(ClientBase):
                 message=f"Status: {response.status}. Message: {await response.text()}",
             )
 
-    async def _check_response(self, response: aiohttp.ClientResponse) -> Dict[str, Any]:
+    async def _check_response(
+        self,
+        response: aiohttp.ClientResponse
+    ) -> Dict[str, Any]:
         await self._check_response_status_codes(response)
 
         json_response: Dict[str, Any] = orjson.loads(await response.read())
@@ -82,7 +97,7 @@ class ShuttleAIAsyncClient(ClientBase):
         json: Optional[Dict[str, Any]],
         path: str,
         stream: bool = False,
-    ) -> AsyncIterable[Dict[str, Any]]:
+    ) -> AsyncIterator[Dict[str, Any]]:
         if self._session is None:
             self._session = aiohttp.ClientSession(timeout=self._timeout)
 
@@ -127,7 +142,10 @@ class ShuttleAIAsyncClient(ClientBase):
         except ShuttleAIAPIStatusException as e:
             raise ShuttleAIAPIStatusException.from_response(response, message=str(e)) from e
 
-    async def fetch_model(self, model_id: str) -> BaseModelCard:
+    async def fetch_model(
+        self,
+        model_id: str
+    ) -> BaseModelCard:
         """Fetches a model by its ID
 
         Args:
@@ -142,7 +160,9 @@ class ShuttleAIAsyncClient(ClientBase):
         except (pydantic_core.ValidationError, StopAsyncIteration) as e:
             raise ShuttleAIException("No response received") from e
 
-    async def list_models(self) -> ListModelsResponse:
+    async def list_models(
+        self
+    ) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
         """Returns a list of the available models
 
         Returns:
@@ -150,7 +170,9 @@ class ShuttleAIAsyncClient(ClientBase):
         """
         return await self._fetch_and_process_models("v1/models", ListModelsResponse)
 
-    async def list_models_verbose(self) -> ListVerboseModelsResponse:
+    async def list_models_verbose(
+        self
+    ) -> Union[ListVerboseModelsResponse, ListModelsResponse]:
         """Returns a list of the available models with verbose information
 
         Returns:
@@ -158,7 +180,11 @@ class ShuttleAIAsyncClient(ClientBase):
         """
         return await self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
 
-    async def _fetch_and_process_models(self, endpoint: str, response_class: Any) -> Any:
+    async def _fetch_and_process_models(
+        self,
+        endpoint: str,
+        response_class: Type[Union[ListModelsResponse, ListVerboseModelsResponse]]
+    ) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
         singleton_response = self._request("get", {}, endpoint)
         try:
             list_models_response = response_class(**(await singleton_response.__anext__()))
@@ -169,6 +195,9 @@ class ShuttleAIAsyncClient(ClientBase):
 
         for model in list_models_response.data:
             if isinstance(model, ProxyCard):
-                model.parent = models_by_id.get(model.proxy_to)
+                model_parent = models_by_id.get(model.proxy_to)
+                assert isinstance(model_parent, BaseModelCard)
+                if model_parent:
+                    model.parent = model_parent
 
         return list_models_response

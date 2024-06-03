@@ -19,7 +19,7 @@ class AsyncCompletions(BaseCompletions):
     @overload
     async def create(
         self,
-        messages: List[ChatMessage] | List[Dict[str, Any]],
+        messages: List[Union[ChatMessage, Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -33,7 +33,7 @@ class AsyncCompletions(BaseCompletions):
     @overload
     async def create(
         self,
-        messages: List[ChatMessage] | List[Dict[str, Any]],
+        messages: List[Union[ChatMessage, Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -46,7 +46,7 @@ class AsyncCompletions(BaseCompletions):
 
     async def create(
         self,
-        messages: List[ChatMessage] | List[Dict[str, Any]],
+        messages: List[Union[ChatMessage, Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -81,8 +81,7 @@ class SyncCompletions(BaseCompletions):
     @overload
     def create(
         self,
-        # messages: List[Union[ChatMessage, Dict[str, Any]]], # original
-        messages: List[ChatMessage] | List[Dict[str, Any]], # modified
+        messages: List[Union[ChatMessage, Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -96,7 +95,7 @@ class SyncCompletions(BaseCompletions):
     @overload
     def create(
         self,
-        messages: List[ChatMessage] | List[Dict[str, Any]],
+        messages: List[Union[ChatMessage, Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -109,7 +108,7 @@ class SyncCompletions(BaseCompletions):
 
     def create(
         self,
-        messages: List[ChatMessage] | List[Dict[str, Any]],
+        messages: List[Union[ChatMessage, Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -141,10 +140,28 @@ class SyncCompletions(BaseCompletions):
 
 
 class Chat:
-    def __init__(self, client: ClientBase, async_mode: bool = True):
-        # async_mode: temp fix since asyncio.iscoroutinefunction works but not in this context
-        # TODO: dynamic fix
-        if async_mode:
-            self.completions = AsyncCompletions(client)
-        else:
-            self.completions = SyncCompletions(client)
+    def __init__(self, client: ClientBase):
+        self._completions: Optional[Union[AsyncCompletions, SyncCompletions]] = None
+        self._client = client
+
+    @property
+    def completions(self) -> Union[AsyncCompletions, SyncCompletions, None]:
+        if self._completions is None:
+            from shuttleai.client import ShuttleAIAsyncClient, ShuttleAIClient
+            if isinstance(self._client, ShuttleAIAsyncClient):
+                self._completions = AsyncCompletions(self._client)
+            elif isinstance(self._client, ShuttleAIClient):
+                self._completions = SyncCompletions(self._client)
+        return self._completions
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.completions, name)
+
+    def __dir__(self) -> List[str]:
+        return dir(self.completions)
+
+    def __repr__(self) -> str:
+        return repr(self.completions)
+
+    def __str__(self) -> str:
+        return str(self.completions)

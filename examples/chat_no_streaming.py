@@ -2,7 +2,7 @@ from shuttleai import ShuttleAIClient
 from shuttleai.schemas.chat_completion import ChatMessage  # Helper for messages
 
 
-def main():
+def main() -> None:
     model = "shuttle-2-turbo"
 
     client = ShuttleAIClient()
