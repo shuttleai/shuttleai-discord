@@ -9,7 +9,7 @@ The ShuttleAI Python SDK uses [poetry](https://python-poetry.org/), [ruff](https
 ## Benefits
 Top contributors receive a special role in the [ShuttleAI Discord Server](https://discord.gg/shuttleai).
 
-![Example of a contributor with a special role](https://cdn.discordapp.com/attachments/1181912564553232444/1246701293523828817/image.png?ex=665d588e&is=665c070e&hm=5f0d1bfad1fbfad95076de6dc8616c177cd73d548c99537c5901d959121c42c8&)
+![Example of a contributor with a special role](https://cdn.shuttleai.app/cdn/8d8d4800-3914-4a1b-972d-ad09f0009e79.png)
 
 ## Lazy Contributing
 You can submit a pull request without passing checks, but it will be marked as `WIP` and not merged until all checks pass.
@@ -61,7 +61,8 @@ poetry install
 ### Running Checks
 Run linting and type checking:
 ```sh
-poetry run ruff format . --check && poetry run mypy .
+poetry run ruff format . --check
+poetry run mypy .
 ```
 
 ### Running Tests

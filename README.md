@@ -1,16 +1,19 @@
-# The Official Python Wrapper for the ShuttleAI API
-
-Access the ShuttleAI API with an easy-to-use user-friendly lib.
+# The Official Python library for the ShuttleAI API
 
 [![pypi](https://img.shields.io/pypi/v/shuttleai.svg?color=blue)](https://pypi.org/project/shuttleai/)
 [![Downloads](https://pepy.tech/badge/shuttleai)](https://pepy.tech/project/shuttleai)
 [![Downloads/Month](https://static.pepy.tech/badge/shuttleai/month)](https://pepy.tech/project/shuttleai)
-[![License](https://img.shields.io/pypi/l/shuttleai.svg)](https://pypi.org/project/shuttleai/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/shuttleai.svg)](https://pypi.org/project/shuttleai/)
+
+The ShuttleAI Python library provides convenient access to the ShuttleAI REST API from any Python 3.9+ application. The library includes type definitions for all request params and response fields, and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx) and [aiohttp](https://github.com/aio-libs/aiohttp) respectively.
+
+We took this dynamic change from pure httpx to ensure we get the performance benefits of re usable aiohttp client sessions.
+
+*A future plan may be to replace httpx with requests/niquests for the synchronous client*
 
 ## Installation
 
-```sh
+```s
 pip install shuttleai
 ```
 
@@ -59,10 +62,17 @@ the [key management page](https://shuttleai.app/keys).
 
 After you have an API key, you can set it as an environment variable:
 
+### Windows
+
+```s
+setx SHUTTLEAI_API_KEY "<your_api_key>"
+```
+
+### macOS/Linux
+
 ```bash
 export SHUTTLEAI_API_KEY=<your_api_key>
 ```
-
 
 ## Contribution
 We welcome contributions to the ShuttleAI API Python SDK.
