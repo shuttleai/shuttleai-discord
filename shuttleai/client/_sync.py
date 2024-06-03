@@ -31,7 +31,7 @@ class ShuttleAIClient(ClientBase):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        base_url: str = "https://api.shuttleai.app",
+        base_url: Optional[str] = None,
         timeout: HTTPXTimeoutTypes = DEFAULT_HTTPX_TIMEOUT,
         http_client: Optional[Client] = None,
     ):
@@ -93,15 +93,13 @@ class ShuttleAIClient(ClientBase):
         headers = {
             "Accept": accept_header,
             "User-Agent": f"shuttleai-client-python/{self._version}",
-            "Authorization": f"Bearer {self._api_key}",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
 
-        url = posixpath.join(self._base_url, path)
+        url = posixpath.join(self.base_url, path)
 
         self._logger.debug(f"Sending request: {method} {url} {json}")
-
-        response: Response
 
         try:
             if stream:

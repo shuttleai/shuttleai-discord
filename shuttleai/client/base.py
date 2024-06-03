@@ -15,15 +15,19 @@ class ClientBase(ABC):  # noqa: B024
 
     _timeout: TimeoutTypes
     _api_key: Optional[str]
-    _base_url: str
+    _base_url: Optional[str]
     _logger: logging.Logger
     _default_chat_model: str
     _default_image_model: str
     _version: str
 
+    # client options
+    api_key: str
+    base_url: str
+
     def __init__(
         self,
-        base_url: str,
+        base_url: Optional[str] = None,
         api_key: Optional[str] = None,
         timeout: TimeoutTypes = 120.0,
     ):
@@ -33,14 +37,23 @@ class ClientBase(ABC):  # noqa: B024
             raise ShuttleAIException(
                 "API key not provided. Please set SHUTTLEAI_API_KEY environment variable."
             )
-        self._base_url = base_url
+
+        self._base_url = base_url or os.getenv("SHUTTLEAI_API_BASE")
+        if not self._base_url:
+            self._base_url = "https://api.shuttleai.app"
+        # else:
+        #     self._base_url = self._base_url.rstrip("/v1")
+
+        self.api_key = self._api_key
+        self.base_url = self._base_url
+
         self._logger = logging.getLogger(__name__)
         self._default_chat_model = "shuttle-2-turbo"
         self._default_image_model = "sdxl"
         self._version = __version__
 
-        if "shuttleai.app" not in self._base_url:
-            if "api.openai.com" not in self._base_url:
+        if "shuttleai.app" not in self.base_url:
+            if "api.openai.com" not in self.base_url:
                 self._logger.warning(
                     "You are using an **unofficial, unverified** non-ShuttleAI URL. \
                     This is not recommended and may lead to malfunctions. \

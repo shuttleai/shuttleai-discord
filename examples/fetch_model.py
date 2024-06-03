@@ -1,7 +1,7 @@
 from shuttleai import ShuttleAIClient
 
 
-def main():
+def main() -> None:
     client = ShuttleAIClient()
 
     model = "shuttle-2-turbo"

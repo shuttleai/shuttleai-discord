@@ -79,7 +79,9 @@ class ShuttleAIMeta(BaseModel):
     """The ID of the request."""
 
     p: str
-    """The ID of the provider that processed the request."""
+    """The ID of the provider that processed the request.
+
+    The provider ID is semi-reliable, meaning upon VPS restarts, provider IDs may change."""
 
 
 class ChatCompletionResponse(BaseModel):
@@ -105,3 +107,15 @@ class ChatCompletionResponse(BaseModel):
     @property
     def meta(self) -> ShuttleAIMeta:
         return self.x_sai
+
+    @property
+    def provider(self) -> str:
+        return self.x_sai.p
+
+    @property
+    def provider_id(self) -> str:
+        return self.x_sai.p
+
+    @property
+    def request_id(self) -> str:
+        return self.x_sai.id
