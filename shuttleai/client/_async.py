@@ -32,7 +32,7 @@ class ShuttleAIAsyncClient(ClientBase):
     def __init__(
         self,
         api_key: Optional[str] = None,
-        base_url: str = "https://api.shuttleai.app",
+        base_url: Optional[str] = None,
         timeout: AIOHTTPTimeoutTypes = DEFAULT_AIOTTP_TIMEOUT,
         session: Optional[aiohttp.ClientSession] = None,
     ):
@@ -116,7 +116,7 @@ class ShuttleAIAsyncClient(ClientBase):
             "Content-Type": "application/json",
         }
 
-        url = posixpath.join(self._base_url, path)
+        url = posixpath.join(self.base_url, path)
 
         self._logger.debug(f"Sending request: {method} {url} {json}")
 

@@ -22,7 +22,7 @@ from shuttleai.schemas.chat_completion import (
 
 class AsyncCompletions(AsyncResource):
     @overload
-    async def create( # type: ignore
+    async def create(  # type: ignore
         self,
         messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
@@ -69,18 +69,18 @@ class AsyncCompletions(AsyncResource):
             tool_choice=tool_choice,
         )
 
-        return await self.handle_request( # type: ignore
+        return await self.handle_request(  # type: ignore
             method="post",
             endpoint="v1/chat/completions",
             request_data=request,
-            response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse, # type: ignore
+            response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse,  # type: ignore
             stream=stream,
         )
 
 
 class SyncCompletions(SyncResource):
     @overload
-    def create( # type: ignore
+    def create(  # type: ignore
         self,
         messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
@@ -127,11 +127,11 @@ class SyncCompletions(SyncResource):
             tool_choice=tool_choice,
         )
 
-        return self.handle_request( # type: ignore
+        return self.handle_request(  # type: ignore
             method="post",
             endpoint="v1/chat/completions",
             request_data=request,
-            response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse, # type: ignore
+            response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse,  # type: ignore
             stream=stream,
         )
 

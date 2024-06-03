@@ -12,16 +12,14 @@ class BaseResource:
 
 
 class SyncResource(BaseResource):
-    def _stream_response(self,
-        response: Iterator[Dict[str, Any]],
-        response_cls: Type[BaseModel]
+    def _stream_response(
+        self, response: Iterator[Dict[str, Any]], response_cls: Type[BaseModel]
     ) -> Iterator[BaseModel]:
         for json_streamed_response in response:
             yield response_cls(**json_streamed_response)
 
-    def _no_stream_response(self,
-        response: Iterator[Dict[str, Any]],
-        response_cls: Type[BaseModel]
+    def _no_stream_response(
+        self, response: Iterator[Dict[str, Any]], response_cls: Type[BaseModel]
     ) -> BaseModel:
         for resp in response:
             return response_cls(**resp)
@@ -33,10 +31,10 @@ class SyncResource(BaseResource):
         endpoint: str,
         request_data: Dict[str, Any],
         response_cls: Type[BaseModel],
-        stream: bool = False
+        stream: bool = False,
     ) -> Any:
         assert issubclass(response_cls, BaseModel)
-        response = self._client._request( # type: ignore
+        response = self._client._request(  # type: ignore
             method=method,
             json=request_data,
             path=endpoint,
@@ -49,16 +47,14 @@ class SyncResource(BaseResource):
 
 
 class AsyncResource(BaseResource):
-    async def _stream_response(self,
-        response: AsyncIterator[Dict[str, Any]],
-        response_cls: Type[BaseModel]
+    async def _stream_response(
+        self, response: AsyncIterator[Dict[str, Any]], response_cls: Type[BaseModel]
     ) -> AsyncIterable[BaseModel]:
         async for json_streamed_response in response:
             yield response_cls(**json_streamed_response)
 
-    async def _no_stream_response(self,
-        response: AsyncIterator[Dict[str, Any]],
-        response_cls: Type[BaseModel]
+    async def _no_stream_response(
+        self, response: AsyncIterator[Dict[str, Any]], response_cls: Type[BaseModel]
     ) -> BaseModel:
         async for resp in response:
             return response_cls(**resp)
@@ -70,10 +66,10 @@ class AsyncResource(BaseResource):
         endpoint: str,
         request_data: Dict[str, Any],
         response_cls: Type[BaseModel],
-        stream: bool = False
+        stream: bool = False,
     ) -> Any:
         assert issubclass(response_cls, BaseModel)
-        response = self._client._request( # type: ignore
+        response = self._client._request(  # type: ignore
             method=method,
             json=request_data,
             path=endpoint,
