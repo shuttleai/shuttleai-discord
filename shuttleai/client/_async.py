@@ -106,7 +106,7 @@ class ShuttleAIAsyncClient(ClientBase):
 
         json_bytes: bytes | None = (
             orjson.dumps(json) if json and len(json) > 0 else None
-        )
+        )  # x-sai [dict to bytes]
 
         accept_header = "text/event-stream" if stream else "application/json"
         headers = {

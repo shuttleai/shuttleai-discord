@@ -85,7 +85,7 @@ class ShuttleAIClient(ClientBase):
         path: str,
         stream: bool = False,
     ) -> Iterator[Dict[str, Any]]:
-        json: bytes | None = (
+        json_bytes: bytes | None = (
             orjson.dumps(json) if json and len(json) > 0 else None
         )  # x-sai [dict to bytes]
 
@@ -109,7 +109,7 @@ class ShuttleAIClient(ClientBase):
                     method,
                     url,
                     headers=headers,
-                    json=json,
+                    json=json_bytes,
                 ) as response:
                     self._check_streaming_response(response)
 
@@ -123,7 +123,7 @@ class ShuttleAIClient(ClientBase):
                     method,
                     url,
                     headers=headers,
-                    json=json,
+                    json=json_bytes,
                 )
 
                 yield self._check_response(response)

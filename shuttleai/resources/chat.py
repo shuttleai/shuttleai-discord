@@ -11,7 +11,7 @@ from typing import (
 )
 
 from shuttleai.client.base import ClientBase
-from shuttleai.exceptions import ShuttleAIException
+from shuttleai.resources._resource import AsyncResource, SyncResource
 from shuttleai.schemas.chat_completion import (
     ChatCompletionResponse,
     ChatCompletionStreamResponse,
@@ -20,14 +20,9 @@ from shuttleai.schemas.chat_completion import (
 )
 
 
-class BaseCompletions:
-    def __init__(self, client: ClientBase):
-        self._client = client
-
-
-class AsyncCompletions(BaseCompletions):
+class AsyncCompletions(AsyncResource):
     @overload
-    async def create(
+    async def create( # type: ignore
         self,
         messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
@@ -74,27 +69,18 @@ class AsyncCompletions(BaseCompletions):
             tool_choice=tool_choice,
         )
 
-        if stream:
-            response = self._client._request(
-                "post", request, "v1/chat/completions", stream=True
-            )
-            return (
-                ChatCompletionStreamResponse(**json_streamed_response)
-                async for json_streamed_response in response
-            )
-        else:
-            single_response = await self._client._request(
-                "post", request, "v1/chat/completions"
-            )
-            for response in single_response:
-                return ChatCompletionResponse(**response)
-
-            raise ShuttleAIException("No response received")
+        return await self.handle_request( # type: ignore
+            method="post",
+            endpoint="v1/chat/completions",
+            request_data=request,
+            response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse, # type: ignore
+            stream=stream,
+        )
 
 
-class SyncCompletions(BaseCompletions):
+class SyncCompletions(SyncResource):
     @overload
-    def create(
+    def create( # type: ignore
         self,
         messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
@@ -141,22 +127,13 @@ class SyncCompletions(BaseCompletions):
             tool_choice=tool_choice,
         )
 
-        if stream:
-            response = self._client._request(
-                "post", request, "v1/chat/completions", stream=True
-            )
-            return (
-                ChatCompletionStreamResponse(**json_streamed_response)
-                for json_streamed_response in response
-            )
-        else:
-            single_response = self._client._request(
-                "post", request, "v1/chat/completions"
-            )
-            for response in single_response:
-                return ChatCompletionResponse(**response)
-
-            raise ShuttleAIException("No response received")
+        return self.handle_request( # type: ignore
+            method="post",
+            endpoint="v1/chat/completions",
+            request_data=request,
+            response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse, # type: ignore
+            stream=stream,
+        )
 
 
 class AsyncChat:
@@ -170,9 +147,6 @@ class AsyncChat:
             self._completions = AsyncCompletions(self._client)
         return self._completions
 
-    def __getattr__(self, name: str) -> Any:
-        return getattr(self.completions, name)
-
 
 class Chat:
     def __init__(self, client: ClientBase):
@@ -184,6 +158,3 @@ class Chat:
         if self._completions is None:
             self._completions = SyncCompletions(self._client)
         return self._completions
-
-    def __getattr__(self, name: str) -> Any:
-        return getattr(self.completions, name)

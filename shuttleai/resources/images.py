@@ -1,16 +1,11 @@
 from typing import Optional
 
 from shuttleai.client.base import ClientBase
-from shuttleai.exceptions import ShuttleAIException
+from shuttleai.resources._resource import AsyncResource, SyncResource
 from shuttleai.schemas.images_generations import ImagesGenerationResponse
 
 
-class BaseGenerations:
-    def __init__(self, client: ClientBase):
-        self._client = client
-
-
-class AsyncGenerations(BaseGenerations):
+class AsyncGenerations(AsyncResource):
     async def generate(
         self,
         prompt: str,
@@ -21,17 +16,15 @@ class AsyncGenerations(BaseGenerations):
             model,
         )
 
-        single_response = self._client._request(
-            "post", request, "v1/images/generations"
+        return await self.handle_request( # type: ignore
+            method="post",
+            endpoint="v1/images/generations",
+            request_data=request,
+            response_cls=ImagesGenerationResponse,
         )
 
-        async for response in single_response:
-            return ImagesGenerationResponse(**response)
 
-        raise ShuttleAIException("No response received")
-
-
-class SyncGenerations(BaseGenerations):
+class SyncGenerations(SyncResource):
     def generate(
         self,
         prompt: str,
@@ -42,14 +35,12 @@ class SyncGenerations(BaseGenerations):
             model,
         )
 
-        single_response = self._client._request(
-            "post", request, "v1/images/generations"
+        return self.handle_request( # type: ignore
+            method="post",
+            endpoint="v1/images/generations",
+            request_data=request,
+            response_cls=ImagesGenerationResponse,
         )
-
-        for response in single_response:
-            return ImagesGenerationResponse(**response)
-
-        raise ShuttleAIException("No response received")
 
 
 class Images:
