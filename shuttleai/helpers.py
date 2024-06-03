@@ -4,6 +4,14 @@ from typing import Callable, Literal, Type, get_type_hints
 
 
 def _get_type_name(t: Type) -> str:
+    """Gets the name of a type, handling some edge cases like Literal types
+
+    Args:
+        t (Type): The type to get the name of
+
+    Returns:
+        str: The name of the type
+    """
     if hasattr(t, "__name__"):
         return t.__name__
     if hasattr(t, "_name"):
@@ -13,6 +21,14 @@ def _get_type_name(t: Type) -> str:
 
 
 def serialize_function_to_json(func: Callable) -> dict:
+    """Serializes a python callable function to a function schema JSON spec
+
+    Args:
+        func (Callable): The function to serialize
+
+    Returns:
+        dict: The serialized function schema JSON spec
+    """
     signature = inspect.signature(func)
     type_hints = get_type_hints(func)
     params = signature.parameters
@@ -32,7 +48,7 @@ def serialize_function_to_json(func: Callable) -> dict:
 
     required_params = [name for name, param in params.items() if param.default == inspect.Parameter.empty]
     if required_params:
-        function_info["parameters"]["required"] = required_params
+        function_info["parameters"]["required"] = required_params # type: ignore
 
     for name, _ in params.items():
         param_type = _get_type_name(type_hints.get(name, type(None)))
@@ -44,12 +60,20 @@ def serialize_function_to_json(func: Callable) -> dict:
         if isinstance(type_hints.get(name), type(Literal)):
             param_info["enum"] = list(type_hints[name].__args__)
             param_info["type"] = "string"
-        function_info["parameters"]["properties"][name] = param_info
+        function_info["parameters"]["properties"][name] = param_info # type: ignore
 
     return function_info
 
 
 def deserialize_function_from_json(json_obj: dict) -> Callable:
+    """Deserializes a function schema JSON spec to a python callable function
+
+    Args:
+        json_obj (dict): The function schema JSON spec
+
+    Returns:
+        Callable: The deserialized python callable function
+    """
     func_name = json_obj["name"]
     func_docstring = json_obj["description"]
 
@@ -69,7 +93,7 @@ def deserialize_function_from_json(json_obj: dict) -> Callable:
     param_docstring = "\n".join([f":param {name}: {desc}" for name, desc in param_docstrings.items()])
     full_docstring = f"{func_docstring}\n{param_docstring}"
 
-    def func(*args, **kwargs):
+    def func(*args, **kwargs): # type: ignore
         real_func = globals()[func_name]
         return real_func(*args, **kwargs)
 
@@ -80,7 +104,14 @@ def deserialize_function_from_json(json_obj: dict) -> Callable:
     return func
 
 def convert_function_json_to_tool_json(json_obj: dict) -> dict:
-    """Converts a serialized function JSON object to a tool JSON object"""
+    """Converts a serialized function JSON object to a tool JSON SPEC
+
+    Args:
+        json_obj (dict): The serialized function JSON object
+
+    Returns:
+        dict: The tool JSON SPEC object
+    """
     return {
         "type": "function",
         "function": json_obj

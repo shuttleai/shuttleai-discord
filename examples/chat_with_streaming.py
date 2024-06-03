@@ -14,7 +14,6 @@ def main() -> None:
     )
 
     for chat in response:
-        chat: ChatCompletionStreamResponse # type hint for IDEs (only necessary for sync stream? # TODO: fix)
         print(chat.choices[0].delta.content or "", end="", flush=True)
 
 

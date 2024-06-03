@@ -4,17 +4,16 @@ from abc import ABC
 from typing import Any, Dict, List, Optional, Union
 
 import orjson
-from aiohttp import ClientTimeout
-from httpx import Timeout
 
 from shuttleai import __version__
+from shuttleai._types import TimeoutTypes
 from shuttleai.exceptions import ShuttleAIException
 from shuttleai.schemas.chat_completion import ChatMessage, Function, ToolChoice
 
 
 class ClientBase(ABC):  # noqa: B024
 
-    _timeout: Union[Timeout, ClientTimeout, float, int]
+    _timeout: TimeoutTypes
     _api_key: Optional[str]
     _base_url: str
     _logger: logging.Logger
@@ -26,7 +25,7 @@ class ClientBase(ABC):  # noqa: B024
         self,
         base_url: str,
         api_key: Optional[str] = None,
-        timeout: Union[Timeout, ClientTimeout, float, int] = 120.0,
+        timeout: TimeoutTypes = 120.0,
     ):
         self._timeout = timeout
         self._api_key = api_key or os.getenv("SHUTTLEAI_API_KEY")
@@ -39,11 +38,20 @@ class ClientBase(ABC):  # noqa: B024
         self._version = __version__
 
         if "shuttleai.app" not in self._base_url:
-            self._logger.warning(
-                "You are using a non-ShuttleAI URL. \
-                This is not recommended and may lead to malfunctions. \
-                Your data could potentially be at risk since you are using a 3rd party."
-            )
+            if "api.openai.com" not in self._base_url:
+                self._logger.warning(
+                    "You are using an **unofficial, unverified** non-ShuttleAI URL. \
+                    This is not recommended and may lead to malfunctions. \
+                    Your data could be at risk since you are using a 3rd party. \
+                    Please use the official ShuttleAI API URL: https://api.shuttleai.app/v1"
+                )
+            else:
+                self._logger.warning(
+                    "You are using the official, verified OpenAI API URL. \
+                    This library is not meant to replace the OpenAI SDK. \
+                    If you wish to use the OpenAI API, consider using their SDK respectively. \
+                    Otherwise, please use the official ShuttleAI API URL: https://api.shuttleai.app/v1"
+                )
             self._default_chat_model = "gpt-3.5-turbo"
             self._default_image_model = "dall-e-2"
 
@@ -105,7 +113,7 @@ class ClientBase(ABC):  # noqa: B024
             request_data["tool_choice"] = self._parse_tool_choice(tool_choice)
         if stream:
             request_data["stream"] = stream
-        request_data.update(self._build_sampling_params(temperature, max_tokens, top_p))
+        request_data.update(self._build_sampling_params(max_tokens, temperature, top_p))
         return self._make_request("chat", request_data)
 
     def _make_image_request(
@@ -120,7 +128,7 @@ class ClientBase(ABC):  # noqa: B024
             request_data["model"] = model
         return self._make_request("image", request_data)
 
-    def _process_line(self, line: Union[str, bytes]) -> Optional[Dict[str, Any]]:
+    def _process_line(self, line: Union[str, bytes]) -> Optional[Dict[str, Any] | Any]:
         line = line.encode("utf-8") if isinstance(line, str) else line
         if line.startswith(b"data: "):
             line = line[6:].strip()

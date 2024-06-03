@@ -38,7 +38,7 @@ exclude = ["docs", "tests", "examples", "tools", "build"]
 python = "^3.9"
 aiohttp = "^3.9.5"
 orjson = "^3.10.3"
-pydantic = "^2.7.2"
+pydantic = "^2.7.3"
 httpx = ">= 0.25.2, < 1"
 python-dateutil = "^2.9.0.post0"
 

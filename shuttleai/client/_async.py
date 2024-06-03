@@ -8,6 +8,7 @@ import pydantic_core
 from aiohttp import ClientTimeout
 
 from shuttleai import resources
+from shuttleai._types import DEFAULT_AIOTTP_TIMEOUT, AIOHTTPTimeoutTypes
 from shuttleai.client.base import ClientBase
 from shuttleai.exceptions import (
     ShuttleAIAPIException,
@@ -26,18 +27,18 @@ class ShuttleAIAsyncClient(ClientBase):
         self,
         api_key: Optional[str] = None,
         base_url: str = "https://api.shuttleai.app",
-        timeout: int | ClientTimeout | float = 120,
+        timeout: AIOHTTPTimeoutTypes = DEFAULT_AIOTTP_TIMEOUT,
         session: Optional[aiohttp.ClientSession] = None,
     ):
         super().__init__(base_url, api_key, timeout)
 
-        self._timeout = ClientTimeout(total=float(timeout))
+        self._timeout = timeout if isinstance(timeout, ClientTimeout) else ClientTimeout(total=timeout)
 
         self._session: Optional[aiohttp.ClientSession] = None
         if session:
             self._session = session
 
-        self.chat: resources.Chat = resources.Chat(self)
+        self.chat: resources.AsyncChat = resources.AsyncChat(self)
         self.images: resources.Images = resources.Images(self)
 
     async def __aenter__(

@@ -1,7 +1,7 @@
 from enum import Enum
-from typing import List, Optional, Union
+from typing import Annotated, List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from shuttleai.schemas.common import UsageInfo
 
@@ -73,6 +73,15 @@ class ChatCompletionResponseChoice(BaseModel):
     finish_reason: Optional[FinishReason]
 
 
+class ShuttleAIMeta(BaseModel):
+
+    id: str
+    """The ID of the request."""
+
+    p: str
+    """The ID of the provider that processed the request."""
+
+
 class ChatCompletionResponse(BaseModel):
     id: str
     object: str
@@ -80,3 +89,15 @@ class ChatCompletionResponse(BaseModel):
     model: str
     choices: List[ChatCompletionResponseChoice]
     usage: UsageInfo
+    x_sai: Annotated[
+        ShuttleAIMeta,
+        Field(alias="x-sai", alias_priority=1, examples=[{"id": "req_123abc", "p": "p_123abc"}])
+    ]
+
+    @property
+    def xsai(self) -> ShuttleAIMeta:
+        return self.x_sai
+
+    @property
+    def meta(self) -> ShuttleAIMeta:
+        return self.x_sai

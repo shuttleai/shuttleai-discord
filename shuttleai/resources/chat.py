@@ -19,7 +19,7 @@ class AsyncCompletions(BaseCompletions):
     @overload
     async def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -33,7 +33,7 @@ class AsyncCompletions(BaseCompletions):
     @overload
     async def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -46,7 +46,7 @@ class AsyncCompletions(BaseCompletions):
 
     async def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -70,8 +70,8 @@ class AsyncCompletions(BaseCompletions):
             response = self._client._request("post", request, "v1/chat/completions", stream=True)
             return (ChatCompletionStreamResponse(**json_streamed_response) async for json_streamed_response in response)
         else:
-            single_response = self._client._request("post", request, "v1/chat/completions")
-            async for response in single_response:
+            single_response = await self._client._request("post", request, "v1/chat/completions")
+            for response in single_response:
                 return ChatCompletionResponse(**response)
 
             raise ShuttleAIException("No response received")
@@ -81,7 +81,7 @@ class SyncCompletions(BaseCompletions):
     @overload
     def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -95,7 +95,7 @@ class SyncCompletions(BaseCompletions):
     @overload
     def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -108,7 +108,7 @@ class SyncCompletions(BaseCompletions):
 
     def create(
         self,
-        messages: List[Union[ChatMessage, Dict[str, Any]]],
+        messages: Union[List[ChatMessage], List[Dict[str, Any]]],
         model: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
@@ -139,29 +139,31 @@ class SyncCompletions(BaseCompletions):
             raise ShuttleAIException("No response received")
 
 
-class Chat:
+class AsyncChat:
     def __init__(self, client: ClientBase):
-        self._completions: Optional[Union[AsyncCompletions, SyncCompletions]] = None
+        self._completions: Optional[AsyncCompletions] = None
         self._client = client
 
     @property
-    def completions(self) -> Union[AsyncCompletions, SyncCompletions, None]:
+    def completions(self) -> AsyncCompletions:
         if self._completions is None:
-            from shuttleai.client import ShuttleAIAsyncClient, ShuttleAIClient
-            if isinstance(self._client, ShuttleAIAsyncClient):
-                self._completions = AsyncCompletions(self._client)
-            elif isinstance(self._client, ShuttleAIClient):
-                self._completions = SyncCompletions(self._client)
+            self._completions = AsyncCompletions(self._client)
         return self._completions
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self.completions, name)
 
-    def __dir__(self) -> List[str]:
-        return dir(self.completions)
 
-    def __repr__(self) -> str:
-        return repr(self.completions)
+class Chat:
+    def __init__(self, client: ClientBase):
+        self._completions: Optional[SyncCompletions] = None
+        self._client = client
 
-    def __str__(self) -> str:
-        return str(self.completions)
+    @property
+    def completions(self) -> SyncCompletions:
+        if self._completions is None:
+            self._completions = SyncCompletions(self._client)
+        return self._completions
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.completions, name)

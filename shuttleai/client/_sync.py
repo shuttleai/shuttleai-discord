@@ -4,9 +4,10 @@ from typing import Any, Dict, Iterator, Optional, Type, Union
 
 import orjson
 import pydantic_core
-from httpx import Client, ConnectError, RequestError, Response, Timeout
+from httpx import Client, ConnectError, RequestError, Response
 
 from shuttleai import resources
+from shuttleai._types import DEFAULT_HTTPX_TIMEOUT, HTTPXTimeoutTypes
 from shuttleai.client.base import ClientBase
 from shuttleai.exceptions import (
     ShuttleAIAPIException,
@@ -25,23 +26,23 @@ class ShuttleAIClient(ClientBase):
         self,
         api_key: Optional[str] = None,
         base_url: str = "https://api.shuttleai.app",
-        timeout: Timeout | float | int = 120,
-        client: Optional[Client] = None,
+        timeout: HTTPXTimeoutTypes = DEFAULT_HTTPX_TIMEOUT,
+        http_client: Optional[Client] = None,
     ):
         super().__init__(base_url, api_key, timeout)
 
-        if client:
-            self._client = client
+        if http_client:
+            self._http_client = http_client
         else:
-            self._client = Client(
-                follow_redirects=True, timeout=self._timeout
+            self._http_client = Client(
+                follow_redirects=True, timeout=timeout
             )
 
         self.chat: resources.Chat = resources.Chat(self)
         self.images: resources.Images = resources.Images(self, async_mode=False)
 
     def __del__(self) -> None:
-        self._client.close()
+        self._http_client.close()
 
     def _check_response_status_codes(self, response: Response) -> None:
         if response.status_code in {429, 500, 502, 503, 504}:
@@ -98,7 +99,7 @@ class ShuttleAIClient(ClientBase):
 
         try:
             if stream:
-                with self._client.stream(
+                with self._http_client.stream(
                     method,
                     url,
                     headers=headers,
@@ -112,7 +113,7 @@ class ShuttleAIClient(ClientBase):
                             yield json_streamed_response
 
             else:
-                response = self._client.request(
+                response = self._http_client.request(
                     method,
                     url,
                     headers=headers,
