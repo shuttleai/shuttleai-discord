@@ -67,7 +67,6 @@ class ProxyCard(BaseModel):
     proxy_to: str
     """The model ID that the proxy points to."""
 
-
     @property
     def parent(self) -> BaseModelCard | str:
         """The parent model card that the proxy points to."""

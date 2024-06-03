@@ -15,13 +15,19 @@ from shuttleai.exceptions import (
     ShuttleAIConnectionException,
     ShuttleAIException,
 )
-from shuttleai.schemas.models.models import BaseModelCard, ListModelsResponse, ListVerboseModelsResponse, ProxyCard
+from shuttleai.schemas.models.models import (
+    BaseModelCard,
+    ListModelsResponse,
+    ListVerboseModelsResponse,
+    ProxyCard,
+)
 
 
 class ShuttleAIClient(ClientBase):
     """
     Synchronous wrapper for the ShuttleAI API
     """
+
     def __init__(
         self,
         api_key: Optional[str] = None,
@@ -34,12 +40,10 @@ class ShuttleAIClient(ClientBase):
         if http_client:
             self._http_client = http_client
         else:
-            self._http_client = Client(
-                follow_redirects=True, timeout=timeout
-            )
+            self._http_client = Client(follow_redirects=True, timeout=timeout)
 
         self.chat: resources.Chat = resources.Chat(self)
-        self.images: resources.Images = resources.Images(self, async_mode=False)
+        self.images: resources.Images = resources.Images(self)
 
     def __del__(self) -> None:
         self._http_client.close()
@@ -81,7 +85,9 @@ class ShuttleAIClient(ClientBase):
         path: str,
         stream: bool = False,
     ) -> Iterator[Dict[str, Any]]:
-        json: bytes | None = orjson.dumps(json) if json and len(json) > 0 else None # x-sai [dict to bytes]
+        json: bytes | None = (
+            orjson.dumps(json) if json and len(json) > 0 else None
+        )  # x-sai [dict to bytes]
 
         accept_header = "text/event-stream" if stream else "application/json"
         headers = {
@@ -125,14 +131,18 @@ class ShuttleAIClient(ClientBase):
         except ConnectError as e:
             raise ShuttleAIConnectionException(str(e)) from e
         except RequestError as e:
-            raise ShuttleAIException(f"Unexpected exception ({e.__class__.__name__}): {e}") from e
+            raise ShuttleAIException(
+                f"Unexpected exception ({e.__class__.__name__}): {e}"
+            ) from e
         except JSONDecodeError as e:
             raise ShuttleAIAPIException.from_response(
                 response,
                 message=f"Failed to decode json body: {response.text}",
             ) from e
         except ShuttleAIAPIStatusException as e:
-            raise ShuttleAIAPIStatusException.from_response(response, message=str(e)) from e
+            raise ShuttleAIAPIStatusException.from_response(
+                response, message=str(e)
+            ) from e
 
     def fetch_model(self, model_id: str) -> BaseModelCard:
         """Fetches a model by its ID
@@ -157,18 +167,22 @@ class ShuttleAIClient(ClientBase):
         """
         return self._fetch_and_process_models("v1/models", ListModelsResponse)
 
-    def list_models_verbose(self) -> Union[ListVerboseModelsResponse, ListModelsResponse]:
+    def list_models_verbose(
+        self,
+    ) -> Union[ListVerboseModelsResponse, ListModelsResponse]:
         """Returns a list of the available models with verbose information
 
         Returns:
             ListVerboseModelsResponse: A response object containing the list of models.
         """
-        return self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
+        return self._fetch_and_process_models(
+            "v1/models/verbose", ListVerboseModelsResponse
+        )
 
     def _fetch_and_process_models(
         self,
         endpoint: str,
-        response_class: Type[Union[ListModelsResponse, ListVerboseModelsResponse]]
+        response_class: Type[Union[ListModelsResponse, ListVerboseModelsResponse]],
     ) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
         singleton_response = self._request("get", {}, endpoint)
         try:

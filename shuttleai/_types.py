@@ -12,12 +12,6 @@ HTTPXTimeoutTypes = Union[
     "Timeout",
 ]
 
-AIOHTTPTimeoutTypes = Union[
-    float,
-    "ClientTimeout"
-]
+AIOHTTPTimeoutTypes = Union[float, "ClientTimeout"]
 
-TimeoutTypes = Union[
-    HTTPXTimeoutTypes,
-    AIOHTTPTimeoutTypes
-]
+TimeoutTypes = Union[HTTPXTimeoutTypes, AIOHTTPTimeoutTypes]

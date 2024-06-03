@@ -5,8 +5,8 @@ from pydantic import BaseModel
 
 class Image(BaseModel):
 
-        url: str
-        """The URL of the image."""
+    url: str
+    """The URL of the image."""
 
 
 ListImageChoicesData = List[Image]

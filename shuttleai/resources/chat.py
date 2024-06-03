@@ -1,4 +1,14 @@
-from typing import Any, AsyncIterable, Dict, Iterable, List, Literal, Optional, Union, overload
+from typing import (
+    Any,
+    AsyncIterable,
+    Dict,
+    Iterable,
+    List,
+    Literal,
+    Optional,
+    Union,
+    overload,
+)
 
 from shuttleai.client.base import ClientBase
 from shuttleai.exceptions import ShuttleAIException
@@ -26,9 +36,8 @@ class AsyncCompletions(BaseCompletions):
         max_tokens: Optional[int] = None,
         top_p: Optional[float] = None,
         tool_choice: Optional[Union[str, ToolChoice]] = None,
-        stream: Literal[False] = False
-    ) -> ChatCompletionResponse:
-        ...
+        stream: Literal[False] = False,
+    ) -> ChatCompletionResponse: ...
 
     @overload
     async def create(
@@ -40,9 +49,8 @@ class AsyncCompletions(BaseCompletions):
         max_tokens: Optional[int] = None,
         top_p: Optional[float] = None,
         tool_choice: Optional[Union[str, ToolChoice]] = None,
-        stream: Literal[True] = True
-    ) -> AsyncIterable[ChatCompletionStreamResponse]:
-        ...
+        stream: Literal[True] = True,
+    ) -> AsyncIterable[ChatCompletionStreamResponse]: ...
 
     async def create(
         self,
@@ -53,7 +61,7 @@ class AsyncCompletions(BaseCompletions):
         max_tokens: Optional[int] = None,
         top_p: Optional[float] = None,
         tool_choice: Optional[Union[str, ToolChoice]] = None,
-        stream: bool = False
+        stream: bool = False,
     ) -> Union[ChatCompletionResponse, AsyncIterable[ChatCompletionStreamResponse]]:
         request = self._client._make_chat_request(
             messages,
@@ -67,10 +75,17 @@ class AsyncCompletions(BaseCompletions):
         )
 
         if stream:
-            response = self._client._request("post", request, "v1/chat/completions", stream=True)
-            return (ChatCompletionStreamResponse(**json_streamed_response) async for json_streamed_response in response)
+            response = self._client._request(
+                "post", request, "v1/chat/completions", stream=True
+            )
+            return (
+                ChatCompletionStreamResponse(**json_streamed_response)
+                async for json_streamed_response in response
+            )
         else:
-            single_response = await self._client._request("post", request, "v1/chat/completions")
+            single_response = await self._client._request(
+                "post", request, "v1/chat/completions"
+            )
             for response in single_response:
                 return ChatCompletionResponse(**response)
 
@@ -88,9 +103,8 @@ class SyncCompletions(BaseCompletions):
         max_tokens: Optional[int] = None,
         top_p: Optional[float] = None,
         tool_choice: Optional[Union[str, ToolChoice]] = None,
-        stream: Literal[False] = False
-    ) -> ChatCompletionResponse:
-        ...
+        stream: Literal[False] = False,
+    ) -> ChatCompletionResponse: ...
 
     @overload
     def create(
@@ -102,9 +116,8 @@ class SyncCompletions(BaseCompletions):
         max_tokens: Optional[int] = None,
         top_p: Optional[float] = None,
         tool_choice: Optional[Union[str, ToolChoice]] = None,
-        stream: Literal[True] = True
-    ) -> Iterable[ChatCompletionStreamResponse]:
-        ...
+        stream: Literal[True] = True,
+    ) -> Iterable[ChatCompletionStreamResponse]: ...
 
     def create(
         self,
@@ -115,7 +128,7 @@ class SyncCompletions(BaseCompletions):
         max_tokens: Optional[int] = None,
         top_p: Optional[float] = None,
         tool_choice: Optional[Union[str, ToolChoice]] = None,
-        stream: bool = False
+        stream: bool = False,
     ) -> Union[ChatCompletionResponse, Iterable[ChatCompletionStreamResponse]]:
         request = self._client._make_chat_request(
             messages,
@@ -129,10 +142,17 @@ class SyncCompletions(BaseCompletions):
         )
 
         if stream:
-            response = self._client._request("post", request, "v1/chat/completions", stream=True)
-            return (ChatCompletionStreamResponse(**json_streamed_response) for json_streamed_response in response)
+            response = self._client._request(
+                "post", request, "v1/chat/completions", stream=True
+            )
+            return (
+                ChatCompletionStreamResponse(**json_streamed_response)
+                for json_streamed_response in response
+            )
         else:
-            single_response = self._client._request("post", request, "v1/chat/completions")
+            single_response = self._client._request(
+                "post", request, "v1/chat/completions"
+            )
             for response in single_response:
                 return ChatCompletionResponse(**response)
 

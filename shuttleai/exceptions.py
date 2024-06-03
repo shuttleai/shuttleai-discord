@@ -36,10 +36,20 @@ class ShuttleAIAPIException(ShuttleAIException):
         self.headers = headers or {}
 
     @classmethod
-    def from_response(cls, response: Response | ClientResponse, message: Optional[str] = None) -> ShuttleAIAPIException:
+    def from_response(
+        cls, response: Response | ClientResponse, message: Optional[str] = None
+    ) -> ShuttleAIAPIException:
         return cls(
-            message=message or response.text if isinstance(response, Response) else response.reason,
-            http_status=response.status_code if isinstance(response, Response) else response.status
+            message=(
+                message or response.text
+                if isinstance(response, Response)
+                else response.reason
+            ),
+            http_status=(
+                response.status_code
+                if isinstance(response, Response)
+                else response.status
+            ),
         )
 
     def __repr__(self) -> str:

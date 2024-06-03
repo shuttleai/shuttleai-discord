@@ -154,8 +154,7 @@ To see this help: /help
         logger.debug("Exiting chatbot")
         sys.exit(0)
 
-
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(description="A simple chatbot using the ShuttleAI API")
     parser.add_argument(
         "--api-key",
@@ -196,3 +195,6 @@ if __name__ == "__main__":
     except Exception as e:
         logger.error(e)
         sys.exit(1)
+
+if __name__ == "__main__":
+    main()

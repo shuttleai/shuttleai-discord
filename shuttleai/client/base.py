@@ -30,7 +30,9 @@ class ClientBase(ABC):  # noqa: B024
         self._timeout = timeout
         self._api_key = api_key or os.getenv("SHUTTLEAI_API_KEY")
         if not self._api_key:
-            raise ShuttleAIException("API key not provided. Please set SHUTTLEAI_API_KEY environment variable.")
+            raise ShuttleAIException(
+                "API key not provided. Please set SHUTTLEAI_API_KEY environment variable."
+            )
         self._base_url = base_url
         self._logger = logging.getLogger(__name__)
         self._default_chat_model = "shuttle-2-turbo"
@@ -55,7 +57,9 @@ class ClientBase(ABC):  # noqa: B024
             self._default_chat_model = "gpt-3.5-turbo"
             self._default_image_model = "dall-e-2"
 
-        self._logger.info(f"ShuttleAI API client initialized with base URL: {self._base_url}")
+        self._logger.info(
+            f"ShuttleAI API client initialized with base URL: {self._base_url}"
+        )
 
     def _build_sampling_params(
         self,
@@ -64,16 +68,27 @@ class ClientBase(ABC):  # noqa: B024
         top_p: Optional[float],
     ) -> Dict[str, Any]:
         return {
-            k: v for k, v in {
-                "temperature": temperature, "max_tokens": max_tokens, "top_p": top_p
-            }.items() if v is not None
+            k: v
+            for k, v in {
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+                "top_p": top_p,
+            }.items()
+            if v is not None
         }
 
     def _parse_tools(self, tools: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         return [
-            {"type": tool["type"], "function": tool["function"].model_dump(exclude_none=True)
-             if isinstance(tool["function"], Function) else tool["function"]}
-            for tool in tools if tool["type"] == "function"
+            {
+                "type": tool["type"],
+                "function": (
+                    tool["function"].model_dump(exclude_none=True)
+                    if isinstance(tool["function"], Function)
+                    else tool["function"]
+                ),
+            }
+            for tool in tools
+            if tool["type"] == "function"
         ]
 
     def _parse_tool_choice(self, tool_choice: Union[str, ToolChoice]) -> str:
@@ -81,11 +96,17 @@ class ClientBase(ABC):  # noqa: B024
 
     def _parse_messages(self, messages: List[Any]) -> List[Dict[str, Any]]:
         return [
-            message.model_dump(exclude_none=True) if isinstance(message, ChatMessage) else message
+            (
+                message.model_dump(exclude_none=True)
+                if isinstance(message, ChatMessage)
+                else message
+            )
             for message in messages
         ]
 
-    def _make_request(self, endpoint: str, request_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _make_request(
+        self, endpoint: str, request_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         if "model" not in request_data:
             request_data["model"] = getattr(self, f"_default_{endpoint}_model")
         self._logger.debug(f"{endpoint.capitalize()} request: {request_data}")
@@ -117,9 +138,7 @@ class ClientBase(ABC):  # noqa: B024
         return self._make_request("chat", request_data)
 
     def _make_image_request(
-        self,
-        prompt: str,
-        model: Optional[str] = None
+        self, prompt: str, model: Optional[str] = None
     ) -> Dict[str, Any]:
         request_data: Dict[str, Any] = {
             "prompt": prompt,

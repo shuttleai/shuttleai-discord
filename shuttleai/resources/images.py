@@ -5,12 +5,12 @@ from shuttleai.exceptions import ShuttleAIException
 from shuttleai.schemas.images_generations import ImagesGenerationResponse
 
 
-class BaseImages:
+class BaseGenerations:
     def __init__(self, client: ClientBase):
         self._client = client
 
 
-class AsyncImages(BaseImages):
+class AsyncGenerations(BaseGenerations):
     async def generate(
         self,
         prompt: str,
@@ -21,7 +21,9 @@ class AsyncImages(BaseImages):
             model,
         )
 
-        single_response = self._client._request("post", request, "v1/images/generations")
+        single_response = self._client._request(
+            "post", request, "v1/images/generations"
+        )
 
         async for response in single_response:
             return ImagesGenerationResponse(**response)
@@ -29,28 +31,46 @@ class AsyncImages(BaseImages):
         raise ShuttleAIException("No response received")
 
 
-class SyncImages(BaseImages):
-        def generate(
-            self,
-            prompt: str,
-            model: Optional[str] = None,
-        ) -> ImagesGenerationResponse:
-            request = self._client._make_image_request(
-                prompt,
-                model,
-            )
+class SyncGenerations(BaseGenerations):
+    def generate(
+        self,
+        prompt: str,
+        model: Optional[str] = None,
+    ) -> ImagesGenerationResponse:
+        request = self._client._make_image_request(
+            prompt,
+            model,
+        )
 
-            single_response = self._client._request("post", request, "v1/images/generations")
+        single_response = self._client._request(
+            "post", request, "v1/images/generations"
+        )
 
-            for response in single_response:
-                return ImagesGenerationResponse(**response)
+        for response in single_response:
+            return ImagesGenerationResponse(**response)
 
-            raise ShuttleAIException("No response received")
+        raise ShuttleAIException("No response received")
 
 
 class Images:
-    def __init__(self, client: ClientBase, async_mode: bool = True):
-        if async_mode:
-            self._client = AsyncImages(client)
-        else:
-            self._client = SyncImages(client)
+    def __init__(self, client: ClientBase):
+        self._generations: Optional[SyncGenerations] = None
+        self._client = client
+
+    @property
+    def generations(self) -> SyncGenerations:
+        if self._generations is None:
+            self._generations = SyncGenerations(self._client)
+        return self._generations
+
+
+class AsyncImages:
+    def __init__(self, client: ClientBase):
+        self._generations: Optional[AsyncGenerations] = None
+        self._client = client
+
+    @property
+    def generations(self) -> AsyncGenerations:
+        if self._generations is None:
+            self._generations = AsyncGenerations(self._client)
+        return self._generations

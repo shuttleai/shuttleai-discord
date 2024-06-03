@@ -91,7 +91,11 @@ class ChatCompletionResponse(BaseModel):
     usage: UsageInfo
     x_sai: Annotated[
         ShuttleAIMeta,
-        Field(alias="x-sai", alias_priority=1, examples=[{"id": "req_123abc", "p": "p_123abc"}])
+        Field(
+            alias="x-sai",
+            alias_priority=1,
+            examples=[{"id": "req_123abc", "p": "p_123abc"}],
+        ),
     ]
 
     @property

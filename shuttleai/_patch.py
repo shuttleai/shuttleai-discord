@@ -12,7 +12,10 @@ def _patch_httpx():  # type: ignore
     from httpx._content import Any, ByteStream
 
     def encode_json(json: Any) -> tuple[dict[str, str], ByteStream]:
-        return {"Content-Length": str(len(json)), "Content-Type": "application/json"}, ByteStream(json)
+        return {
+            "Content-Length": str(len(json)),
+            "Content-Type": "application/json",
+        }, ByteStream(json)
 
     # This makes the above function look and act like the original.
     encode_json.__globals__.update(httpx._content.__dict__)
