@@ -75,5 +75,6 @@ export SHUTTLEAI_API_KEY=<your_api_key>
 ```
 
 ## Contribution
-We welcome contributions to the ShuttleAI API Python SDK.
+We welcome and appreciate contributions to the ShuttleAI API Python SDK.
 Please see the [contribution guide](CONTRIBUTING.md) for more information.
+*Benefits may apply! :smile:*
