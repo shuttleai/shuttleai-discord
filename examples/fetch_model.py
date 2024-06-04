@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 from shuttleai import ShuttleAIClient
 
 

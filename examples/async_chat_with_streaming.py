@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 import asyncio
 
 from shuttleai import ShuttleAIAsyncClient

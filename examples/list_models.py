@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 import random
 
 from shuttleai import ShuttleAIClient

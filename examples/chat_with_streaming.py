@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+
+
 from shuttleai import ShuttleAIClient
-from shuttleai.schemas.chat_completion import ChatCompletionStreamResponse, ChatMessage
+from shuttleai.schemas.chat_completion import ChatMessage
 
 
 def main() -> None:
