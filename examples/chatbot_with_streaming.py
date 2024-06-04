@@ -1,8 +1,9 @@
 import argparse
 import logging
 import os
+import readline
 import sys
-from typing import Dict, List, Optional, Union
+from typing import Dict, KeysView, List, Optional, Union
 
 from shuttleai import ShuttleAIClient
 from shuttleai.schemas.chat_completion import ChatMessage
@@ -28,6 +29,34 @@ COMMAND_LIST: Dict[str, Union[Dict[str, Dict], Dict]] = {
 logger = logging.getLogger("chatbot")
 
 
+def find_completions(
+    command_dict: Dict[str, Union[Dict[str, Dict], Dict]],
+    parts: list[str]
+) -> Union[KeysView[str], List[str]]:
+    if not parts:
+        return command_dict.keys()
+    if parts[0] in command_dict:
+        return find_completions(command_dict[parts[0]], parts[1:])
+    else:
+        return [cmd for cmd in command_dict if cmd.startswith(parts[0])]
+
+
+def completer(text: str, state: int) -> Optional[str]:
+    buffer = readline.get_line_buffer()  # type: ignore
+    line_parts = buffer.lstrip().split(" ")
+    options = find_completions(COMMAND_LIST, line_parts[:-1])
+
+    try:
+        return [option for option in options if option.startswith(line_parts[-1])][state]
+    except IndexError:
+        return None
+
+readline.set_completer(completer)  # type: ignore
+readline.set_completer_delims(" ")  # type: ignore
+# Enable tab completion
+readline.parse_and_bind("tab: complete")  # type: ignore
+
+
 class ChatBot:
     def __init__(self, api_key: str, model: str, system_message: Optional[str] = None):
         if not api_key:
@@ -47,6 +76,7 @@ To switch system message: /system <message>
 To see current config: /config
 To exit: /exit, /quit, or hit CTRL+C
 To see this help: /help
+HINT: We support TAB autocompletion for commands and model names!
 """
         )
 
