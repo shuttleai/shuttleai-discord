@@ -10,7 +10,7 @@ from shuttleai.helpers import (
     convert_function_json_to_tool_json,
     serialize_function_to_json,
 )
-from shuttleai.schemas.chat_completion import ChatMessage, FunctionCall
+from shuttleai.schemas.chat.completions import ChatMessage, FunctionCall
 
 
 def get_current_weather(location: str, unit: str = "fahrenheit") -> str:

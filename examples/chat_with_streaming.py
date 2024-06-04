@@ -2,7 +2,7 @@
 
 
 from shuttleai import ShuttleAIClient
-from shuttleai.schemas.chat_completion import ChatMessage
+from shuttleai.schemas.chat.completions import ChatMessage
 
 
 def main() -> None:

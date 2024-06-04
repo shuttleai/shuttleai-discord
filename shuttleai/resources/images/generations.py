@@ -2,7 +2,7 @@ from typing import Optional
 
 from shuttleai.client.base import ClientBase
 from shuttleai.resources._resource import AsyncResource, SyncResource
-from shuttleai.schemas.images_generations import ImagesGenerationResponse
+from shuttleai.schemas.images.generations import ImagesGenerationResponse
 
 
 class AsyncGenerations(AsyncResource):

@@ -8,7 +8,7 @@ import orjson
 from shuttleai import __version__
 from shuttleai._types import TimeoutTypes
 from shuttleai.exceptions import ShuttleAIException
-from shuttleai.schemas.chat_completion import ChatMessage, Function, ToolChoice
+from shuttleai.schemas.chat.completions import ChatMessage, Function, ToolChoice
 
 
 class ClientBase(ABC):  # noqa: B024
@@ -41,7 +41,7 @@ class ClientBase(ABC):  # noqa: B024
         self._base_url = base_url or os.getenv("SHUTTLEAI_API_BASE")
         if not self._base_url:
             self._base_url = "https://api.shuttleai.app"
-        # else: # TODO: uh, yeah, we might just follow the OpenAI SDK format, but for now, let's just keep it simple
+        # else: # TODO: uh, yeah, we might just follow the OpenAI SDK format, but for now, let's just keep as is
         #     self._base_url = self._base_url.rstrip("/v1")
 
         self.api_key = self._api_key

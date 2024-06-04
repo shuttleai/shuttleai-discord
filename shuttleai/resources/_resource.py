@@ -33,7 +33,7 @@ class SyncResource(BaseResource):
         response_cls: Type[BaseModel],
         stream: bool = False,
     ) -> Any:
-        assert issubclass(response_cls, BaseModel)
+        # assert issubclass(response_cls, BaseModel)
         response = self._client._request(  # type: ignore
             method=method,
             json=request_data,

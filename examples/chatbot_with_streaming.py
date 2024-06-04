@@ -9,7 +9,7 @@ import sys
 from typing import Dict, KeysView, List, Optional, Union
 
 from shuttleai import ShuttleAIClient
-from shuttleai.schemas.chat_completion import ChatMessage
+from shuttleai.schemas.chat.completions import ChatMessage
 
 MODEL_LIST: List[str] = [
     "shuttle-2-turbo",
