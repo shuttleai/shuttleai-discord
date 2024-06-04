@@ -46,11 +46,7 @@ def serialize_function_to_json(func: Callable) -> dict:
     param_desc_pattern = r":param\s+(\w+)\s*:(.*?)(?=:param|$)"
     param_descriptions = dict(re.findall(param_desc_pattern, docstring, re.DOTALL))
 
-    required_params = [
-        name
-        for name, param in params.items()
-        if param.default == inspect.Parameter.empty
-    ]
+    required_params = [name for name, param in params.items() if param.default == inspect.Parameter.empty]
     if required_params:
         function_info["parameters"]["required"] = required_params  # type: ignore
 
@@ -91,9 +87,7 @@ def deserialize_function_from_json(json_obj: dict) -> Callable:
             param_types[param_name] = str  # Fallback type if eval fails
         param_docstrings[param_name] = param_info["description"]
 
-    param_docstring = "\n".join(
-        [f":param {name}: {desc}" for name, desc in param_docstrings.items()]
-    )
+    param_docstring = "\n".join([f":param {name}: {desc}" for name, desc in param_docstrings.items()])
     full_docstring = f"{func_docstring}\n{param_docstring}"
 
     def func(*args, **kwargs):  # type: ignore

@@ -18,9 +18,7 @@ class SyncResource(BaseResource):
         for json_streamed_response in response:
             yield response_cls(**json_streamed_response)
 
-    def _no_stream_response(
-        self, response: Iterator[Dict[str, Any]], response_cls: Type[BaseModel]
-    ) -> BaseModel:
+    def _no_stream_response(self, response: Iterator[Dict[str, Any]], response_cls: Type[BaseModel]) -> BaseModel:
         for resp in response:
             return response_cls(**resp)
         raise ShuttleAIException("No response received")

@@ -34,9 +34,7 @@ class ClientBase(ABC):  # noqa: B024
         self._timeout = timeout
         self._api_key = api_key or os.getenv("SHUTTLEAI_API_KEY")
         if not self._api_key:
-            raise ShuttleAIException(
-                "API key not provided. Please set SHUTTLEAI_API_KEY environment variable."
-            )
+            raise ShuttleAIException("API key not provided. Please set SHUTTLEAI_API_KEY environment variable.")
 
         self._base_url = base_url or os.getenv("SHUTTLEAI_API_BASE")
         if not self._base_url:
@@ -72,9 +70,7 @@ class ClientBase(ABC):  # noqa: B024
             self._default_image_model = "dall-e-2"
             self._default_audio_speech_model = "whisper-1"
 
-        self._logger.info(
-            f"ShuttleAI API client initialized with base URL: {self._base_url}"
-        )
+        self._logger.info(f"ShuttleAI API client initialized with base URL: {self._base_url}")
 
     def _build_sampling_params(
         self,
@@ -111,17 +107,11 @@ class ClientBase(ABC):  # noqa: B024
 
     def _parse_messages(self, messages: List[Any]) -> List[Dict[str, Any]]:
         return [
-            (
-                message.model_dump(exclude_none=True)
-                if isinstance(message, ChatMessage)
-                else message
-            )
+            (message.model_dump(exclude_none=True) if isinstance(message, ChatMessage) else message)
             for message in messages
         ]
 
-    def _make_request(
-        self, endpoint: str, request_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _make_request(self, endpoint: str, request_data: Dict[str, Any]) -> Dict[str, Any]:
         if "model" not in request_data:
             request_data["model"] = getattr(self, f"_default_{endpoint}_model")
         self._logger.debug(f"{endpoint.capitalize()} request: {request_data}")
@@ -152,9 +142,7 @@ class ClientBase(ABC):  # noqa: B024
         request_data.update(self._build_sampling_params(max_tokens, temperature, top_p))
         return self._make_request("chat", request_data)
 
-    def _make_image_request(
-        self, prompt: str, model: Optional[str] = None
-    ) -> Dict[str, Any]:
+    def _make_image_request(self, prompt: str, model: Optional[str] = None) -> Dict[str, Any]:
         request_data: Dict[str, Any] = {
             "prompt": prompt,
         }

@@ -138,18 +138,14 @@ class ShuttleAIClient(ClientBase):
         except ConnectError as e:
             raise ShuttleAIConnectionException(str(e)) from e
         except RequestError as e:
-            raise ShuttleAIException(
-                f"Unexpected exception ({e.__class__.__name__}): {e}"
-            ) from e
+            raise ShuttleAIException(f"Unexpected exception ({e.__class__.__name__}): {e}") from e
         except JSONDecodeError as e:
             raise ShuttleAIAPIException.from_response(
                 response,
                 message=f"Failed to decode json body: {response.text}",
             ) from e
         except ShuttleAIAPIStatusException as e:
-            raise ShuttleAIAPIStatusException.from_response(
-                response, message=str(e)
-            ) from e
+            raise ShuttleAIAPIStatusException.from_response(response, message=str(e)) from e
 
     def fetch_model(self, model_id: str) -> BaseModelCard:
         """Fetches a model by its ID
@@ -182,9 +178,7 @@ class ShuttleAIClient(ClientBase):
         Returns:
             ListVerboseModelsResponse: A response object containing the list of models.
         """
-        return self._fetch_and_process_models(
-            "v1/models/verbose", ListVerboseModelsResponse
-        )
+        return self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
 
     def _fetch_and_process_models(
         self,

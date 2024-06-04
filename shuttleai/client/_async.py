@@ -39,11 +39,7 @@ class ShuttleAIAsyncClient(ClientBase):
     ):
         super().__init__(base_url, api_key, timeout)
 
-        self._timeout = (
-            timeout
-            if isinstance(timeout, ClientTimeout)
-            else ClientTimeout(total=timeout)
-        )
+        self._timeout = timeout if isinstance(timeout, ClientTimeout) else ClientTimeout(total=timeout)
 
         self._session: Optional[aiohttp.ClientSession] = None
         if session:
@@ -71,9 +67,7 @@ class ShuttleAIAsyncClient(ClientBase):
             await self._session.close()
             self._session = None
 
-    async def _check_response_status_codes(
-        self, response: aiohttp.ClientResponse
-    ) -> None:
+    async def _check_response_status_codes(self, response: aiohttp.ClientResponse) -> None:
         if response.status in {429, 500, 502, 503, 504}:
             raise ShuttleAIAPIStatusException.from_response(
                 response,
@@ -149,18 +143,14 @@ class ShuttleAIAsyncClient(ClientBase):
         except aiohttp.ClientConnectorError as e:
             raise ShuttleAIConnectionException(str(e)) from e
         except aiohttp.ClientError as e:
-            raise ShuttleAIException(
-                f"Unexpected exception ({e.__class__.__name__}): {e}"
-            ) from e
+            raise ShuttleAIException(f"Unexpected exception ({e.__class__.__name__}): {e}") from e
         except JSONDecodeError as e:
             raise ShuttleAIAPIException.from_response(
                 response,
                 message=f"Failed to decode json body: {await response.text()}",
             ) from e
         except ShuttleAIAPIStatusException as e:
-            raise ShuttleAIAPIStatusException.from_response(
-                response, message=str(e)
-            ) from e
+            raise ShuttleAIAPIStatusException.from_response(response, message=str(e)) from e
 
     async def fetch_model(self, model_id: str) -> BaseModelCard:
         """Fetches a model by its ID
@@ -193,9 +183,7 @@ class ShuttleAIAsyncClient(ClientBase):
         Returns:
             ListVerboseModelsResponse: A response object containing the list of models.
         """
-        return await self._fetch_and_process_models(
-            "v1/models/verbose", ListVerboseModelsResponse
-        )
+        return await self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
 
     async def _fetch_and_process_models(
         self,
@@ -204,9 +192,7 @@ class ShuttleAIAsyncClient(ClientBase):
     ) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
         singleton_response = self._request("get", {}, endpoint)
         try:
-            list_models_response = response_class(
-                **(await singleton_response.__anext__())
-            )
+            list_models_response = response_class(**(await singleton_response.__anext__()))
         except pydantic_core.ValidationError as e:
             raise ShuttleAIException("No response received") from e
 

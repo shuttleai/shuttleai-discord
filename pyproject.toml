@@ -27,7 +27,7 @@ line-length = 120
 extend-select = ["B"]
 
 [tool.black]
-line-length = 88
+line-length = 120
 target-version = ['py39']
 exclude = '''
 /(
@@ -75,7 +75,7 @@ pytest-asyncio = "^0.23.2"
 shuttleai = "examples.chatbot_with_streaming:main"
 clean = "etc.tools.clean:clean_all"
 key = "etc.tools.key:show_key"
-contributors = "etc.tools.contributors:main"
+contr = "etc.tools.contributors:main"
 
 [build-system]
 requires = ["poetry-core"]
