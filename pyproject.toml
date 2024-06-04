@@ -6,7 +6,7 @@ authors = ["Tristan Liu <tristan@shuttleai.app>", "Christian \"Thoth\" Heru <chr
 maintainers = ["Christian \"Thoth\" Heru <chris@shuttleai.app>"]
 homepage = "https://github.com/shuttleai"
 repository = "https://github.com/shuttleai/shuttleai-python"
-urls = { Documentation = "https://docs.shuttleai.app", Dashboard = "https://shuttleai.app", Discord = "https://discord.gg/shuttleai" }
+urls = { Documentation = "https://docs.shuttleai.app", Dashboard = "https://shuttleai.app", Discord = "https://discord.gg/shuttleai", PyPI = "https://pypi.org/project/shuttleai" }
 readme = "README.md"
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -62,6 +62,8 @@ python-dateutil = "^2.9.0.post0"
 matplotlib = "^3.9.0"
 pyreadline3 = "^3.4.1"
 aiofiles = "^23.2.1"
+types-aiofiles = "^23.2.0.20240403"
+poetry-version-plugin = "^0.2.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.6"
