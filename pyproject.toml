@@ -59,6 +59,7 @@ orjson = "^3.10.3"
 pydantic = "^2.7.3"
 httpx = ">= 0.25.2, < 1"
 python-dateutil = "^2.9.0.post0"
+matplotlib = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.6"
@@ -72,6 +73,7 @@ pytest-asyncio = "^0.23.2"
 shuttleai = "examples.chatbot_with_streaming:main"
 clean = "etc.tools.clean:clean_all"
 key = "etc.tools.key:show_key"
+contributors = "etc.tools.contributors:main"
 
 [build-system]
 requires = ["poetry-core"]
