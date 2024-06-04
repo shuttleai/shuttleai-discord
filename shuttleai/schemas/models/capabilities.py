@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class SupportsTools(BaseModel):
-
     regular: bool
     """Whether the model supports regular tool calling."""
 
@@ -16,7 +15,6 @@ class SupportsTools(BaseModel):
 
 
 class SupportsMaxTokens(BaseModel):
-
     input: int
     """The maximum number of tokens that can be input to the model."""
 
@@ -25,7 +23,6 @@ class SupportsMaxTokens(BaseModel):
 
 
 class Capabilities(BaseModel):
-
     supports_tools: Optional[SupportsTools] = None
     """The tool calling capabilities of the model."""
 

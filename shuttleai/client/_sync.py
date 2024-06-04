@@ -44,6 +44,7 @@ class ShuttleAIClient(ClientBase):
 
         self.chat: resources.Chat = resources.Chat(self)
         self.images: resources.Images = resources.Images(self)
+        self.audio: resources.Audio = resources.Audio(self)
 
     def __del__(self) -> None:
         self._http_client.close()
@@ -85,9 +86,17 @@ class ShuttleAIClient(ClientBase):
         path: str,
         stream: bool = False,
     ) -> Iterator[Dict[str, Any]]:
-        json_bytes: bytes | None = (
-            orjson.dumps(json) if json and len(json) > 0 else None
-        )  # x-sai [dict to bytes]
+        if json and len(json) > 0:
+            if "file" in json:
+                with open(json["file"], "rb") as f:
+                    json_bytes = f.read()
+            else:
+                json_bytes = orjson.dumps(json)
+        else:
+            json_bytes = None
+        # json_bytes: bytes | None = (
+        #     orjson.dumps(json) if json and len(json) > 0 else None
+        # )  # x-sai [dict to bytes]
 
         accept_header = "text/event-stream" if stream else "application/json"
         headers = {

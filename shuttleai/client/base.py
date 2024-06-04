@@ -12,13 +12,13 @@ from shuttleai.schemas.chat.completions import ChatMessage, Function, ToolChoice
 
 
 class ClientBase(ABC):  # noqa: B024
-
     _timeout: TimeoutTypes
     _api_key: Optional[str]
     _base_url: Optional[str]
     _logger: logging.Logger
     _default_chat_model: str
     _default_image_model: str
+    _default_audio_speech_model: str
     _version: str
 
     # client options
@@ -50,6 +50,7 @@ class ClientBase(ABC):  # noqa: B024
         self._logger = logging.getLogger(__name__)
         self._default_chat_model = "shuttle-2-turbo"
         self._default_image_model = "sdxl"
+        self._default_audio_speech_model = "eleven-labs"
         self._version = __version__
 
         if "shuttleai.app" not in self.base_url:
@@ -69,6 +70,7 @@ class ClientBase(ABC):  # noqa: B024
                 )
             self._default_chat_model = "gpt-3.5-turbo"
             self._default_image_model = "dall-e-2"
+            self._default_audio_speech_model = "whisper-1"
 
         self._logger.info(
             f"ShuttleAI API client initialized with base URL: {self._base_url}"
@@ -159,6 +161,33 @@ class ClientBase(ABC):  # noqa: B024
         if model:
             request_data["model"] = model
         return self._make_request("image", request_data)
+
+    def _make_audio_speech_request(
+        self,
+        prompt: str,
+        model: Optional[str] = None,
+        voice: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        request_data: Dict[str, Any] = {
+            "prompt": prompt,
+        }
+        if model:
+            request_data["model"] = model
+        if voice:
+            request_data["voice"] = voice
+        return self._make_request("audio_speech", request_data)
+
+    def _make_audio_trans_request(  # translations/transcriptions share similar request/response schemas
+        self,
+        file: str,
+        model: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        request_data: Dict[str, Any] = {
+            "file": file,
+        }
+        if model:
+            request_data["model"] = model
+        return self._make_request("audio_trans", request_data)
 
     def _process_line(self, line: Union[str, bytes]) -> Optional[Dict[str, Any] | Any]:
         line = line.encode("utf-8") if isinstance(line, str) else line

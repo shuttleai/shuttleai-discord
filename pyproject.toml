@@ -61,6 +61,7 @@ httpx = ">= 0.25.2, < 1"
 python-dateutil = "^2.9.0.post0"
 matplotlib = "^3.9.0"
 pyreadline3 = "^3.4.1"
+aiofiles = "^23.2.1"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.6"

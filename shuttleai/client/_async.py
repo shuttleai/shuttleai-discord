@@ -5,6 +5,7 @@ from typing import Any, AsyncIterator, Dict, Optional, Type, Union
 import aiohttp
 import orjson
 import pydantic_core
+from aiofiles import open as aopen
 from aiohttp import ClientTimeout
 
 from shuttleai import resources
@@ -50,6 +51,7 @@ class ShuttleAIAsyncClient(ClientBase):
 
         self.chat: resources.AsyncChat = resources.AsyncChat(self)
         self.images: resources.AsyncImages = resources.AsyncImages(self)
+        self.audio: resources.AsyncAudio = resources.AsyncAudio(self)
 
     async def __aenter__(self) -> "ShuttleAIAsyncClient":
         if self._session is None:
@@ -104,9 +106,18 @@ class ShuttleAIAsyncClient(ClientBase):
         if self._session is None:
             self._session = aiohttp.ClientSession(timeout=self._timeout)
 
-        json_bytes: bytes | None = (
-            orjson.dumps(json) if json and len(json) > 0 else None
-        )  # x-sai [dict to bytes]
+        if json and len(json) > 0:
+            if "file" in json:
+                async with aopen(json["file"], "rb") as f:
+                    json_bytes = await f.read()
+            else:
+                json_bytes = orjson.dumps(json)
+        else:
+            json_bytes = None
+
+        # json_bytes: bytes | None = (
+        #     orjson.dumps(json) if json and len(json) > 0 else None
+        # )  # x-sai [dict to bytes]
 
         accept_header = "text/event-stream" if stream else "application/json"
         headers = {

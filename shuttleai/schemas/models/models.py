@@ -15,7 +15,6 @@ class ModelType(str, Enum):
 
 
 class BaseModelCard(BaseModel):
-
     id: str
     """The ID of the model object."""
 
@@ -39,7 +38,6 @@ class BaseModelCard(BaseModel):
 
 
 class VerboseModelCard(BaseModelCard):
-
     name: str
     """The pretty name of the model."""
 
@@ -57,7 +55,6 @@ class VerboseModelCard(BaseModelCard):
 
 
 class ProxyCard(BaseModel):
-
     id: str
     """The ID of the proxy object."""
 
@@ -84,7 +81,6 @@ ListVerboseModelsData = List[Union[VerboseModelCard, ProxyCard]]
 
 
 class ListModelsResponse(BaseModel):
-
     object: str
     """The object type, which is always "list" for a list of model objects."""
 
@@ -96,7 +92,6 @@ class ListModelsResponse(BaseModel):
 
 
 class ListVerboseModelsResponse(BaseModel):
-
     object: str
     """The object type, which is always "list" for a list of model objects."""
 

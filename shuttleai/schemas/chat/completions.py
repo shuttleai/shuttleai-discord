@@ -74,7 +74,6 @@ class ChatCompletionResponseChoice(BaseModel):
 
 
 class ShuttleAIMeta(BaseModel):
-
     id: str
     """The ID of the request."""
 
