@@ -76,3 +76,18 @@ export SHUTTLEAI_API_KEY=<your_api_key>
 We welcome and appreciate contributions to the ShuttleAI API Python SDK.
 Please see the [contribution guide](CONTRIBUTING.md) for more information.
 *Benefits may apply! :smile:*
+
+## Scripts
+### Formatting/Checks
+- `poetry run ruff check shuttleai` - Check for code formatting issues
+- `poetry run black shuttleai --diff --color` - Check for code formatting issues
+- `poetry run black shuttleai` - Format code
+- `poetry run mypy shuttleai` - Check for type errors
+
+### Tools
+- `poetry run clean` - Clean up the project directory
+- `poetry run key` - Display your default API key (if set by environment variable)
+- `poetry run contributors` - Display contributors
+
+### Interactive Chatbot
+- `poetry run shuttleai` - Run the interactive chatbot
