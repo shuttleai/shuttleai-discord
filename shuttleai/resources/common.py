@@ -1,9 +1,11 @@
-from typing import Any, AsyncIterable, AsyncIterator, Dict, Iterator, Type
+from typing import Any, AsyncIterable, AsyncIterator, Dict, Iterator, Type, TypeVar
 
 from pydantic import BaseModel
 
 from shuttleai.client.base import ClientBase
 from shuttleai.exceptions import ShuttleAIException
+
+T = TypeVar("T", bound=ClientBase)
 
 
 class BaseResource:

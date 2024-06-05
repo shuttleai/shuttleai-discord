@@ -1,61 +1,54 @@
-from typing import Optional
+from typing import Generic, Type, TypeVar
 
 from shuttleai.client.base import ClientBase
+from shuttleai.helpers import cached_property
 from shuttleai.resources.audio.speech import AsyncSpeech, SyncSpeech
 from shuttleai.resources.audio.transcriptions import (
     AsyncTranscriptions,
     SyncTranscriptions,
 )
 from shuttleai.resources.audio.translations import AsyncTranslations, SyncTranslations
+from shuttleai.resources.common import T
 
+SpeechType = TypeVar("SpeechType", SyncSpeech, AsyncSpeech)
+TranscriptionsType = TypeVar("TranscriptionsType", SyncTranscriptions, AsyncTranscriptions)
+TranslationsType = TypeVar("TranslationsType", SyncTranslations, AsyncTranslations)
 
-class Audio:
-    def __init__(self, client: ClientBase):
-        self._speech: Optional[SyncSpeech] = None
-        self._transcriptions: Optional[SyncTranscriptions] = None
-        self._translations: Optional[SyncTranslations] = None
+class BaseAudio(Generic[T, SpeechType, TranscriptionsType, TranslationsType]):
+    _client: T
+    _speech_class: Type[SpeechType]
+    _transcriptions_class: Type[TranscriptionsType]
+    _translations_class: Type[TranslationsType]
+
+    def __init__(
+        self,
+        client: T,
+        speech_class: Type[SpeechType],
+        transcriptions_class: Type[TranscriptionsType],
+        translations_class: Type[TranslationsType]
+    ) -> None:
         self._client = client
+        self._speech_class = speech_class
+        self._transcriptions_class = transcriptions_class
+        self._translations_class = translations_class
 
-    @property
-    def speech(self) -> SyncSpeech:
-        if self._speech is None:
-            self._speech = SyncSpeech(self._client)
-        return self._speech
+    @cached_property
+    def speech(self) -> SpeechType:
+        return self._speech_class(self._client)
 
-    @property
-    def transcriptions(self) -> SyncTranscriptions:
-        if self._transcriptions is None:
-            self._transcriptions = SyncTranscriptions(self._client)
-        return self._transcriptions
+    @cached_property
+    def transcriptions(self) -> TranscriptionsType:
+        return self._transcriptions_class(self._client)
 
-    @property
-    def translations(self) -> SyncTranslations:
-        if self._translations is None:
-            self._translations = SyncTranslations(self._client)
-        return self._translations
+    @cached_property
+    def translations(self) -> TranslationsType:
+        return self._translations_class(self._client)
 
 
-class AsyncAudio:
-    def __init__(self, client: ClientBase):
-        self._speech: Optional[AsyncSpeech] = None
-        self._transcriptions: Optional[AsyncTranscriptions] = None
-        self._translations: Optional[AsyncTranslations] = None
-        self._client = client
+class Audio(BaseAudio[ClientBase, SyncSpeech, SyncTranscriptions, SyncTranslations]):
+    def __init__(self, client: ClientBase) -> None:
+        super().__init__(client, SyncSpeech, SyncTranscriptions, SyncTranslations)
 
-    @property
-    def speech(self) -> AsyncSpeech:
-        if self._speech is None:
-            self._speech = AsyncSpeech(self._client)
-        return self._speech
-
-    @property
-    def transcriptions(self) -> AsyncTranscriptions:
-        if self._transcriptions is None:
-            self._transcriptions = AsyncTranscriptions(self._client)
-        return self._transcriptions
-
-    @property
-    def translations(self) -> AsyncTranslations:
-        if self._translations is None:
-            self._translations = AsyncTranslations(self._client)
-        return self._translations
+class AsyncAudio(BaseAudio[ClientBase, AsyncSpeech, AsyncTranscriptions, AsyncTranslations]):
+    def __init__(self, client: ClientBase) -> None:
+        super().__init__(client, AsyncSpeech, AsyncTranscriptions, AsyncTranslations)

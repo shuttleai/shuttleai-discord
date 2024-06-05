@@ -2,16 +2,20 @@ from typing import (
     Any,
     AsyncIterable,
     Dict,
+    Generic,
     Iterable,
     List,
     Literal,
     Optional,
+    Type,
+    TypeVar,
     Union,
     overload,
 )
 
 from shuttleai.client.base import ClientBase
-from shuttleai.resources.common import AsyncResource, SyncResource
+from shuttleai.helpers import cached_property
+from shuttleai.resources.common import AsyncResource, SyncResource, T
 from shuttleai.schemas.chat.completions import (
     ChatCompletionResponse,
     ChatCompletionStreamResponse,
@@ -136,25 +140,25 @@ class SyncCompletions(SyncResource):
         )
 
 
-class AsyncChat:
-    def __init__(self, client: ClientBase):
-        self._completions: Optional[AsyncCompletions] = None
+CompletionsType = TypeVar("CompletionsType", SyncCompletions, AsyncCompletions)
+
+class BaseChat(Generic[T, CompletionsType]):
+    _client: T
+    _completions_class: Type[CompletionsType]
+
+    def __init__(self, client: T, completions_class: Type[CompletionsType]) -> None:
         self._client = client
+        self._completions_class = completions_class
 
-    @property
-    def completions(self) -> AsyncCompletions:
-        if self._completions is None:
-            self._completions = AsyncCompletions(self._client)
-        return self._completions
+    @cached_property
+    def completions(self) -> CompletionsType:
+        return self._completions_class(self._client)
 
 
-class Chat:
-    def __init__(self, client: ClientBase):
-        self._completions: Optional[SyncCompletions] = None
-        self._client = client
+class Chat(BaseChat[ClientBase, SyncCompletions]):
+    def __init__(self, client: ClientBase) -> None:
+        super().__init__(client, SyncCompletions)
 
-    @property
-    def completions(self) -> SyncCompletions:
-        if self._completions is None:
-            self._completions = SyncCompletions(self._client)
-        return self._completions
+class AsyncChat(BaseChat[ClientBase, AsyncCompletions]):
+    def __init__(self, client: ClientBase) -> None:
+        super().__init__(client, AsyncCompletions)

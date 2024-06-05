@@ -1,4 +1,4 @@
-from shuttleai.schemas.chat_completion import (
+from shuttleai.schemas.chat.completions import (
     ChatCompletionResponse,
     ChatCompletionStreamResponse,
     ChatMessage,

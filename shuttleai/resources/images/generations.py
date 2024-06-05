@@ -1,7 +1,7 @@
-from typing import Optional
+from typing import Generic, Optional, Type, TypeVar
 
 from shuttleai.client.base import ClientBase
-from shuttleai.resources.common import AsyncResource, SyncResource
+from shuttleai.resources.common import AsyncResource, SyncResource, T
 from shuttleai.schemas.images.generations import ImagesGenerationResponse
 
 
@@ -43,25 +43,29 @@ class SyncGenerations(SyncResource):
         )
 
 
-class Images:
-    def __init__(self, client: ClientBase):
-        self._generations: Optional[SyncGenerations] = None
+GenerationsType = TypeVar("GenerationsType", SyncGenerations, AsyncGenerations)
+
+class BaseImages(Generic[T, GenerationsType]):
+    _client: T
+    _generations_class: Type[GenerationsType]
+    _generations: Optional[GenerationsType]
+
+    def __init__(self, client: T, generations_class: Type[GenerationsType]) -> None:
         self._client = client
+        self._generations_class = generations_class
+        self._generations = None
 
     @property
-    def generations(self) -> SyncGenerations:
+    def generations(self) -> GenerationsType:
         if self._generations is None:
-            self._generations = SyncGenerations(self._client)
+            self._generations = self._generations_class(self._client)
         return self._generations
 
 
-class AsyncImages:
-    def __init__(self, client: ClientBase):
-        self._generations: Optional[AsyncGenerations] = None
-        self._client = client
+class Images(BaseImages[ClientBase, SyncGenerations]):
+    def __init__(self, client: ClientBase) -> None:
+        super().__init__(client, SyncGenerations)
 
-    @property
-    def generations(self) -> AsyncGenerations:
-        if self._generations is None:
-            self._generations = AsyncGenerations(self._client)
-        return self._generations
+class AsyncImages(BaseImages[ClientBase, AsyncGenerations]):
+    def __init__(self, client: ClientBase) -> None:
+        super().__init__(client, AsyncGenerations)
