@@ -219,7 +219,7 @@ class ShuttleAIClient(ClientBase):
         stream: Literal[True] = True
     ) -> Iterable[ChatCompletionStreamResponse]:
         ...
-    
+
     def ez_chat(  # type: ignore
         self,
         text: str,
