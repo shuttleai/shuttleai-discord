@@ -80,7 +80,9 @@ class ShuttleAIMeta(BaseModel):
     p: str
     """The ID of the provider that processed the request.
 
-    The provider ID is semi-reliable, meaning upon VPS restarts, provider IDs may change."""
+    The provider ID is semi-reliable, meaning upon VPS restarts, provider IDs may change;
+    however, they are guaranteed to remain the same for the duration of the VPS uptime.
+    (This can be useful for debugging/reporting purposes.)"""
 
 
 class ChatCompletionResponse(BaseModel):
