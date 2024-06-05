@@ -4,7 +4,7 @@ Thank you for considering contributing to the ShuttleAI project! Your contributi
 
 **We need your help with adding previous endpoints to the new wrapper!**
 
-The ShuttleAI Python SDK uses [poetry](https://python-poetry.org/), [ruff](https://github.com/astral-sh/ruff) for linting and formatting, and [mypy](https://github.com/python/mypy) for type checking. Ensure your code passes all checks before submitting a pull request.
+The ShuttleAI Python SDK uses [poetry](https://python-poetry.org/), [ruff](https://github.com/astral-sh/ruff) for linting, [black](https://github.com/psf/black) for formatting, and [mypy](https://github.com/python/mypy) for type checking. Ensure your code passes all checks before submitting a pull request.
 
 ## Benefits
 Top contributors receive a special role in the [ShuttleAI Discord Server](https://discord.gg/shuttleai).
@@ -61,7 +61,8 @@ poetry install
 ### Running Checks
 Run linting and type checking:
 ```sh
-poetry run ruff format . --check
+poetry run ruff .
+poetry run black .
 poetry run mypy .
 ```
 

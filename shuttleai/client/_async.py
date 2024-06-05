@@ -1,5 +1,5 @@
 import posixpath
-from typing import Any, AsyncIterator, Dict, Optional, Type, Union
+from typing import Any, AsyncIterable, AsyncIterator, Dict, Literal, Optional, Type, Union, overload
 
 import aiohttp
 import orjson
@@ -16,6 +16,7 @@ from shuttleai.exceptions import (
     ShuttleAIConnectionException,
     ShuttleAIException,
 )
+from shuttleai.schemas.chat.completions import ChatCompletionResponse, ChatCompletionStreamResponse
 from shuttleai.schemas.models.models import (
     BaseModelCard,
     ListModelsResponse,
@@ -204,3 +205,33 @@ class ShuttleAIAsyncClient(ClientBase):
                     model.parent = model_parent
 
         return list_models_response
+
+    @overload
+    async def ez_chat(  # type: ignore
+        self,
+        text: str,
+        model: Optional[str] = None,
+        stream: Literal[False] = False
+    ) -> ChatCompletionResponse:
+        ...
+
+    @overload
+    async def ez_chat(
+        self,
+        text: str,
+        model: Optional[str] = None,
+        stream: Literal[True] = True
+    ) -> AsyncIterable[ChatCompletionStreamResponse]:
+        ...
+
+    async def ez_chat(  # type: ignore
+        self,
+        text: str,
+        model: Optional[str] = None,
+        stream: bool = False,
+    ) -> Union[ChatCompletionResponse, AsyncIterable[ChatCompletionStreamResponse]]:
+        return await self.chat.completions.create(  # type: ignore
+            messages=[{"role": "user", "content": text}],
+            model=model,
+            stream=stream,
+        )

@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Set python version to 3.11
+      # Set python version to 3.12
       - name: set python version
         uses: actions/setup-python@v4
         with:
@@ -44,7 +44,7 @@ jobs:
 
       - name: Ruff check
         run: |
-          poetry run ruff format . --check
+          poetry run black format . --check
 
       # Mypy
       - name: Mypy Check

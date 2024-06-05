@@ -1,6 +1,6 @@
 import posixpath
 from json import JSONDecodeError
-from typing import Any, Dict, Iterator, Optional, Type, Union
+from typing import Any, Dict, Iterable, Iterator, Literal, Optional, Type, Union, overload
 
 import orjson
 import pydantic_core
@@ -15,6 +15,7 @@ from shuttleai.exceptions import (
     ShuttleAIConnectionException,
     ShuttleAIException,
 )
+from shuttleai.schemas.chat.completions import ChatCompletionResponse, ChatCompletionStreamResponse
 from shuttleai.schemas.models.models import (
     BaseModelCard,
     ListModelsResponse,
@@ -200,3 +201,33 @@ class ShuttleAIClient(ClientBase):
                     model.parent = model_parent
 
         return list_models_response
+
+    @overload
+    def ez_chat(  # type: ignore
+        self,
+        text: str,
+        model: Optional[str] = None,
+        stream: Literal[False] = False
+    ) -> ChatCompletionResponse:
+        ...
+
+    @overload
+    def ez_chat(
+        self,
+        text: str,
+        model: Optional[str] = None,
+        stream: Literal[True] = True
+    ) -> Iterable[ChatCompletionStreamResponse]:
+        ...
+    
+    def ez_chat(  # type: ignore
+        self,
+        text: str,
+        model: Optional[str] = None,
+        stream: bool = False,
+    ) -> Union[ChatCompletionResponse, Iterable[ChatCompletionStreamResponse]]:
+        return self.chat.completions.create(  # type: ignore
+            messages=[{"role": "user", "content": text}],
+            model=model,
+            stream=stream,
+        )

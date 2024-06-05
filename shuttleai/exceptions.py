@@ -29,11 +29,9 @@ class ShuttleAIAPIException(ShuttleAIException):
         self,
         message: Optional[str] = None,
         http_status: Optional[int] = None,
-        headers: Optional[Dict[str, Any]] = None,
     ) -> None:
         super().__init__(message)
         self.http_status = http_status
-        self.headers = headers or {}
 
     @classmethod
     def from_response(cls, response: Response | ClientResponse, message: Optional[str] = None) -> ShuttleAIAPIException:
