@@ -34,7 +34,7 @@ class SyncTranslations(SyncResource):
             model,
         )
 
-        return await self.handle_request(  # type: ignore
+        return self.handle_request(  # type: ignore
             method="post",
             endpoint="v1/audio/translations",
             request_data=request,

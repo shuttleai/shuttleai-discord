@@ -1,5 +1,4 @@
 import posixpath
-from json import JSONDecodeError
 from typing import Any, AsyncIterator, Dict, Optional, Type, Union
 
 import aiohttp
@@ -100,14 +99,13 @@ class ShuttleAIAsyncClient(ClientBase):
         if self._session is None:
             self._session = aiohttp.ClientSession(timeout=self._timeout)
 
+        json_bytes: Any | None = None
         if json and len(json) > 0:
             if "file" in json:
                 async with aopen(json["file"], "rb") as f:
-                    json_bytes = await f.read()
+                    json_bytes = {"file": await f.read()}
             else:
                 json_bytes = orjson.dumps(json)
-        else:
-            json_bytes = None
 
         # json_bytes: bytes | None = (
         #     orjson.dumps(json) if json and len(json) > 0 else None
@@ -144,7 +142,7 @@ class ShuttleAIAsyncClient(ClientBase):
             raise ShuttleAIConnectionException(str(e)) from e
         except aiohttp.ClientError as e:
             raise ShuttleAIException(f"Unexpected exception ({e.__class__.__name__}): {e}") from e
-        except JSONDecodeError as e:
+        except orjson.JSONDecodeError as e:
             raise ShuttleAIAPIException.from_response(
                 response,
                 message=f"Failed to decode json body: {await response.text()}",

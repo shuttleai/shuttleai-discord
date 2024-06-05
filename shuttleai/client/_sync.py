@@ -86,14 +86,13 @@ class ShuttleAIClient(ClientBase):
         path: str,
         stream: bool = False,
     ) -> Iterator[Dict[str, Any]]:
+        json_bytes: Any | None = None
         if json and len(json) > 0:
             if "file" in json:
                 with open(json["file"], "rb") as f:
-                    json_bytes = f.read()
+                    json_bytes = {"file": f.read()}
             else:
                 json_bytes = orjson.dumps(json)
-        else:
-            json_bytes = None
         # json_bytes: bytes | None = (
         #     orjson.dumps(json) if json and len(json) > 0 else None
         # )  # x-sai [dict to bytes]

@@ -1,7 +1,7 @@
 import httpx
 
 
-def _patch_httpx():  # type: ignore
+def _patch_httpx() -> None:
     """
     Monkey-patch httpx to accept direct bytes (orjson.dumps) directly.
     Originally from

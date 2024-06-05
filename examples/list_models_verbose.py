@@ -14,7 +14,7 @@ def main() -> None:
     print(list_models_response)
 
     random_model = random.choice(list_models_response.data)
-    assert isinstance(random_model, VerboseModelCard)
+    assert isinstance(random_model, VerboseModelCard), "You got a proxy object!."
     print("CHOSEN", random_model.name)
 
 
