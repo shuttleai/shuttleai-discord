@@ -1,7 +1,7 @@
 from typing import Optional
 
 from shuttleai.client.base import ClientBase
-from shuttleai.resources._resource import AsyncResource, SyncResource
+from shuttleai.resources.common import AsyncResource, SyncResource
 from shuttleai.schemas.images.generations import ImagesGenerationResponse
 
 

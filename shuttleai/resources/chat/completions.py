@@ -11,7 +11,7 @@ from typing import (
 )
 
 from shuttleai.client.base import ClientBase
-from shuttleai.resources._resource import AsyncResource, SyncResource
+from shuttleai.resources.common import AsyncResource, SyncResource
 from shuttleai.schemas.chat.completions import (
     ChatCompletionResponse,
     ChatCompletionStreamResponse,

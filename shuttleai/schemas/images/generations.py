@@ -8,12 +8,9 @@ class Image(BaseModel):
     """The URL of the image."""
 
 
-Images = List[Image]
-
-
 class ImagesGenerationResponse(BaseModel):
     created: int
     """The Unix timestamp when the image generation was created."""
 
-    data: Images
+    data: List[Image]
     """The generated image(s)."""

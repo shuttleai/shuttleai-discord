@@ -8,9 +8,6 @@ class Insult(BaseModel):
     """The insult."""
 
 
-Insults = List[Insult]
-
-
 class InsultResponse(BaseModel):
-    data: Insults
+    data: List[Insult]
     """The list of insults."""
