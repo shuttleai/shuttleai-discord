@@ -2,7 +2,7 @@
 
 
 from shuttleai import ShuttleAI
-from shuttleai.schemas.chat.completions import ChatMessage  # Helper for messages
+from shuttleai.schemas.chat.completions import ChatMessage  # Helper for messages, not needed!
 
 
 def main() -> None:
