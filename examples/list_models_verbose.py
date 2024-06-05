@@ -3,12 +3,12 @@
 
 import random
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 from shuttleai.schemas.models.models import VerboseModelCard
 
 
 def main() -> None:
-    client = ShuttleAIClient()
+    client = ShuttleAI()
 
     list_models_response = client.list_models_verbose()
     print(list_models_response)

@@ -1,7 +1,7 @@
+from functools import cached_property
 from typing import Generic, Type, TypeVar
 
 from shuttleai.client.base import ClientBase
-from shuttleai.helpers import cached_property
 from shuttleai.resources.audio.speech import AsyncSpeech, SyncSpeech
 from shuttleai.resources.audio.transcriptions import (
     AsyncTranscriptions,

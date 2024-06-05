@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import (
     Any,
     AsyncIterable,
@@ -14,7 +15,6 @@ from typing import (
 )
 
 from shuttleai.client.base import ClientBase
-from shuttleai.helpers import cached_property
 from shuttleai.resources.common import AsyncResource, SyncResource, T
 from shuttleai.schemas.chat.completions import (
     ChatCompletionResponse,

@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 from shuttleai.schemas.chat.completions import ChatMessage
 
 
 def main() -> None:
     model = "shuttle-2-turbo"
 
-    client = ShuttleAIClient()
+    client = ShuttleAI()
 
     response = client.chat.completions.create(
         model=model,

@@ -5,7 +5,7 @@ from typing import Any
 
 import orjson
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 from shuttleai.helpers import (
     convert_function_json_to_tool_json,
     serialize_function_to_json,
@@ -43,7 +43,7 @@ history = [
 def main() -> None:
     model = "shuttle-2-turbo"
 
-    client = ShuttleAIClient()
+    client = ShuttleAI()
 
     chat_response = client.chat.completions.create(
         model=model,

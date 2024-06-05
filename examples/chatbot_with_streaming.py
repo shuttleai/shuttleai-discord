@@ -8,7 +8,7 @@ import readline
 import sys
 from typing import Dict, KeysView, List, Optional, Union
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 from shuttleai.schemas.chat.completions import ChatMessage
 
 MODEL_LIST: List[str] = [
@@ -134,7 +134,7 @@ class ChatBot:
     def __init__(self, api_key: str, model: str, system_message: Optional[str] = None):
         if not api_key:
             raise ValueError("An API key must be provided to use the ShuttleAI API.")
-        self.client = ShuttleAIClient(api_key=api_key)
+        self.client = ShuttleAI(api_key=api_key)
         self.model = model
         self.system_message = system_message
         self.messages: List[ChatMessage] = []

@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import Generic, Optional, Type, TypeVar
 
 from shuttleai.client.base import ClientBase
@@ -55,7 +56,7 @@ class BaseImages(Generic[T, GenerationsType]):
         self._generations_class = generations_class
         self._generations = None
 
-    @property
+    @cached_property
     def generations(self) -> GenerationsType:
         if self._generations is None:
             self._generations = self._generations_class(self._client)

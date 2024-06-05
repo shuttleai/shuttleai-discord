@@ -24,7 +24,7 @@ from shuttleai.schemas.models.models import (
 )
 
 
-class ShuttleAIClient(ClientBase):
+class ShuttleAI(ClientBase):
     """
     Synchronous wrapper for the ShuttleAI API
     """

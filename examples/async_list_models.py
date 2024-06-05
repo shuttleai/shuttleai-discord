@@ -3,11 +3,11 @@
 
 import asyncio
 
-from shuttleai import ShuttleAIAsyncClient
+from shuttleai import AsyncShuttleAI
 
 
 async def main() -> None:
-    client = ShuttleAIAsyncClient()
+    client = AsyncShuttleAI()
 
     list_models_response = await client.list_models()
 

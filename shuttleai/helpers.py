@@ -1,20 +1,6 @@
 import inspect
 import re
-from typing import Any, Callable, Generic, Literal, Optional, Type, TypeVar, Union, cast, get_type_hints
-
-T = TypeVar("T")
-
-class cached_property(Generic[T]):
-    def __init__(self, func: Callable[[Any], T]):
-        self.func = func
-        self.attr_name = f"_{func.__name__}"
-
-    def __get__(self, instance: Optional[Any], owner: Type[Any]) -> Union[T, "cached_property[T]"]:
-        if instance is None:
-            return self
-        if not hasattr(instance, self.attr_name):
-            setattr(instance, self.attr_name, self.func(instance))
-        return cast(T, getattr(instance, self.attr_name))
+from typing import Callable, Literal, Type, get_type_hints
 
 
 def _get_type_name(t: Type) -> str:

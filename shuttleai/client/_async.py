@@ -25,7 +25,7 @@ from shuttleai.schemas.models.models import (
 )
 
 
-class ShuttleAIAsyncClient(ClientBase):
+class AsyncShuttleAI(ClientBase):
     """
     Asynchronous wrapper for the ShuttleAI API
     """
@@ -49,7 +49,7 @@ class ShuttleAIAsyncClient(ClientBase):
         self.images: resources.AsyncImages = resources.AsyncImages(self)
         self.audio: resources.AsyncAudio = resources.AsyncAudio(self)
 
-    async def __aenter__(self) -> "ShuttleAIAsyncClient":
+    async def __aenter__(self) -> "AsyncShuttleAI":
         if self._session is None:
             self._session = aiohttp.ClientSession(timeout=self._timeout)
         return self

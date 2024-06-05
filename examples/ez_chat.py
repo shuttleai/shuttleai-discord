@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 
 
 def main() -> None:
-    client = ShuttleAIClient()
+    client = ShuttleAI()
 
     # Example of using ez_chat to interact with the chat completions endpoint
     # [!] Async uses same example but using await

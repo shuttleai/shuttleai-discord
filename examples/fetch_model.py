@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 
 
 def main() -> None:
-    client = ShuttleAIClient()
+    client = ShuttleAI()
 
     model = "shuttle-2-turbo"
 

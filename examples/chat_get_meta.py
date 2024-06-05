@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 
-from shuttleai import ShuttleAIClient
+from shuttleai import ShuttleAI
 from shuttleai.schemas.chat.completions import ChatMessage  # Helper for messages
 
 
 def main() -> None:
     model = "shuttle-2-turbo"
 
-    client = ShuttleAIClient()
+    client = ShuttleAI()
 
     client.api_key = "my-new-key"  # Support for changing API key after initialization
     client.base_url = "http://my-new-base.url" # Support for changing base URL after initialization

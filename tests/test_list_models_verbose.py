@@ -1,3 +1,4 @@
+#  type: ignore
 from shuttleai.schemas.models.models import ListVerboseModelsResponse
 
 
