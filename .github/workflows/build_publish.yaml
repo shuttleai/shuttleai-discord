@@ -40,21 +40,21 @@ jobs:
         # Ruff
       - name: Ruff check
         run: |
-          poetry run ruff check .
+          poetry run ruff check shuttleai
 
       - name: Ruff check
         run: |
-          poetry run black format . --check
+          poetry run black format shuttleai
 
       # Mypy
       - name: Mypy Check
         run: |
-          poetry run mypy .
+          poetry run mypy shuttleai
 
       # Tests
       - name: Run Tests
         run: |
-          poetry run pytest .
+          poetry run pytest tests
 
   publish:
     if: startsWith(github.ref, 'refs/tags')

@@ -119,8 +119,8 @@ class AsyncShuttleAI(ClientBase):
         accept_header = "text/event-stream" if stream else "application/json"
         headers = {
             "Accept": accept_header,
-            "User-Agent": f"shuttleai-python/{self._version}",
-            "Authorization": f"Bearer {self._api_key}",
+            "User-Agent": f"shuttleai-python/a-{self._version}",
+            "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
 
