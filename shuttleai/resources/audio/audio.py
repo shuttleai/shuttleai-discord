@@ -14,6 +14,7 @@ SpeechType = TypeVar("SpeechType", SyncSpeech, AsyncSpeech)
 TranscriptionsType = TypeVar("TranscriptionsType", SyncTranscriptions, AsyncTranscriptions)
 TranslationsType = TypeVar("TranslationsType", SyncTranslations, AsyncTranslations)
 
+
 class BaseAudio(Generic[T, SpeechType, TranscriptionsType, TranslationsType]):
     _client: T
     _speech_class: Type[SpeechType]
@@ -25,7 +26,7 @@ class BaseAudio(Generic[T, SpeechType, TranscriptionsType, TranslationsType]):
         client: T,
         speech_class: Type[SpeechType],
         transcriptions_class: Type[TranscriptionsType],
-        translations_class: Type[TranslationsType]
+        translations_class: Type[TranslationsType],
     ) -> None:
         self._client = client
         self._speech_class = speech_class
@@ -48,6 +49,7 @@ class BaseAudio(Generic[T, SpeechType, TranscriptionsType, TranslationsType]):
 class Audio(BaseAudio[ClientBase, SyncSpeech, SyncTranscriptions, SyncTranslations]):
     def __init__(self, client: ClientBase) -> None:
         super().__init__(client, SyncSpeech, SyncTranscriptions, SyncTranslations)
+
 
 class AsyncAudio(BaseAudio[ClientBase, AsyncSpeech, AsyncTranscriptions, AsyncTranslations]):
     def __init__(self, client: ClientBase) -> None:

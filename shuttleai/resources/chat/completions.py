@@ -142,6 +142,7 @@ class SyncCompletions(SyncResource):
 
 CompletionsType = TypeVar("CompletionsType", SyncCompletions, AsyncCompletions)
 
+
 class BaseChat(Generic[T, CompletionsType]):
     _client: T
     _completions_class: Type[CompletionsType]
@@ -158,6 +159,7 @@ class BaseChat(Generic[T, CompletionsType]):
 class Chat(BaseChat[ClientBase, SyncCompletions]):
     def __init__(self, client: ClientBase) -> None:
         super().__init__(client, SyncCompletions)
+
 
 class AsyncChat(BaseChat[ClientBase, AsyncCompletions]):
     def __init__(self, client: ClientBase) -> None:

@@ -28,6 +28,7 @@ class ShuttleAI(ClientBase):
     """
     Synchronous wrapper for the ShuttleAI API
     """
+
     default_headers: Mapping[str, str] | None = None
 
     def __init__(
@@ -211,23 +212,15 @@ class ShuttleAI(ClientBase):
 
     @overload
     def ez_chat(  # type: ignore
-        self,
-        text: str,
-        model: Optional[str] = None,
-        stream: Literal[False] = False
-    ) -> ChatCompletionResponse:
-        ...
+        self, text: str, model: Optional[str] = None, stream: Literal[False] = False
+    ) -> ChatCompletionResponse: ...
 
     @overload
     def ez_chat(
-        self,
-        text: str,
-        model: Optional[str] = None,
-        stream: Literal[True] = True
-    ) -> Iterable[ChatCompletionStreamResponse]:
-        ...
+        self, text: str, model: Optional[str] = None, stream: Literal[True] = True
+    ) -> Iterable[ChatCompletionStreamResponse]: ...
 
-    def ez_chat(  # type: ignore
+    def ez_chat(
         self,
         text: str,
         model: Optional[str] = None,

@@ -29,6 +29,7 @@ class AsyncShuttleAI(ClientBase):
     """
     Asynchronous wrapper for the ShuttleAI API
     """
+
     default_headers: Mapping[str, str] | None = None
 
     def __init__(
@@ -215,23 +216,15 @@ class AsyncShuttleAI(ClientBase):
 
     @overload
     async def ez_chat(  # type: ignore
-        self,
-        text: str,
-        model: Optional[str] = None,
-        stream: Literal[False] = False
-    ) -> ChatCompletionResponse:
-        ...
+        self, text: str, model: Optional[str] = None, stream: Literal[False] = False
+    ) -> ChatCompletionResponse: ...
 
     @overload
     async def ez_chat(
-        self,
-        text: str,
-        model: Optional[str] = None,
-        stream: Literal[True] = True
-    ) -> AsyncIterable[ChatCompletionStreamResponse]:
-        ...
+        self, text: str, model: Optional[str] = None, stream: Literal[True] = True
+    ) -> AsyncIterable[ChatCompletionStreamResponse]: ...
 
-    async def ez_chat(  # type: ignore
+    async def ez_chat(
         self,
         text: str,
         model: Optional[str] = None,

@@ -46,6 +46,7 @@ class SyncGenerations(SyncResource):
 
 GenerationsType = TypeVar("GenerationsType", SyncGenerations, AsyncGenerations)
 
+
 class BaseImages(Generic[T, GenerationsType]):
     _client: T
     _generations_class: Type[GenerationsType]
@@ -66,6 +67,7 @@ class BaseImages(Generic[T, GenerationsType]):
 class Images(BaseImages[ClientBase, SyncGenerations]):
     def __init__(self, client: ClientBase) -> None:
         super().__init__(client, SyncGenerations)
+
 
 class AsyncImages(BaseImages[ClientBase, AsyncGenerations]):
     def __init__(self, client: ClientBase) -> None:
