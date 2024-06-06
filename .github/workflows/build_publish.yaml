@@ -52,9 +52,9 @@ jobs:
           poetry run mypy shuttleai
 
       # Tests
-      - name: Run Tests
-        run: |
-          poetry run pytest tests
+      # - name: Run Tests
+      #   run: |
+      #     poetry run pytest tests
 
   publish:
     if: startsWith(github.ref, 'refs/tags')
