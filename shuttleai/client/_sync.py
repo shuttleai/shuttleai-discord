@@ -1,6 +1,6 @@
 import posixpath
 from json import JSONDecodeError
-from typing import Any, Dict, Iterable, Iterator, Literal, Optional, Type, Union, overload
+from typing import Any, Dict, Iterable, Iterator, Literal, Mapping, Optional, Type, Union, overload
 
 import orjson
 import pydantic_core
@@ -28,15 +28,19 @@ class ShuttleAI(ClientBase):
     """
     Synchronous wrapper for the ShuttleAI API
     """
+    default_headers: Mapping[str, str] | None = None
 
     def __init__(
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         timeout: HTTPXTimeoutTypes = DEFAULT_HTTPX_TIMEOUT,
+        default_headers: Mapping[str, str] | None = None,
         http_client: Optional[Client] = None,
     ):
         super().__init__(base_url, api_key, timeout)
+        if default_headers:
+            self.default_headers = default_headers
 
         if http_client:
             self._http_client = http_client
@@ -105,6 +109,9 @@ class ShuttleAI(ClientBase):
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
+
+        if self.default_headers:
+            headers.update(self.default_headers)
 
         url = posixpath.join(self.base_url, path)
 

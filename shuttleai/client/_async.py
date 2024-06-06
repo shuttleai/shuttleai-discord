@@ -1,5 +1,5 @@
 import posixpath
-from typing import Any, AsyncIterable, AsyncIterator, Dict, Literal, Optional, Type, Union, overload
+from typing import Any, AsyncIterable, AsyncIterator, Dict, Literal, Mapping, Optional, Type, Union, overload
 
 import aiohttp
 import orjson
@@ -29,17 +29,21 @@ class AsyncShuttleAI(ClientBase):
     """
     Asynchronous wrapper for the ShuttleAI API
     """
+    default_headers: Mapping[str, str] | None = None
 
     def __init__(
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         timeout: AIOHTTPTimeoutTypes = DEFAULT_AIOTTP_TIMEOUT,
+        default_headers: Mapping[str, str] | None = None,
         session: Optional[aiohttp.ClientSession] = None,
     ):
         super().__init__(base_url, api_key, timeout)
 
         self._timeout = timeout if isinstance(timeout, ClientTimeout) else ClientTimeout(total=timeout)
+        if default_headers:
+            self.default_headers = default_headers
 
         self._session: Optional[aiohttp.ClientSession] = None
         if session:
@@ -119,6 +123,9 @@ class AsyncShuttleAI(ClientBase):
             "Authorization": f"Bearer {self._api_key}",
             "Content-Type": "application/json",
         }
+
+        if self.default_headers:
+            headers.update(self.default_headers)
 
         url = posixpath.join(self.base_url, path)
 
