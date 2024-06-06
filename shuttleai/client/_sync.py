@@ -52,6 +52,7 @@ class ShuttleAI(ClientBase):
         self.images: resources.Images = resources.Images(self)
         self.audio: resources.Audio = resources.Audio(self)
         self.moderations: resources.Moderations = resources.Moderations(self)
+        self.embeddings: resources.Embeddings = resources.Embeddings(self)
 
     def __del__(self) -> None:
         self._http_client.close()
