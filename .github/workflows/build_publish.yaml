@@ -44,7 +44,7 @@ jobs:
 
       - name: Ruff check
         run: |
-          poetry run black format shuttleai
+          poetry run black shuttleai --check
 
       # Mypy
       - name: Mypy Check
