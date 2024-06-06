@@ -1,6 +1,7 @@
 # The Official Python library for the ShuttleAI API
 
 ![Build, Lint, Format](https://img.shields.io/github/actions/workflow/status/shuttleai/shuttleai-python/build_publish.yaml)
+![Branch Checks](https://img.shields.io/github/check-runs/shuttleai/shuttleai-python/main)
 [![pypi](https://img.shields.io/pypi/v/shuttleai.svg?color=blue)](https://pypi.org/project/shuttleai/)
 [![Downloads](https://pepy.tech/badge/shuttleai)](https://pepy.tech/project/shuttleai)
 [![Downloads/Month](https://static.pepy.tech/badge/shuttleai/month)](https://pepy.tech/project/shuttleai)
