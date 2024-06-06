@@ -2,11 +2,14 @@
 
 
 import argparse
+import json
 import logging
 import os
 import readline
 import sys
 from typing import Dict, KeysView, List, Optional, Union
+
+import yaml
 
 from shuttleai import ShuttleAI
 from shuttleai.schemas.chat.completions import ChatMessage
@@ -95,6 +98,7 @@ COMMAND_LIST: Dict[str, Union[Dict[str, Dict], Dict]] = {
     "/model": {model: {} for model in MODEL_LIST},  # Nested completions for models
     "/system": {},
     "/config": {},
+    "/download": {"json": {}, "txt": {}, "yaml": {}},
     "/quit": {},
     "/exit": {},
 }
@@ -238,6 +242,30 @@ HINT: We support TAB autocompletion for commands and model names!
             self.switch_system_message(input)
         elif command == "/config":
             self.show_config()
+        elif command == "/download":
+            self.download_conversation(input)
+
+    def download_conversation(self, input: str) -> None:
+        format = self.get_arguments(input).lower()
+        if format not in ["json", "txt", "yaml"]:
+            logger.error("Invalid format. Choose from 'json', 'txt', or 'yaml'.")
+            return
+
+        filename = f"conversation.{format}"
+        try:
+            if format == "json":
+                with open(filename, "w") as f:
+                    json.dump([msg.model_dump(exclude_none=True) for msg in self.messages], f, indent=4)
+            elif format == "txt":
+                with open(filename, "w") as f:
+                    for msg in self.messages:
+                        f.write(f"{msg.role.capitalize()}: {msg.content}\n\n")
+            elif format == "yaml":
+                with open(filename, "w") as f:
+                    yaml.dump([msg.model_dump(exclude_none=True) for msg in self.messages], f, default_flow_style=False)
+            logger.info(f"Conversation saved to {filename}")
+        except Exception as e:
+            logger.error(f"Error saving conversation: {e}")
 
     def start(self) -> None:
         self.opening_instructions()
