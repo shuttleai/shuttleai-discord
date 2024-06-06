@@ -2,6 +2,14 @@ import os
 import shutil
 
 
+def remove_dist(root_dir: str = ".") -> None:
+    for dirpath, dirnames, _ in os.walk(root_dir):
+        if "dist" in dirnames:
+            dist_path = os.path.join(dirpath, "dist")
+            shutil.rmtree(dist_path)
+            print(f"Removed {dist_path}")
+
+
 def remove_pycache(root_dir: str = ".") -> None:
     for dirpath, dirnames, filenames in os.walk(root_dir):
         if "__pycache__" in dirnames:
@@ -31,7 +39,17 @@ def remove_ruff_cache(root_dir: str = ".") -> None:
             print(f"Removed {ruff_cache_path}")
 
 
+def remove_pytest_cache(root_dir: str = ".") -> None:
+    for dirpath, dirnames, _ in os.walk(root_dir):
+        if ".pytest_cache" in dirnames:
+            pytest_cache_path = os.path.join(dirpath, ".pytest_cache")
+            shutil.rmtree(pytest_cache_path)
+            print(f"Removed {pytest_cache_path}")
+
+
 def clean_all(root_dir: str = ".") -> None:
+    remove_dist(root_dir)
     remove_pycache(root_dir)
     remove_mypy_cache(root_dir)
     remove_ruff_cache(root_dir)
+    remove_pytest_cache(root_dir)
