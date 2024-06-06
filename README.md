@@ -91,3 +91,8 @@ Please see the [contribution guide](CONTRIBUTING.md) for more information.
 
 ### Interactive Chatbot
 - `poetry run shuttleai` - Run the interactive chatbot
+![Example of Chatbot](https://cdn.discordapp.com/attachments/1152273617166544967/1248138512222388346/image.png?ex=66629312&is=66614192&hm=49030f4b20a81adfbdb2fc09e76e93555f06b49bc9884e74d3618f435e64da48&)
+![Example response of Chatbot](https://cdn.discordapp.com/attachments/1152273617166544967/1248138599174639726/image.png?ex=66629327&is=666141a7&hm=63828fd61ab1cfa1a1571f4c4859e2b037145a7dad53645b34626cb07820553d&)
+> [!Important]
+> We support auto TAB completion of commands and model names! Just press `TAB`!
+![Example of TAB of Chatbot](https://cdn.discordapp.com/attachments/1152273617166544967/1248138790250348566/image.png?ex=66629354&is=666141d4&hm=24abda2562a260edd03bffd355c45c9ec25b86c94e98196f9ff53663c040d616&)
