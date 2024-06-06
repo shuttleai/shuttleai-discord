@@ -53,6 +53,7 @@ class AsyncShuttleAI(ClientBase):
         self.chat: resources.AsyncChat = resources.AsyncChat(self)
         self.images: resources.AsyncImages = resources.AsyncImages(self)
         self.audio: resources.AsyncAudio = resources.AsyncAudio(self)
+        self.moderations: resources.AsyncModerations = resources.AsyncModerations(self)
 
     async def __aenter__(self) -> "AsyncShuttleAI":
         if self._session is None:
