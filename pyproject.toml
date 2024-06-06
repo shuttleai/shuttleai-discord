@@ -1,0 +1,84 @@
+[tool.poetry]
+name = "shuttleai"
+version = "0"
+description = "Access Shuttle AI's API via an easy-to-use Python wrapper. Dashboard: https://shuttleai.app Discord: https://discord.gg/shuttleai"
+authors = ["Tristan Liu <tristan@shuttleai.app>", "Christian \"Thoth\" Heru <chris@shuttleai.app>"]
+maintainers = ["Christian \"Thoth\" Heru <chris@shuttleai.app>"]
+homepage = "https://github.com/shuttleai"
+repository = "https://github.com/shuttleai/shuttleai-python"
+urls = { Documentation = "https://docs.shuttleai.app", Dashboard = "https://shuttleai.app", Discord = "https://discord.gg/shuttleai", PyPI = "https://pypi.org/project/shuttleai" }
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = ["shuttleai", "ai", "gpt", "claude", "api", "free", "chatgpt", "gpt-4"]
+
+[tool.poetry-version-plugin]
+source = "init"
+
+[tool.ruff]
+select = ["E", "F", "W", "Q", "I"]
+ignore = ["E203"]
+fixable = ["ALL"]
+unfixable = []
+line-length = 120
+extend-select = ["B"]
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.mypy]
+disallow_untyped_defs = true
+show_error_codes = true
+no_implicit_optional = true
+warn_return_any = true
+warn_unused_ignores = true
+exclude = ["docs", "tests", "examples", "tools", "build", "etc"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+aiohttp = "^3.9.5"
+orjson = "^3.10.3"
+pydantic = "^2.7.3"
+httpx = ">= 0.25.2, < 1"
+python-dateutil = "^2.9.0.post0"
+matplotlib = "^3.9.0"
+pyreadline3 = "^3.4.1"
+aiofiles = "^23.2.1"
+types-aiofiles = "^23.2.0.20240403"
+poetry-version-plugin = "^0.2.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.6"
+mypy = "^1.10.0"
+black = "^24.4.2"
+types-requests = "^2.31.0.10"
+pytest = "^7.4.3"
+pytest-asyncio = "^0.23.2"
+
+[tool.poetry.scripts]
+shuttleai = "examples.chatbot_with_streaming:main"
+clean = "etc.tools.clean:clean_all"
+key = "etc.tools.key:show_key"
+contr = "etc.tools.contributors:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

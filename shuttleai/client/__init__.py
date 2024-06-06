@@ -1,2 +1,4 @@
-from ._async import ShuttleAsyncClient
-from ._sync import ShuttleClient
+from ._async import AsyncShuttleAI
+from ._sync import ShuttleAI
+
+__all__ = ["ShuttleAI", "AsyncShuttleAI"]

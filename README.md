@@ -1,102 +1,93 @@
-# The official Python library for the ShuttleAI API
-Access the ShuttleAI API with a simple, user-friendly lib; or a sleek command line interface (CLI)
+# The Official Python library for the ShuttleAI API
 
-> *PRs appreciated 🙂*
-# Installation
-## ShuttleAI
 [![pypi](https://img.shields.io/pypi/v/shuttleai.svg?color=blue)](https://pypi.org/project/shuttleai/)
-```ShellSession
+[![Downloads](https://pepy.tech/badge/shuttleai)](https://pepy.tech/project/shuttleai)
+[![Downloads/Month](https://static.pepy.tech/badge/shuttleai/month)](https://pepy.tech/project/shuttleai)
+[![Python Versions](https://img.shields.io/pypi/pyversions/shuttleai.svg)](https://pypi.org/project/shuttleai/)
+
+The ShuttleAI Python library provides easy access to the ShuttleAI REST API for Python 3.9+ applications. It includes type definitions for all request parameters and response fields, offering both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx) and [aiohttp](https://github.com/aio-libs/aiohttp), respectively.
+
+We prioritize performance optimizations across the library. Beyond using orjson for near-instant JSON processing, we implement various techniques to reduce overhead and enhance speed, ensuring efficient and swift API interactions. These optimizations include minimizing built-in library usage, leveraging reusable aiohttp client sessions, and incorporating several small adjustments to streamline operations.
+
+## Installation
+
+```s
 pip install shuttleai
 ```
 
-## ShuttleAI CLI
-```ShellSession
-pip install shuttleai[cli]
+### From Source
+
+This client uses `poetry` as a dependency and virtual environment manager.
+
+You can install poetry with
+
+```bash
+pip install poetry
 ```
 
-# Usage
-## ShuttleAI CLI
-```ShellSession
-shuttleai
+`poetry` will set up a virtual environment and install dependencies with the following command:
+
+```bash
+poetry install
 ```
-*That's it! Just type `shuttleai` in your terminal!*
-## ShuttleAI
-> [!IMPORTANT]
-> It is strongly recommended to use the asynchronous client instead of the synchronous client.
-```py
-import asyncio
-from shuttleai import *
 
-SHUTTLE_KEY = "ShuttleAPI Key"
+## Run examples
 
-async def main():
-    async with ShuttleAsyncClient(SHUTTLE_KEY, timeout=60) as shuttle:
-        """Optionally change base url"""
-        # shuttle.base_url = "https://api.shuttleai.app/v1"
+You can run the examples in the `examples/` directory using `poetry run` or by entering the virtual environment using `poetry shell`.
 
-        """Get Models Example"""
-        # response = await shuttle.get_models()
-        # print(response)
-        """Get Model Example"""
-        # response = await shuttle.get_model("gpt-4")
-        # print(response)
-        """Streaming Example"""
-        # response = await shuttle.chat_completion(
-        #     model="gpt-3.5-turbo",
-        #     messages="write me a short story about bees",
-        #     stream=True,
-        #     plain=True,
-        #     internet=False
-        # )
-        # async for chunk in response:
-        #     print(chunk.choices[0].delta.content)
-        """Non-Streaming Example"""
-        # response = await shuttle.chat_completion(
-        #     model="gpt-3.5-turbo",
-        #     messages=[{"role":"user","content":"write me a short story about bees"}],
-        #     stream=False,
-        #     plain=False,
-        #     internet=False,
-        #     max_tokens=100,
-        #     temperature=0.5,
-        #     image="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
-        # )
-        # print(response)
-        """Image Generation Example"""
-        # response = await shuttle.images_generations(
-        #     model='sdxl',
-        #     prompt='a cute cat',
-        #     n=1,
-        # )
-        # print(response)
-        """Audio Generation Example"""
-        # response = await shuttle.audio_generations(
-        #     model='eleven-labs-999',
-        #     input='Once upon a time, there was a cute cat wondering through a dark, cold forest.',
-        #     voice="mimi"
-        # )
-        # print(response)
-        """Audio Transcription Example"""
-        # response = await shuttle.audio_transcriptions(
-        #     model='whisper-large',
-        #     file="test.mp3"
-        # )
-        # print(response)
-        """Moderation Example"""
-        # response = await shuttle.moderations(
-        #     model='text-moderation-latest',
-        #     input="I hate you"
-        # )
-        # print(response)
-        """Embeddings Example"""
-        # response = await shuttle.embeddings(
-        #     model='text-embedding-ada-002',
-        #     input="Hello there world"
-        # )
-        # print(response)
+### Using poetry run
 
-
-if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(main())
+```bash
+cd examples
+poetry run python chat_no_streaming.py
 ```
+
+### Using poetry shell
+
+```bash
+poetry shell
+cd examples
+
+>> python chat_no_streaming.py
+```
+
+## API Key Setup
+
+To use the ShuttleAI API, you need to have an API key. 
+You can get a **FREE** API key by signing up at 
+[shuttleai.app](https://shuttleai.app) and heading to 
+the [key management page](https://shuttleai.app/keys).
+
+After you have an API key, you can set it as an environment variable:
+
+### Windows
+
+```s
+setx SHUTTLEAI_API_KEY "<your_api_key>"
+```
+
+### macOS/Linux
+
+```bash
+export SHUTTLEAI_API_KEY=<your_api_key>
+```
+
+## Contribution
+We welcome and appreciate contributions to the ShuttleAI API Python SDK.
+Please see the [contribution guide](CONTRIBUTING.md) for more information.
+*Benefits may apply! :smile:*
+
+## Scripts
+### Formatting/Checks
+- `poetry run ruff check shuttleai` - Check for code formatting issues
+- `poetry run black shuttleai --diff --color` - Check for code formatting issues
+- `poetry run black shuttleai` - Format code
+- `poetry run mypy shuttleai` - Check for type errors
+
+### Tools
+- `poetry run clean` - Clean up the project directory
+- `poetry run key` - Display your default API key (if set by environment variable)
+- `poetry run contributors` - Display contributors
+
+### Interactive Chatbot
+- `poetry run shuttleai` - Run the interactive chatbot

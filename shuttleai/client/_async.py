@@ -1,473 +1,237 @@
-"""
-@Author: ShuttleAI
-@Date: 5-17-2024
-"""
-from __future__ import annotations
-from typing import (
-    List,
-    Dict,
-    Any,
-    Union,
-    Optional,
-    AsyncGenerator
-)
-from ..schemas import (
-    ShuttleError,
-    Model,
-    Models,
-    ChatChunk,
-    Chat,
-    Image,
-    Audio,
-    Embedding
-    )
-from ..log import log
+import posixpath
+from typing import Any, AsyncIterable, AsyncIterator, Dict, Literal, Mapping, Optional, Type, Union, overload
+
 import aiohttp
 import orjson
-import os
+import pydantic_core
+from aiofiles import open as aopen
+from aiohttp import ClientTimeout
+
+from shuttleai import resources
+from shuttleai._types import DEFAULT_AIOTTP_TIMEOUT, AIOHTTPTimeoutTypes
+from shuttleai.client.base import ClientBase
+from shuttleai.exceptions import (
+    ShuttleAIAPIException,
+    ShuttleAIAPIStatusException,
+    ShuttleAIConnectionException,
+    ShuttleAIException,
+)
+from shuttleai.schemas.chat.completions import ChatCompletionResponse, ChatCompletionStreamResponse
+from shuttleai.schemas.models.models import (
+    BaseModelCard,
+    ListModelsResponse,
+    ListVerboseModelsResponse,
+    ProxyCard,
+)
 
 
-class ShuttleAsyncClient:
+class AsyncShuttleAI(ClientBase):
     """
-    The asynchronous client for interacting with the ShuttleAI API.
-
-    - The client can be used as a context manager to automatically close the aiohttp.ClientSession.
-    Example:
-    ```python
-    async with ShuttleAsyncClient() as client:
-        models = await client.get_models()
-        print(models)
-    ```
-
-    - The client can also be used without a context manager, which requires the user to manually close the aiohttp.ClientSession.
-    Example:
-    ```python
-    client = ShuttleAsyncClient()
-    models = await client.get_models()
-    print(models)
-    await client.close()
-    ```
-
-    (Not specifying an api_key defaults the api_key to the SHUTTLEAI_API_KEY environment variable)
+    Asynchronous wrapper for the ShuttleAI API
     """
-    _session: Optional[aiohttp.ClientSession] = None
+
+    default_headers: Mapping[str, str] | None = None
 
     def __init__(
-            self,
-            api_key: Optional[str] = None,
-            base_url: Optional[str] = None,
-            timeout: Union[float, aiohttp.ClientTimeout, int, None] = 60.0,
-            session: Optional[aiohttp.ClientSession] = None,
-            silent: bool = True
+        self,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+        timeout: AIOHTTPTimeoutTypes = DEFAULT_AIOTTP_TIMEOUT,
+        default_headers: Mapping[str, str] | None = None,
+        session: Optional[aiohttp.ClientSession] = None,
     ):
-        """
-        Initialize the ShuttleAsyncClient.
+        super().__init__(base_url, api_key, timeout)
 
-        Args:
-            api_key (Optional[str], optional): The API key. Defaults to SHUTTLEAI_API_KEY environment variable.
-            base_url (Optional[str], optional): The base URL for the API. Defaults to https://api.shuttleai.app/v1.
-            timeout (Union[float, aiohttp.ClientTimeout, None], optional): The timeout for the aiohttp.ClientSession. Defaults to 60.0.
-            session (Optional[aiohttp.ClientSession], optional): An existing aiohttp.ClientSession. Defaults to None.
-            silent (bool, optional): Whether to silent debugging messages. Defaults to True.
-        """
-        self.silent = silent
-        if session is not None:
-            if not isinstance(session, aiohttp.ClientSession):
-                raise TypeError(
-                    f"session must be an instance of aiohttp.ClientSession, not {type(session)}"
-                )
-            if session.closed:
-                raise ValueError("session is closed")
-            if not silent:
-                log.info("Using provided aiohttp.ClientSession")
+        self._timeout = timeout if isinstance(timeout, ClientTimeout) else ClientTimeout(total=timeout)
+        if default_headers:
+            self.default_headers = default_headers
 
+        self._session: Optional[aiohttp.ClientSession] = None
+        if session:
             self._session = session
-        else:
-            if self._session is None:
-                if isinstance(timeout, float):
-                    timeout = aiohttp.ClientTimeout(total=timeout)
-                elif isinstance(timeout, int):
-                    timeout = aiohttp.ClientTimeout(total=float(timeout))
-                elif not isinstance(timeout, aiohttp.ClientTimeout):
-                    raise TypeError(
-                        f"timeout must be a float or aiohttp.ClientTimeout, not {type(timeout)}"
-                    )
-                self._session = aiohttp.ClientSession(timeout=timeout, json_serialize=lambda x: orjson.dumps(x).decode())
-            if not silent:
-                log.info("registered new aiohttp.ClientSession")
 
+        self.chat: resources.AsyncChat = resources.AsyncChat(self)
+        self.images: resources.AsyncImages = resources.AsyncImages(self)
+        self.audio: resources.AsyncAudio = resources.AsyncAudio(self)
 
-        if api_key is None:
-            api_key = os.environ.get("SHUTTLEAI_API_KEY")
-            if api_key is not None and not silent:
-                log.info("using SHUTTLEAI_API_KEY environment variable")
-        if api_key is None:
-            raise Exception("the api_key client option must be set either by passing api_key to the client or by setting the SHUTTLEAI_API_KEY environment variable")
-        self.api_key = api_key
-
-        if base_url is None:
-            base_url = os.environ.get("SHUTTLEAI_BASE_URL")
-            if base_url is not None and not silent:
-                log.info("using SHUTTLEAI_BASE_URL environment variable")
-        if base_url is None:
-            base_url = "https://api.shuttleai.app/v1"
-        self.base_url = base_url
-
-    async def __aenter__(self):
+    async def __aenter__(self) -> "AsyncShuttleAI":
+        if self._session is None:
+            self._session = aiohttp.ClientSession(timeout=self._timeout)
         return self
-    
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[Type[BaseException]],
+    ) -> None:
         await self.close()
-        return None
-    
+
     async def close(self) -> None:
-        if self._session is not None and self._session.closed is False:
-            if not self._session.closed:
-                if not self._session.connector.closed:
-                    await self._session.close()
-                else:
-                    self._session.connector.close()
-                    await self._session.close()
-        if not self.silent:
-            log.info("closed aiohttp.ClientSession")
-        return None
-    
-    async def _make_request(
+        if self._session:
+            await self._session.close()
+            self._session = None
+
+    async def _check_response_status_codes(self, response: aiohttp.ClientResponse) -> None:
+        if response.status in {429, 500, 502, 503, 504}:
+            raise ShuttleAIAPIStatusException.from_response(
+                response,
+                message=f"Status: {response.status}. Message: {await response.text()}",
+            )
+        elif 400 <= response.status < 500:
+            raise ShuttleAIAPIException.from_response(
+                response,
+                message=f"Status: {response.status}. Message: {await response.text()}",
+            )
+        elif response.status >= 500:
+            raise ShuttleAIException(
+                message=f"Status: {response.status}. Message: {await response.text()}",
+            )
+
+    async def _check_response(self, response: aiohttp.ClientResponse) -> Dict[str, Any]:
+        await self._check_response_status_codes(response)
+
+        json_response: Dict[str, Any] = orjson.loads(await response.read())
+
+        return json_response
+
+    async def _request(
         self,
         method: str,
-        endpoint: str,
-        data: Optional[Dict[str, Any]] = None,
-        headers: Optional[Dict[str, Any]] = None,
+        json: Optional[Dict[str, Any]],
+        path: str,
         stream: bool = False,
-        params: Optional[Dict[str, Any]] = None,
-        file: Optional[str] = None,
-    ) -> Union[Dict[str, Any], List[Dict[str, Any]]]:
-        """
-        Make an async HTTP request.
+    ) -> AsyncIterator[Dict[str, Any]]:
+        if self._session is None:
+            self._session = aiohttp.ClientSession(timeout=self._timeout)
 
-        Args:
-            method (str): The HTTP method (GET, POST, etc.).
-            endpoint (str): The API endpoint.
-            data (Optional[Dict[str, Any]], optional): JSON data for the request body. Defaults to None.
-            headers (Optional[Dict[str, Any]], optional): Additional headers. Defaults to None.
-            stream (bool, optional): Whether the response should be streamed. Defaults to False.
-            params (Optional[Dict[str, Any]], optional): URL parameters. Defaults to None.
-            file (Optional[str], optional): File path for uploading. Defaults to None.
-
-        Returns:
-            Union[Dict[str, Any], List[Dict[str, Any]]]: The response data.
-        """
-        url = f"{self.base_url}/{endpoint}"
-        args = "&".join(f"{key}={value}" for key,
-                        value in params.items()) if params else ""
-        files = {"file": (file, open(file, "rb"))} if file else None
-
-        if stream:
-            async def streamer():
-                async with self._session.request(
-                    method, url, json=data, headers=headers, params=args, data=files
-                ) as response:
-                    if response.status != 200:
-                        data_to_yield = orjson.loads(await response.text())
-                        yield data_to_yield
-                        return
-
-                    async for line in response.content.__aiter__():
-                        try:
-                            line = line.decode('utf-8')
-                            yield orjson.loads(line.replace('data: ', ''))
-                        except:
-                            pass
-            return streamer()
-        else:
-            async with self._session.request(
-                method, url, json=data, headers=headers, params=args, data=files
-            ) as response:
-                try:
-                    return await response.json()
-                except:
-                    return await response.text()
-            
-    async def get_models(
-        self,
-        free: bool = False,
-        premium: bool = False,
-        endpoint: str = "all"
-    ) -> Models:
-        """
-        Get information about available models.
-
-        Args:
-            free (bool, optional): Whether to include free models. Defaults to False.
-            premium (bool, optional): Whether to include premium models. Defaults to False.
-            endpoint (str, optional): The specific model endpoint. Defaults to "all".
-
-        Returns:
-            Models: Model information.
-
-        Raises:
-            Aiohttp.ClientError: If the API request failed.
-        """
-        try:
-            params = {"endpoints": endpoint,
-                      **({"format": "free"} if free else {"format": "premium"} if premium else {})}
-            return Models.model_validate(await self._make_request("GET", "models", params=params))
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to retrieve models: {e}")
-            raise
-
-    async def get_model(
-        self,
-        model: str
-    ) -> Union[Model, ShuttleError]:
-        """
-        Get information about a specific model.
-
-        Args:
-            model (str): The model name.
-
-        Returns:
-            Model: Model information or None if not found.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
-        """
-        try:
-            response = await self._make_request("GET", f"models/{model}")
-            try:
-                return Model.model_validate(response)
-            except:
-                try:
-                    return ShuttleError.model_validate(response)
-                except:
-                    return response
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to retrieve model information: {e}")
-            return None
-
-    async def chat_completion(
-        self,
-        model: str,
-        messages: Union[str, List[Dict[str, Any]]],
-        stream: bool = False,
-        plain: bool = False,
-        **kwargs
-    ) -> Union[Chat, AsyncGenerator[Union[ChatChunk, ShuttleError, Dict[str, Any]], ShuttleError, None]]:
-        """
-        Get chat completions from a model.
-
-        Args:
-            model (str): The model name.
-            messages (Union[str, List[Dict[str, Any]]]): User messages.
-            stream (bool, optional): Whether to stream the response. Defaults to False.
-            plain (bool, optional): Whether messages are plain text. Defaults to False.
-            **kwargs: Additional keyword arguments.
-
-        Returns:
-            Union[Chat, AsyncGenerator[Union[ChatChunk, ShuttleError, Dict[str, Any]], None]]: The completed chat or streamed response.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
-        """
-        try:
-            messages = [{"role": "user", "content": messages}
-                        ] if plain else messages
-            data = {"model": model, "messages": messages,
-                    "stream": stream, **kwargs}
-            response = await self._make_request(
-                "POST", "chat/completions", data, headers={"Authorization": f"Bearer {self.api_key}"}, stream=stream
-            )
-            if stream:
-                async def streamer():
-                    async for chunk in response:
-                        try:
-                            yield ChatChunk.from_dict(chunk)
-                        except:
-                            try:
-                                yield ShuttleError(**chunk)
-                            except:
-                                try:
-                                    yield chunk
-                                except:
-                                    pass
-                return streamer()
+        json_bytes: Any | None = None
+        if json and len(json) > 0:
+            if "file" in json:
+                async with aopen(json["file"], "rb") as f:
+                    json_bytes = {"file": await f.read()}
             else:
-                try:
-                    return Chat.from_dict(response)
-                except:
-                    try:
-                        return ShuttleError(**response)
-                    except:
-                        return response
+                json_bytes = orjson.dumps(json)
 
+        # json_bytes: bytes | None = (
+        #     orjson.dumps(json) if json and len(json) > 0 else None
+        # )  # x-sai [dict to bytes]
+
+        accept_header = "text/event-stream" if stream else "application/json"
+        headers = {
+            "Accept": accept_header,
+            "User-Agent": f"shuttleai-python/a-{self._version}",
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+
+        if self.default_headers:
+            headers.update(self.default_headers)
+
+        url = posixpath.join(self.base_url, path)
+
+        self._logger.debug(f"Sending request: {method} {url} {json}")
+
+        try:
+            async with self._session.request(
+                method,
+                url,
+                headers=headers,
+                data=json_bytes,
+            ) as response:
+                if stream:
+                    async for line in response.content:
+                        json_streamed_response = self._process_line(line)
+                        if json_streamed_response:
+                            yield json_streamed_response
+                else:
+                    yield await self._check_response(response)
+
+        except aiohttp.ClientConnectorError as e:
+            raise ShuttleAIConnectionException(str(e)) from e
         except aiohttp.ClientError as e:
-            log.error(f"Failed to get chat completions: {e}")
-            raise
+            raise ShuttleAIException(f"Unexpected exception ({e.__class__.__name__}): {e}") from e
+        except orjson.JSONDecodeError as e:
+            raise ShuttleAIAPIException.from_response(
+                response,
+                message=f"Failed to decode json body: {await response.text()}",
+            ) from e
+        except ShuttleAIAPIStatusException as e:
+            raise ShuttleAIAPIStatusException.from_response(response, message=str(e)) from e
 
-    async def images_generations(
-        self,
-        model: str,
-        prompt: str,
-        n: int = 1,
-        **kwargs
-    ) -> Union[Image, ShuttleError]:
-        """
-        Generate images using a model.
+    async def fetch_model(self, model_id: str) -> BaseModelCard:
+        """Fetches a model by its ID
 
         Args:
-            model (str): The model name.
-            prompt (str): The prompt for image generation.
-            n (int, optional): Number of images to generate. Defaults to 1.
+            model_id (str): The ID of the model to fetch
 
         Returns:
-            Image: The generated image.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
+            BaseModelCard, None]: The model if it exists
         """
+        singleton_response = self._request("get", {}, f"v1/models/{model_id}")
         try:
-            data = {"model": model, "prompt": prompt, "n": n, **kwargs}
-            response = await self._make_request(
-                "POST", "images/generations", data, headers={"Authorization": f"Bearer {self.api_key}"}
-            )
-            try:
-                return Image.from_dict(response)
-            except:
-                try:
-                    return ShuttleError(**response)
-                except:
-                    return response
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to generate images: {e}")
-            raise
+            return BaseModelCard(**(await singleton_response.__anext__())["data"])
+        except (pydantic_core.ValidationError, StopAsyncIteration) as e:
+            raise ShuttleAIException("No response received") from e
 
-    async def audio_generations(
+    async def list_models(self) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
+        """Returns a list of the available models
+
+        Returns:
+            ListModelsResponse: A response object containing the list of models.
+        """
+        return await self._fetch_and_process_models("v1/models", ListModelsResponse)
+
+    async def list_models_verbose(
         self,
-        input: str,
-        voice: str = None,
-        model: str = "eleven-labs",
-        **kwargs
-    ) -> Union[Audio, ShuttleError]:
-        """
-        Generate audio using a model.
-
-        Args:
-            input (str): The input for audio generation.
-            voice (str): The desired voice for the audio.
-            model (str, optional): The model name. Defaults to "ElevenLabs".
+    ) -> Union[ListVerboseModelsResponse, ListModelsResponse]:
+        """Returns a list of the available models with verbose information
 
         Returns:
-            Audio: The generated audio.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
+            ListVerboseModelsResponse: A response object containing the list of models.
         """
-        try:
-            data = {"model": model, "input": input, **({"voice": voice} if voice else {}), **kwargs}
-            response = await self._make_request(
-                "POST", "audio/speech", data, headers={"Authorization": f"Bearer {self.api_key}"}
-            )
-            try:
-                return Audio.from_dict(response)
-            except:
-                try:
-                    return ShuttleError(**response)
-                except:
-                    return response
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to generate audio: {e}")
-            raise
+        return await self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
 
-    async def audio_transcriptions(
+    async def _fetch_and_process_models(
         self,
-        file: str,
-        model: str = "whisper-large"
-    ) -> Union[Dict[str, Any], ShuttleError]:
-        """
-        Transcribe audio using a model.
-
-        Args:
-            file (str): Path to the audio file for transcription.
-            model (str, optional): The model name. Defaults to "whisper-large".
-
-        Returns:
-            Dict[str, Any]: The transcription result.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
-        """
+        endpoint: str,
+        response_class: Type[Union[ListModelsResponse, ListVerboseModelsResponse]],
+    ) -> Union[ListModelsResponse, ListVerboseModelsResponse]:
+        singleton_response = self._request("get", {}, endpoint)
         try:
-            data = {"model": model}
-            return await self._make_request(
-                "POST", "audio/transcriptions", data, headers={"Authorization": f"Bearer {self.api_key}"}, file=file
-            )
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to transcribe audio: {e}")
-            raise
+            list_models_response = response_class(**(await singleton_response.__anext__()))
+        except pydantic_core.ValidationError as e:
+            raise ShuttleAIException("No response received") from e
 
-    async def moderations(
+        models_by_id = {model.id: model for model in list_models_response.data}
+
+        for model in list_models_response.data:
+            if isinstance(model, ProxyCard):
+                model_parent = models_by_id.get(model.proxy_to)
+                assert isinstance(model_parent, BaseModelCard)
+                if model_parent:
+                    model.parent = model_parent
+
+        return list_models_response
+
+    @overload
+    async def ez_chat(  # type: ignore
+        self, text: str, model: Optional[str] = None, stream: Literal[False] = False
+    ) -> ChatCompletionResponse: ...
+
+    @overload
+    async def ez_chat(
+        self, text: str, model: Optional[str] = None, stream: Literal[True] = True
+    ) -> AsyncIterable[ChatCompletionStreamResponse]: ...
+
+    async def ez_chat(
         self,
-        input: str,
-        model: str = 'text-moderation-latest'
-    ) -> Union[Dict[str, Any], ShuttleError]:
-        """
-        Moderate text using a model.
-
-        Args:
-            input (str): The text to moderate.
-            model (str, optional): The model name. Defaults to 'text-moderation-007'.
-
-        Returns:
-            Dict[str, Any]: Moderation results.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
-        """
-        try:
-            data = {"model": model, "input": input}
-            return await self._make_request("POST", "moderations", data, headers={"Authorization": f"Bearer {self.api_key}"})
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to moderate input: {e}")
-            raise
-
-    async def embeddings(
-        self,
-        input: Union[str, List[str]],
-        model: str = 'text-embedding-ada-002'
-    ) -> Union[Embedding, ShuttleError]:
-        """
-        Generate embeddings using a model.
-
-        Args:
-            input (Union[str, List[str]]): The input text or list of texts.
-            model (str, optional): The model name. Defaults to 'text-embedding-ada-002'.
-
-        Returns:
-            Embedding: The generated embeddings.
-
-        Raises:
-            ShuttleError: If the API request fails.
-            Aiohttp.ClientError: If the API request is invalid.
-        """
-        try:
-            input = [input] if isinstance(input, str) else input
-            data = {"model": model, "input": input, "encoding_format": "float"}
-            response = await self._make_request(
-                "POST", "embeddings", data, headers={"Authorization": f"Bearer {self.api_key}"}
-            )
-            try:
-                return Embedding(**response)
-            except:
-                try:
-                    return ShuttleError(**response)
-                except:
-                    return response
-        except aiohttp.ClientError as e:
-            log.error(f"Failed to generate embeddings: {e}")
-            raise
+        text: str,
+        model: Optional[str] = None,
+        stream: bool = False,
+    ) -> Union[ChatCompletionResponse, AsyncIterable[ChatCompletionStreamResponse]]:
+        return await self.chat.completions.create(  # type: ignore
+            messages=[{"role": "user", "content": text}],
+            model=model,
+            stream=stream,
+        )
