@@ -208,20 +208,21 @@ HINT: We support TAB autocompletion for commands and model names!
 
     def execute_command(self, input: str) -> None:
         command = self.get_command(input)
-        if command in ["/exit", "/quit"]:
-            self.exit()
-        elif command == "/help":
-            self.opening_instructions()
-        elif command == "/new":
-            self.new_chat()
-        elif command == "/model":
-            self.switch_model(input)
-        elif command == "/system":
-            self.switch_system_message(input)
-        elif command == "/config":
-            self.show_config()
-        elif command == "/download":
-            self.download_conversation(input)
+        match command:
+            case "/exit" | "/quit":
+                self.exit()
+            case "/help":
+                self.opening_instructions()
+            case "/new":
+                self.new_chat()
+            case "/model":
+                self.switch_model(input)
+            case "/system":
+                self.switch_system_message(input)
+            case "/config":
+                self.show_config()
+            case "/download":
+                self.download_conversation(input)
 
     def download_conversation(self, input: str) -> None:
         format = self.get_arguments(input).lower()
