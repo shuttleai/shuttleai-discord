@@ -10,7 +10,7 @@ class AsyncModerations(AsyncResource):
         input: str,
         model: Optional[
             Union[str, Literal["text-moderation-latest", "text-moderation-stable"]]
-            ] = "text-moderation-stable",
+        ] = "text-moderation-stable",
     ) -> ModerationResponse:
         request = {"input": input, "model": model}
 
@@ -28,7 +28,7 @@ class Moderations(SyncResource):
         input: str,
         model: Optional[
             Union[str, Literal["text-moderation-latest", "text-moderation-stable"]]
-            ] = "text-moderation-stable",
+        ] = "text-moderation-stable",
     ) -> ModerationResponse:
         request = {"input": input, "model": model}
 

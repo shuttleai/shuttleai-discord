@@ -4,8 +4,13 @@ from .images.generations import AsyncImages, Images
 from .moderations import AsyncModerations, Moderations
 
 __all__ = [
-    "AsyncChat", "Chat",
-    "AsyncImages", "Images",
-    "AsyncAudio", "Audio",
-    "AsyncModerations", "Moderations"
-    ]
+    "AsyncChat",
+    "Chat",
+    "AsyncImages",
+    "Images",
+    "AsyncAudio",
+    "Audio",
+    "AsyncModerations",
+    "Moderations",
+    # Add new resources here
+]
