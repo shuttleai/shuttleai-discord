@@ -55,6 +55,8 @@ class AsyncShuttleAI(ClientBase):
         self.audio: resources.AsyncAudio = resources.AsyncAudio(self)
         self.moderations: resources.AsyncModerations = resources.AsyncModerations(self)
         self.embeddings: resources.AsyncEmbeddings = resources.AsyncEmbeddings(self)
+        self.insults: resources.AsyncInsults = resources.AsyncInsults(self)
+        self.jokes: resources.AsyncJokes = resources.AsyncJokes(self)
 
     async def __aenter__(self) -> "AsyncShuttleAI":
         if self._session is None:

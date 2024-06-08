@@ -29,7 +29,7 @@ class SyncResource(BaseResource):
         self,
         method: str,
         endpoint: str,
-        request_data: Dict[str, Any],
+        request_data: Dict[str, Any] | None,
         response_cls: Type[BaseModel],
         stream: bool = False,
     ) -> Any:
@@ -64,7 +64,7 @@ class AsyncResource(BaseResource):
         self,
         method: str,
         endpoint: str,
-        request_data: Dict[str, Any],
+        request_data: Dict[str, Any] | None,
         response_cls: Type[BaseModel],
         stream: bool = False,
     ) -> Any:
