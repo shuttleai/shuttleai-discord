@@ -67,6 +67,23 @@ class ChatCompletionStreamResponse(BaseModel):
     object: Optional[str] = None
     usage: Optional[UsageInfo] = None
 
+    @property
+    def first_choice(self) -> ChatCompletionResponseStreamChoice:
+        return self.choices[0]
+
+    def print_chunk(self) -> None:
+        try:
+            print(f"Request ID: {self.id}")
+            print(f"Model: {self.model}")
+            print(f"Created: {self.created}")
+            print(f"Usage: {self.usage}")
+            for choice in self.choices:
+                print(f"Index: {choice.index}")
+                print(f"Delta: {choice.delta}")
+                print(f"Finish Reason: {choice.finish_reason}")
+        except Exception as e:
+            raise ShuttleAIException(f"Error printing response: {e}") from e
+
 
 class ChatCompletionResponseChoice(BaseModel):
     index: int
@@ -122,7 +139,11 @@ class ChatCompletionResponse(BaseModel):
     def request_id(self) -> str:
         return self.x_sai.id
 
-    def print_response(self) -> None:
+    @property
+    def first_choice(self) -> ChatCompletionResponseChoice:
+        return self.choices[0]
+
+    def print(self) -> None:
         try:
             print(f"Request ID: {self.request_id}")
             print(f"Provider ID: {self.provider_id}")
