@@ -1,5 +1,5 @@
 __title__ = "shuttleai"
-__version__ = "4.0.8"
+__version__ = "4.0.9"
 
 from ._patch import _patch_httpx
 from .client import AsyncShuttleAI, ShuttleAI
