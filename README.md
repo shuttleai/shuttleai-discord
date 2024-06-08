@@ -32,6 +32,44 @@ pip install poetry
 poetry install
 ```
 
+## Getting Started
+
+### Synchronous Client
+
+```python
+from shuttleai import ShuttleAI
+
+shuttleai = ShuttleAI()
+
+for chunk in shuttleai.chat.completions.create(
+        messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
+        stream=True
+    ):
+    print(chunk.choices[0].delta.content, end="", flush=True)
+```
+
+### Asynchronous Client
+
+```python
+import asyncio
+from shuttleai import AsyncShuttleAI
+
+async def main():
+    shuttleai = AsyncShuttleAI()
+
+    async for chunk in shuttleai.chat.completions.create(
+        messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
+        stream=True
+    ):
+        print(chunk.choices[0].delta.content, end="", flush=True)
+
+asyncio.run(main())
+```
+
+### Interactive Chatbot
+
+Scroll down to the [Interactive Chatbot](#interactive-chatbot) section for more information.
+
 ## Run examples
 
 You can run the examples in the `examples/` directory using `poetry run` or by entering the virtual environment using `poetry shell`.
