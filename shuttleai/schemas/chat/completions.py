@@ -3,6 +3,7 @@ from typing import Annotated, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
+from shuttleai.exceptions import ShuttleAIException
 from shuttleai.schemas.common import UsageInfo
 
 
@@ -120,3 +121,17 @@ class ChatCompletionResponse(BaseModel):
     @property
     def request_id(self) -> str:
         return self.x_sai.id
+
+    def print_response(self) -> None:
+        try:
+            print(f"Request ID: {self.request_id}")
+            print(f"Provider ID: {self.provider_id}")
+            print(f"Model: {self.model}")
+            print(f"Created: {self.created}")
+            print(f"Usage: {self.usage}")
+            for choice in self.choices:
+                print(f"Index: {choice.index}")
+                print(f"Message: {choice.message}")
+                print(f"Finish Reason: {choice.finish_reason}")
+        except Exception as e:
+            raise ShuttleAIException(f"Error printing response: {e}") from e
