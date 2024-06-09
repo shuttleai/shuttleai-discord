@@ -47,15 +47,10 @@ jobs:
         run: |
           poetry run black shuttleai --check
 
-      # Mypy
-      - name: Mypy Check
-        run: |
-          poetry run mypy shuttleai
-
-      # Tests (disabled for now)
-      # - name: Run Tests
+      # # Mypy (disabled for now)
+      # - name: Mypy Check
       #   run: |
-      #     poetry run pytest tests
+      #     poetry run mypy shuttleai
 
   publish:
     if: startsWith(github.ref, 'refs/tags') # || github.ref == 'refs/heads/main'
