@@ -71,9 +71,9 @@ async def main():
 asyncio.run(main())
 ```
 
-### Interactive Chatbot
+### ShuttleAI CLI
 
-Scroll down to the [Interactive Chatbot](#scripts) section for more information.
+Scroll down to the [Scripts](#scripts) section for more information.
 
 ## Run examples
 
@@ -139,10 +139,10 @@ Please see the [contribution guide](CONTRIBUTING.md) for more information.
 - `poetry run key` - Display your default API key (if set by environment variable)
 - `poetry run contr` - Display contributors
 
-### Interactive Chatbot
-- `poetry run shuttleai` - Run the interactive chatbot
-![Example of Chatbot](https://cdn.shuttleai.app/cdn/7ceab893-bedb-4df9-9067-e2c63672da0c.png)
-![Example response of Chatbot](https://cdn.shuttleai.app/cdn/a6ec212b-6d01-4af9-b398-0e40960f8212.png)
+### ShuttleAI CLI
+- `poetry run shuttleai` or `shuttleai` - Run the ShuttleAI CLI.
+![Example of Chatbot](https://raw.githubusercontent.com/herumes/githubcdn/main/images/i.png)
+![Example response of Chatbot](https://raw.githubusercontent.com/herumes/githubcdn/main/images/i1.png)
 > [!Important]
 > We support auto TAB completion of commands and model names! Just press `TAB`!
-![Example of TAB of Chatbot](https://cdn.shuttleai.app/cdn/465fd3cf-2c68-4ac4-a3e0-6125a22f675e.png)
+![Example of TAB of Chatbot](https://raw.githubusercontent.com/herumes/githubcdn/main/images/i2.png)

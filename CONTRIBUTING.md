@@ -9,7 +9,7 @@ The ShuttleAI Python SDK uses [poetry](https://python-poetry.org/), [ruff](https
 ## Benefits
 Top contributors receive a special role in the [ShuttleAI Discord Server](https://discord.gg/shuttleai).
 
-![Example of a contributor with a special role](https://cdn.shuttleai.app/cdn/8d8d4800-3914-4a1b-972d-ad09f0009e79.png)
+![Example of a contributor with a special role](https://raw.githubusercontent.com/herumes/githubcdn/main/images/d.png)
 
 ## Lazy Contributing
 You can submit a pull request without passing checks, but it will be marked as `WIP` and not merged until all checks pass.
