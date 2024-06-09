@@ -15,6 +15,7 @@ We prioritize performance optimizations across the library. Beyond using orjson 
 ```s
 pip install shuttleai
 ```
+*We recommend using `--upgrade` or `-U` to ensure you have the latest version of the library.*
 
 ### From Source
 
@@ -33,6 +34,8 @@ poetry install
 ```
 
 ## Getting Started
+
+Below are some basic streaming examples for the ShuttleAI API. You can find more examples in the `examples/` directory.
 
 ### Synchronous Client
 
@@ -68,7 +71,7 @@ asyncio.run(main())
 
 ### Interactive Chatbot
 
-Scroll down to the [Interactive Chatbot](#interactive-chatbot) section for more information.
+Scroll down to the [Interactive Chatbot](#scripts) section for more information.
 
 ## Run examples
 
@@ -118,15 +121,15 @@ Please see the [contribution guide](CONTRIBUTING.md) for more information.
 
 ## Scripts
 ### Formatting/Checks
-- `poetry run ruff check shuttleai` - Check for code formatting issues
-- `poetry run black shuttleai --diff --color` - Check for code formatting issues
+- `poetry run ruff check shuttleai` - Check ruff
+- `poetry run black shuttleai --diff --color` - Check black
 - `poetry run black shuttleai` - Format code
 - `poetry run mypy shuttleai` - Check for type errors
 
 ### Tools
 - `poetry run clean` - Clean up the project directory
 - `poetry run key` - Display your default API key (if set by environment variable)
-- `poetry run contributors` - Display contributors
+- `poetry run contr` - Display contributors
 
 ### Interactive Chatbot
 - `poetry run shuttleai` - Run the interactive chatbot
