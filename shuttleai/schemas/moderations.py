@@ -25,3 +25,6 @@ class ModerationResponse(BaseModel):
     id: str
     model: str
     results: list[ModerationResult]
+
+    def is_flagged(self) -> bool:
+        return any(result.flagged for result in self.results)
