@@ -37,6 +37,7 @@ def invoke_function_call(function: FunctionCall) -> Any | None:
     return None
 
 history = [
+    # You can add a system message with additional information about the tool call if needed.
     ChatMessage(role="user", content="what is the weather in scotland? please tell me in fahrenheit")
 ]
 
