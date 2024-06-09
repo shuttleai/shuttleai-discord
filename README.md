@@ -109,8 +109,8 @@ After you have an API key, you can set it as an environment variable:
 ```s
 setx SHUTTLEAI_API_KEY "<your_api_key>"
 ```
-[!Note]
-This will only work in the current terminal session. To set it permanently, you can use the `setx` command with the `/m` flag.
+> [!Note]
+> This will only work in the current terminal session. To set it permanently, you can use the `setx` command with the `/m` flag.
 
 ```s
 setx SHUTTLEAI_API_KEY "<your_api_key>" /m
