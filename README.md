@@ -35,7 +35,7 @@ poetry install
 
 ## Getting Started
 
-Below are some basic streaming examples for the ShuttleAI API. You can find more examples in the `examples/` directory.
+Below is a non-streamed sync and async example for the ShuttleAI API. You can find more examples in the `examples/` directory.
 
 ### Synchronous Client
 
@@ -44,11 +44,12 @@ from shuttleai import ShuttleAI
 
 shuttleai = ShuttleAI()
 
-for chunk in shuttleai.chat.completions.create(
-        messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
-        stream=True
-    ):
-    print(chunk.choices[0].delta.content, end="", flush=True)
+response = shuttleai.chat.completions.create(
+    model="shuttle-2-turbo",
+    messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
+)
+
+print(chunk.choices[0].message.content)
 ```
 
 ### Asynchronous Client
@@ -60,11 +61,12 @@ from shuttleai import AsyncShuttleAI
 async def main():
     shuttleai = AsyncShuttleAI()
 
-    async for chunk in shuttleai.chat.completions.create(
+    response = await shuttleai.chat.completions.create(
+        model="shuttle-2-turbo",
         messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
-        stream=True
-    ):
-        print(chunk.choices[0].delta.content, end="", flush=True)
+    )
+
+    print(response.choices[0].message.content)
 
 asyncio.run(main())
 ```
@@ -106,6 +108,12 @@ After you have an API key, you can set it as an environment variable:
 
 ```s
 setx SHUTTLEAI_API_KEY "<your_api_key>"
+```
+[!Note]
+This will only work in the current terminal session. To set it permanently, you can use the `setx` command with the `/m` flag.
+
+```s
+setx SHUTTLEAI_API_KEY "<your_api_key>" /m
 ```
 
 ### macOS/Linux
