@@ -9,7 +9,6 @@ class AsyncJokes(AsyncResource):
         self,
         model: Optional[Union[str, Literal["joke-1"]]] = "joke-1",
     ) -> JokeResponse:
-
         return await self.handle_request(  # type: ignore
             method="get",
             endpoint=f"v1/jokes?key={self._client.api_key}&model={model}",
@@ -23,7 +22,6 @@ class Jokes(SyncResource):
         self,
         model: Optional[Union[str, Literal["joke-1"]]] = "joke-1",
     ) -> JokeResponse:
-
         return self.handle_request(  # type: ignore
             method="get",
             endpoint=f"v1/jokes?key={self._client.api_key}&model={model}",

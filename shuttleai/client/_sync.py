@@ -40,13 +40,22 @@ class ShuttleAI(ClientBase):
         http_client: Optional[Client] = None,
     ):
         super().__init__(base_url, api_key, timeout)
+
+        if self.api_key is None:
+            raise ShuttleAIException(
+                "API key not provided. Please set SHUTTLEAI_API_KEY environment variable.\n"
+                + "Alternatively, you may pass it as an argument to the ShuttleAI class constructor as `api_key`.\n"
+                + "In addition to that, you can also set the api key after creating the ShuttleAI object by setting \
+                    `client.api_key`.\n"
+            )
+
         if default_headers:
             self.default_headers = default_headers
 
         if http_client:
             self._http_client = http_client
         else:
-            self._http_client = Client(follow_redirects=True, timeout=timeout)
+            self._http_client = Client(timeout=timeout)
 
         self.chat: resources.Chat = resources.Chat(self)
         self.images: resources.Images = resources.Images(self)

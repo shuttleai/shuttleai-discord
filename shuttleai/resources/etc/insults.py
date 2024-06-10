@@ -9,7 +9,6 @@ class AsyncInsults(AsyncResource):
         self,
         model: Optional[Union[str, Literal["insult-1"]]] = "insult-1",
     ) -> InsultResponse:
-
         return await self.handle_request(  # type: ignore
             method="get",
             endpoint=f"v1/insults?key={self._client.api_key}&model={model}",
@@ -23,7 +22,6 @@ class Insults(SyncResource):
         self,
         model: Optional[Union[str, Literal["insult-1"]]] = "insult-1",
     ) -> InsultResponse:
-
         return self.handle_request(  # type: ignore
             method="get",
             endpoint=f"v1/insults?key={self._client.api_key}&model={model}",

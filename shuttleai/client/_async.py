@@ -42,6 +42,14 @@ class AsyncShuttleAI(ClientBase):
     ):
         super().__init__(base_url, api_key, timeout)
 
+        if self.api_key is None:
+            raise ShuttleAIException(
+                "API key not provided. Please set SHUTTLEAI_API_KEY environment variable.\n"
+                + "Alternatively, you may pass it as an argument to the ShuttleAI class constructor as `api_key`.\n"
+                + "In addition to that, you can also set the api key after creating the ShuttleAI object by setting \
+                    `client.api_key`.\n"
+            )
+
         self._timeout = timeout if isinstance(timeout, ClientTimeout) else ClientTimeout(total=timeout)
         if default_headers:
             self.default_headers = default_headers
