@@ -15,6 +15,7 @@ from .client import AsyncShuttleAI, ShuttleAI
 CACHE_FILE = Path(f"{__title__}-version.json")
 CACHE_DURATION = 86400  # 24 hours in seconds
 
+
 def read_cached_version_info() -> typing.Optional[dict[str, typing.Any]]:
     """Read the cached version information from the cache file."""
     if CACHE_FILE.exists():
@@ -25,6 +26,7 @@ def read_cached_version_info() -> typing.Optional[dict[str, typing.Any]]:
             print(f"Error reading cache file: {e}")
     return None
 
+
 def write_cached_version_info(version_info: dict[str, typing.Any]) -> None:
     """Write the version information to the cache file."""
     try:
@@ -33,9 +35,11 @@ def write_cached_version_info(version_info: dict[str, typing.Any]) -> None:
     except IOError as e:
         print(f"Error writing to cache file: {e}")
 
+
 def is_cache_valid(cache_time: float) -> bool:
     """Check if the cache is still valid based on the cache duration."""
     return time.time() - cache_time < CACHE_DURATION
+
 
 def check_for_updates() -> None:
     """Check for updates and notify the user if a newer version is available."""
@@ -59,11 +63,14 @@ def check_for_updates() -> None:
     except requests.RequestException as e:
         print(f"Could not check for updates: {e}")
 
+
 def print_update_message(latest_version: str) -> None:
     """Print a message to the user indicating that an update is available."""
-    print(f"WARNING: You are using an outdated version of {__title__} ({__version__}). "
-          f"The latest version is {latest_version}. It is recommended to upgrade using:\n"
-          f">> pip install -U {__title__}")
+    print(
+        f"WARNING: You are using an outdated version of {__title__} ({__version__}). "
+        f"The latest version is {latest_version}. It is recommended to upgrade using:\n"
+        f">> pip install -U {__title__}"
+    )
 
 
 _patch_httpx()
