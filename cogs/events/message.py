@@ -75,7 +75,7 @@ class MessageCog(commands.Cog):
             
             # Check settings
             user_settings = user_settings_manager.get_or_create_user_settings(discord_id)
-            model = user_settings.get('model', 'shuttle-turbo')
+            model = user_settings.get('model', 'shuttle-2-turbo')
             # TODO: Guild settings
 
             # Get personality
@@ -133,14 +133,12 @@ class MessageCog(commands.Cog):
                                         try:
                                             jschunk = orjson.loads(jschunk)
                                             chunk = jschunk.get('choices', [{}])[0].get('delta', {}).get('content')
+                                            # Append valid chunk
+                                            if (chunk):
+                                                chunks.append(chunk)
+                                                message_content += chunk
                                         except:
                                             pass
-                                        if chunk is None:
-                                            continue
-
-                                        # Append valid chunk
-                                        chunks.append(chunk)
-                                        message_content += chunk
 
                                         # Check for if the message is over discord's max char limit
                                         if len(message_content) > 2000:
@@ -204,10 +202,10 @@ class MessageCog(commands.Cog):
                             can_send_embed = True
 
                         if can_send_embed:
-                            embed = discord.Embed(title="💡Did You Know", description="You can generate images with ShuttleAI using `/imagine`", color=discord.Color(0x2b2d31))
+                            embed = discord.Embed(title="🎨 Imagine", description="Generate AI images using `/imagine` back up and working again!", color=discord.Color(0x2b2d31))
                             await message.channel.send(embed=embed)
                         else:
-                            plain_message = "> **💡Did You Know\n> You can generate images with ShuttleAI using `/imagine`**"
+                            plain_message = "> **🎨 Imagine\n> Generate AI images using `/imagine` back up and working again!**"
                             await message.channel.send(plain_message)
                     if self.user_response_counter[discord_id] == 5:
                         self.user_response_counter[discord_id] = 0 
