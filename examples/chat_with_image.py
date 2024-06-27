@@ -2,7 +2,7 @@
 
 
 from shuttleai import ShuttleAI
-from shuttleai.schemas.chat.completions import (  # Helper for messages
+from shuttleai.schemas.chat.completions import (  # Helper for messages, not required!
     ChatMessage,
     ChatMessageContentPartImage,  # For v5 use
     ChatMessageContentPartText,  # For v5 use
