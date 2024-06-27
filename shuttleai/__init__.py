@@ -1,5 +1,5 @@
 __title__ = "shuttleai"
-__version__ = "4.1.7"
+__version__ = "4.1.8"
 
 import json
 import time

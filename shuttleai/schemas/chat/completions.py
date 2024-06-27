@@ -22,6 +22,11 @@ class FunctionCall(BaseModel):
     arguments: str
 
 
+class ContentPartType(str, Enum):
+    text = "text"
+    image_url = "image_url"
+
+
 class ToolCall(BaseModel):
     id: str = "call_null"
     type: ToolType = ToolType.function
@@ -33,9 +38,19 @@ class ToolChoice(str, Enum):
     none: str = "none"
 
 
+class ChatMessageContentPartText(BaseModel):
+    type: ContentPartType = ContentPartType.text
+    text: str
+
+
+class ChatMessageContentPartImage(BaseModel):
+    type: ContentPartType = ContentPartType.image_url
+    image_url: str
+
+
 class ChatMessage(BaseModel):
     role: str
-    content: Optional[Union[str, List[str]]] = None
+    content: Optional[Union[str, List[Union[ChatMessageContentPartText, ChatMessageContentPartImage]]]] = None
     name: Optional[str] = None
     tool_calls: Optional[List[ToolCall]] = None
     tool_call_id: Optional[str] = None
