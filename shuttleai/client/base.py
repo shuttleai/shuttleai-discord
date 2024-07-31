@@ -155,17 +155,15 @@ class ClientBase(ABC):  # noqa: B024
 
     def _make_audio_speech_request(
         self,
-        prompt: str,
-        model: Optional[str] = None,
+        input: str,
+        model: str = "eleven-labs",
         voice: Optional[str] = None,
     ) -> Dict[str, Any]:
         request_data: Dict[str, Any] = {
-            "prompt": prompt,
+            "input": input,
+            "model": model,
+            **({"voice": voice} if voice else {}),
         }
-        if model:
-            request_data["model"] = model
-        if voice:
-            request_data["voice"] = voice
         return self._make_request("audio_speech", request_data)
 
     def _make_audio_trans_request(  # translations/transcriptions share similar request/response schemas

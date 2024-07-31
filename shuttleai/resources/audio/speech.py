@@ -7,12 +7,14 @@ from shuttleai.schemas.audio.speech import AudioSpeechResponse
 class AsyncSpeech(AsyncResource):
     async def generate(
         self,
-        prompt: str,
-        model: Optional[str] = None,
+        input: str,
+        model: str = "eleven-labs",
+        voice: Optional[str] = None,
     ) -> AudioSpeechResponse:
         request = self._client._make_audio_speech_request(
-            prompt,
+            input,
             model,
+            voice
         )
 
         return await self.handle_request(  # type: ignore
@@ -26,12 +28,14 @@ class AsyncSpeech(AsyncResource):
 class SyncSpeech(SyncResource):
     def generate(
         self,
-        prompt: str,
-        model: Optional[str] = None,
+        input: str,
+        model: str = "eleven-labs",
+        voice: Optional[str] = None,
     ) -> AudioSpeechResponse:
         request = self._client._make_audio_speech_request(
-            prompt,
+            input,
             model,
+            voice
         )
 
         return self.handle_request(  # type: ignore
