@@ -11,11 +11,7 @@ class AsyncSpeech(AsyncResource):
         model: str = "eleven-labs",
         voice: Optional[str] = None,
     ) -> AudioSpeechResponse:
-        request = self._client._make_audio_speech_request(
-            input,
-            model,
-            voice
-        )
+        request = self._client._make_audio_speech_request(input, model, voice)
 
         return await self.handle_request(  # type: ignore
             method="post",
@@ -32,11 +28,7 @@ class SyncSpeech(SyncResource):
         model: str = "eleven-labs",
         voice: Optional[str] = None,
     ) -> AudioSpeechResponse:
-        request = self._client._make_audio_speech_request(
-            input,
-            model,
-            voice
-        )
+        request = self._client._make_audio_speech_request(input, model, voice)
 
         return self.handle_request(  # type: ignore
             method="post",
