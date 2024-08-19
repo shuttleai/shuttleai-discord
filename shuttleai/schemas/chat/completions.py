@@ -53,7 +53,7 @@ class ChatMessage(BaseModel):
     content: Optional[Union[str, List[Union[ChatMessageContentPartText, ChatMessageContentPartImage]]]] = None
     name: Optional[str] = None
     tool_calls: Optional[List[ToolCall]] = None
-    tool_call_id: Optional[str] = None
+    # tool_call_id: Optional[str] = None
 
 
 class DeltaMessage(BaseModel):
@@ -128,7 +128,7 @@ class ChatCompletionResponse(BaseModel):
 
     @property
     def cost(self) -> float:
-        return self.usage.total_cost
+        return self.usage.total_charged
     # x_sai: Annotated[
     #     ShuttleAIMeta,
     #     Field(
