@@ -106,16 +106,16 @@ class ChatCompletionResponseChoice(BaseModel):
     finish_reason: Optional[FinishReason]
 
 
-class ShuttleAIMeta(BaseModel):
-    id: str
-    """The ID of the request."""
+# class ShuttleAIMeta(BaseModel):
+#     id: str
+#     """The ID of the request."""
 
-    p: str
-    """The ID of the provider that processed the request.
+#     p: str
+#     """The ID of the provider that processed the request.
 
-    The provider ID is semi-reliable, meaning upon VPS restarts, provider IDs may change;
-    however, they are guaranteed to remain the same for the duration of the VPS uptime.
-    (This can be useful for debugging/reporting purposes.)"""
+#     The provider ID is semi-reliable, meaning upon VPS restarts, provider IDs may change;
+#     however, they are guaranteed to remain the same for the duration of the VPS uptime.
+#     (This can be useful for debugging/reporting purposes.)"""
 
 
 class ChatCompletionResponse(BaseModel):
@@ -125,34 +125,38 @@ class ChatCompletionResponse(BaseModel):
     model: str
     choices: List[ChatCompletionResponseChoice]
     usage: UsageInfo
-    x_sai: Annotated[
-        ShuttleAIMeta,
-        Field(
-            alias="x-sai",
-            alias_priority=1,
-            examples=[{"id": "req_123abc", "p": "p_123abc"}],
-        ),
-    ]
 
     @property
-    def xsai(self) -> ShuttleAIMeta:
-        return self.x_sai
+    def cost(self) -> float:
+        return self.usage.total_cost
+    # x_sai: Annotated[
+    #     ShuttleAIMeta,
+    #     Field(
+    #         alias="x-sai",
+    #         alias_priority=1,
+    #         examples=[{"id": "req_123abc", "p": "p_123abc"}],
+    #     ),
+    # ]
 
-    @property
-    def meta(self) -> ShuttleAIMeta:
-        return self.x_sai
+    # @property
+    # def xsai(self) -> ShuttleAIMeta:
+    #     return self.x_sai
 
-    @property
-    def provider(self) -> str:
-        return self.x_sai.p
+    # @property
+    # def meta(self) -> ShuttleAIMeta:
+    #     return self.x_sai
 
-    @property
-    def provider_id(self) -> str:
-        return self.x_sai.p
+    # @property
+    # def provider(self) -> str:
+    #     return self.x_sai.p
 
-    @property
-    def request_id(self) -> str:
-        return self.x_sai.id
+    # @property
+    # def provider_id(self) -> str:
+    #     return self.x_sai.p
+
+    # @property
+    # def request_id(self) -> str:
+    #     return self.x_sai.id
 
     @property
     def first_choice(self) -> ChatCompletionResponseChoice:
@@ -160,8 +164,8 @@ class ChatCompletionResponse(BaseModel):
 
     def print(self) -> None:
         try:
-            print(f"Request ID: {self.request_id}")
-            print(f"Provider ID: {self.provider_id}")
+            # print(f"Request ID: {self.request_id}")
+            # print(f"Provider ID: {self.provider_id}")
             print(f"Model: {self.model}")
             print(f"Created: {self.created}")
             print(f"Usage: {self.usage}")

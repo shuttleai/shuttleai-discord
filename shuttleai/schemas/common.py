@@ -10,4 +10,5 @@ class UsageInfo(BaseModel):
 
     prompt_tokens: int
     total_tokens: int
-    completion_tokens: Optional[int]
+    # completion_tokens: Optional[int]
+    total_cost: float
