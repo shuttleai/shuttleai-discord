@@ -45,7 +45,7 @@ from shuttleai import ShuttleAI
 shuttleai = ShuttleAI()
 
 response = shuttleai.chat.completions.create(
-    model="shuttle-2-turbo",
+    model="shuttle-2.5",
     messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
 )
 
@@ -62,7 +62,7 @@ async def main():
     shuttleai = AsyncShuttleAI()
 
     response = await shuttleai.chat.completions.create(
-        model="shuttle-2-turbo",
+        model="shuttle-2.5",
         messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
     )
 
