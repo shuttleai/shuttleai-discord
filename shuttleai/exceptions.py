@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import Dict, Optional
 
 from aiohttp import ClientResponse
 from httpx import Response
@@ -29,19 +29,22 @@ class ShuttleAIAPIException(ShuttleAIException):
         self,
         message: Optional[str] = None,
         http_status: Optional[int] = None,
+        headers: Optional[Dict[str, str]] = None,
     ) -> None:
         super().__init__(message)
         self.http_status = http_status
+        self.headers = headers or {}
 
     @classmethod
     def from_response(cls, response: Response | ClientResponse, message: Optional[str] = None) -> ShuttleAIAPIException:
         return cls(
             message=(message or response.text if isinstance(response, Response) else response.reason),
             http_status=(response.status_code if isinstance(response, Response) else response.status),
+            headers=dict(response.headers) if isinstance(response, Response) else dict(response.headers.items()),
         )
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}(message={str(self)}, http_status={self.http_status})"
+        return f"{self.__class__.__name__}(message={str(self)}, http_status={self.http_status}, headers={self.headers})"
 
 
 class ShuttleAIAPIStatusException(ShuttleAIAPIException):

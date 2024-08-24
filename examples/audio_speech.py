@@ -9,8 +9,8 @@ def main() -> None:
     client = ShuttleAI()
 
     audio_response = client.audio.speech.generate(
-        "hello",
-        model="eleven-labs",
+        input="hello",
+        model="eleven_turbo_v2_5",
         voice="clyde"  # voices listed @ https://api.shuttleai.app/v1/voices
     )
 

@@ -11,7 +11,7 @@ async def main() -> None:
 
     chat_response = await client.chat.completions.create(
         messages=[{"role": "user", "content": "what is 5 plus 3"}],
-        model="shuttle-2-turbo"
+        model="shuttle-2.5"
     )
 
     print(chat_response.choices[0].message.content)

@@ -46,7 +46,7 @@ class ClientBase(ABC):  # noqa: B024
         self.base_url = self._base_url
 
         self._logger = logging.getLogger(__name__)
-        self._default_chat_model = "shuttle-2-turbo"
+        self._default_chat_model = "shuttle-2.5"
         self._default_image_model = "sdxl"
         self._default_audio_speech_model = "eleven-labs"
         self._version = __version__
