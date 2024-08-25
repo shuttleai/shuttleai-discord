@@ -143,7 +143,7 @@ HINT: We support TAB autocompletion for commands and model names!
         model = self.get_arguments(input)
         if model in MODEL_LIST:
             self.model = model
-            logger.info(f"\033[38;5;105m{model}\033[")
+            logger.info(f"Switched to model \033[38;5;105m{model}\033[")
         else:
             logger.error(f"Invalid model name: {model}")
 
@@ -176,9 +176,12 @@ HINT: We support TAB autocompletion for commands and model names!
         assistant_response = ""
         logger.debug(f"Running inference with model: {self.model}")
         logger.debug(f"Sending messages: {self.messages}")
-        for chunk in self.client.chat.completions.create(model=self.model, messages=self.messages, stream=True):
-            response = chunk.choices[0].delta.content
-            if response is not None:
+        for chunk in self.client.chat.completions.create(
+            model=self.model,
+            messages=self.messages,
+            stream=True
+        ):
+            if response := chunk.first_choice.delta.content:
                 print(response, end="", flush=True)
                 assistant_response += response
 
