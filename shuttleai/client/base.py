@@ -47,8 +47,8 @@ class ClientBase(ABC):  # noqa: B024
 
         self._logger = logging.getLogger(__name__)
         self._default_chat_model = "shuttle-2.5"
-        self._default_image_model = "sdxl"
-        self._default_audio_speech_model = "eleven-labs"
+        self._default_image_model = "shuttle-2-diffusion"
+        self._default_audio_speech_model = "eleven_turbo_v2_5"
         self._version = __version__
 
         if "shuttleai.app" not in self.base_url:
@@ -66,8 +66,8 @@ class ClientBase(ABC):  # noqa: B024
                     If you wish to use the OpenAI API, consider using their SDK respectively. \
                     Otherwise, please use the official ShuttleAI API URL: https://api.shuttleai.app/v1"
                 )
-            self._default_chat_model = "gpt-3.5-turbo"
-            self._default_image_model = "dall-e-2"
+            self._default_chat_model = "gpt-4o-mini"
+            self._default_image_model = "dall-e-3"
             self._default_audio_speech_model = "whisper-1"
 
         self._logger.info(f"ShuttleAI API client initialized with base URL: {self._base_url}")
@@ -156,7 +156,7 @@ class ClientBase(ABC):  # noqa: B024
     def _make_audio_speech_request(
         self,
         input: str,
-        model: str = "eleven-labs",
+        model: str = "eleven_turbo_v2_5",
         voice: Optional[str] = None,
     ) -> Dict[str, Any]:
         request_data: Dict[str, Any] = {
