@@ -129,6 +129,7 @@ class ChatCompletionResponse(BaseModel):
     @property
     def cost(self) -> float:
         return self.usage.total_charged
+
     # x_sai: Annotated[
     #     ShuttleAIMeta,
     #     Field(
