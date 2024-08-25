@@ -176,11 +176,7 @@ HINT: We support TAB autocompletion for commands and model names!
         assistant_response = ""
         logger.debug(f"Running inference with model: {self.model}")
         logger.debug(f"Sending messages: {self.messages}")
-        for chunk in self.client.chat.completions.create(
-            model=self.model,
-            messages=self.messages,
-            stream=True
-        ):
+        for chunk in self.client.chat.completions.create(model=self.model, messages=self.messages, stream=True):
             if response := chunk.first_choice.delta.content:
                 print(response, end="", flush=True)
                 assistant_response += response
