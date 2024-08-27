@@ -22,7 +22,7 @@ def main() -> None:
         "what is 5 plus 3",
         stream=True
     ):
-        print(message.choices[0].delta.content, end="", flush=True)
+        print(message.choices[0].delta.content or "", end="", flush=True)
 
 
 if __name__ == "__main__":
