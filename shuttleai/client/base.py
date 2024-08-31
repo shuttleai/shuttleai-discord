@@ -122,6 +122,7 @@ class ClientBase(ABC):  # noqa: B024
         messages: List[Any],
         model: Optional[str] = None,
         image: Optional[str] = None,
+        internet: Optional[str] = None,
         tools: Optional[List[Dict[str, Any]]] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
@@ -136,6 +137,8 @@ class ClientBase(ABC):  # noqa: B024
             request_data["model"] = model
         if image:
             request_data["image"] = image
+        if internet:
+            request_data["internet"] = internet
         if tools:
             request_data["tools"] = self._parse_tools(tools)
         if tool_choice:
