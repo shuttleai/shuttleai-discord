@@ -46,7 +46,8 @@ shuttleai = ShuttleAI()
 
 response = shuttleai.chat.completions.create(
     model="shuttle-2.5",
-    messages=[{"role": "user", "content": "Imagine an AI like no other, its name is ShuttleAI."}],
+    messages=[{"role": "user", "content": "What day is today?"}],
+    internet=True
 )
 
 print(chunk.choices[0].message.content)
