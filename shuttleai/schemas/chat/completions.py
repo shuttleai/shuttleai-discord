@@ -55,6 +55,13 @@ class ChatMessage(BaseModel):
     tool_calls: Optional[List[ToolCall]] = None
     # tool_call_id: Optional[str] = None
 
+class ChatResponseMessage(BaseModel):
+    role: str = "assistant"
+    content: Optional[str] = None
+    name: Optional[str] = None
+    tool_calls: Optional[List[ToolCall]] = None
+    # tool_call_id: Optional[str] = None
+
 
 class DeltaMessage(BaseModel):
     role: Optional[str] = None
@@ -102,7 +109,7 @@ class ChatCompletionStreamResponse(BaseModel):
 
 class ChatCompletionResponseChoice(BaseModel):
     index: int
-    message: ChatMessage
+    message: ChatResponseMessage
     finish_reason: Optional[FinishReason]
 
 

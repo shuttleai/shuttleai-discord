@@ -100,8 +100,8 @@ cd examples
 
 To use the ShuttleAI API, you need to have an API key. 
 You can get a **FREE** API key by signing up at 
-[shuttleai.app](https://shuttleai.app) and heading to 
-the [key management page](https://shuttleai.app/keys).
+[shuttleai.com](https://shuttleai.com) and heading to 
+the [key management page](https://shuttleai.com/keys).
 
 After you have an API key, you can set it as an environment variable:
 

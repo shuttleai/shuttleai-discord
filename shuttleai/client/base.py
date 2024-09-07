@@ -38,7 +38,7 @@ class ClientBase(ABC):  # noqa: B024
 
         self._base_url = base_url or os.getenv("SHUTTLEAI_API_BASE")
         if not self._base_url:
-            self._base_url = "https://api.shuttleai.app"
+            self._base_url = "https://api.shuttleai.com"
         # else: # TODO: uh, yeah, we might just follow the OpenAI SDK format, but for now, let's just keep as is
         #     self._base_url = self._base_url.rstrip("/v1")
 
@@ -51,20 +51,20 @@ class ClientBase(ABC):  # noqa: B024
         self._default_audio_speech_model = "eleven_turbo_v2_5"
         self._version = __version__
 
-        if "shuttleai.app" not in self.base_url:
+        if "shuttleai.com" not in self.base_url or "shuttleai.app" not in self.base_url:
             if "api.openai.com" not in self.base_url:
                 self._logger.warning(
                     "You are using an **unofficial, unverified** non-ShuttleAI URL. \
                     This is not recommended and may lead to malfunctions. \
                     Your data could be at risk since you are using a 3rd party. \
-                    Please use the official ShuttleAI API URL: https://api.shuttleai.app/v1"
+                    Please use the official ShuttleAI API URL: https://api.shuttleai.com/v1"
                 )
             else:
                 self._logger.warning(
                     "You are using the official, verified OpenAI API URL. \
                     This library is not meant to replace the OpenAI SDK. \
                     If you wish to use the OpenAI API, consider using their SDK respectively. \
-                    Otherwise, please use the official ShuttleAI API URL: https://api.shuttleai.app/v1"
+                    Otherwise, please use the official ShuttleAI API URL: https://api.shuttleai.com/v1"
                 )
             self._default_chat_model = "gpt-4o-mini"
             self._default_image_model = "dall-e-3"

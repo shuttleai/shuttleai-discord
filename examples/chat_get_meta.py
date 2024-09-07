@@ -15,8 +15,8 @@ def main() -> None:
     # client.base_url = "http://my-new-base.url" # Support for changing base URL after initialization
     """shuttleai handles the format of the base URL differently from the openai sdk.
 
-    OpenAI SDK Format: https://api.shuttleai.app/v1
-    ShuttleAI SDK Format: https://api.shuttleai.app
+    OpenAI SDK Format: https://api.shuttleai.com/v1
+    ShuttleAI SDK Format: https://api.shuttleai.com
 
     NOTE that the openai sdk requires the version number to be included in the base URL;
     the shuttleai sdk does not require this."""
