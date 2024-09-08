@@ -51,7 +51,7 @@ class ClientBase(ABC):  # noqa: B024
         self._default_audio_speech_model = "eleven_turbo_v2_5"
         self._version = __version__
 
-        if "shuttleai.com" not in self.base_url or "shuttleai.app" not in self.base_url:
+        if "shuttleai.com" not in self.base_url and "shuttleai.app" not in self.base_url:
             if "api.openai.com" not in self.base_url:
                 self._logger.warning(
                     "You are using an **unofficial, unverified** non-ShuttleAI URL. \
