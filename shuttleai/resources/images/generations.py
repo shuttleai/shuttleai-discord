@@ -19,7 +19,7 @@ class AsyncGenerations(AsyncResource):
 
         return await self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/images/generations",
+            endpoint="/images/generations",
             request_data=request,
             response_cls=ImagesGenerationResponse,
         )
@@ -38,7 +38,7 @@ class SyncGenerations(SyncResource):
 
         return self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/images/generations",
+            endpoint="/images/generations",
             request_data=request,
             response_cls=ImagesGenerationResponse,
         )

@@ -177,7 +177,7 @@ class ShuttleAI(ClientBase):
         Returns:
             BaseModelCard, None]: The model if it exists
         """
-        singleton_response = self._request("get", {}, f"v1/models/{model_id}")
+        singleton_response = self._request("get", {}, f"/models/{model_id}")
         try:
             return BaseModelCard(**next(singleton_response)["data"])
         except (pydantic_core.ValidationError, StopIteration) as e:
@@ -189,7 +189,7 @@ class ShuttleAI(ClientBase):
         Returns:
             ListModelsResponse: A response object containing the list of models.
         """
-        return self._fetch_and_process_models("v1/models", ListModelsResponse)
+        return self._fetch_and_process_models("/models", ListModelsResponse)
 
     def list_models_verbose(
         self,
@@ -199,7 +199,7 @@ class ShuttleAI(ClientBase):
         Returns:
             ListVerboseModelsResponse: A response object containing the list of models.
         """
-        return self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
+        return self._fetch_and_process_models("/models/verbose", ListVerboseModelsResponse)
 
     def _fetch_and_process_models(
         self,

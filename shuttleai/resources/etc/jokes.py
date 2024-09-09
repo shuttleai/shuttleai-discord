@@ -11,7 +11,7 @@ class AsyncJokes(AsyncResource):
     ) -> JokeResponse:
         return await self.handle_request(  # type: ignore
             method="get",
-            endpoint=f"v1/jokes?key={self._client.api_key}&model={model}",
+            endpoint=f"/jokes?key={self._client.api_key}&model={model}",
             request_data=None,
             response_cls=JokeResponse,
         )
@@ -24,7 +24,7 @@ class Jokes(SyncResource):
     ) -> JokeResponse:
         return self.handle_request(  # type: ignore
             method="get",
-            endpoint=f"v1/jokes?key={self._client.api_key}&model={model}",
+            endpoint=f"/jokes?key={self._client.api_key}&model={model}",
             request_data=None,
             response_cls=JokeResponse,
         )

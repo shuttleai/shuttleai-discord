@@ -16,7 +16,7 @@ class AsyncEmbeddings(AsyncResource):
 
         return await self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/embeddings",
+            endpoint="/embeddings",
             request_data=request,
             response_cls=EmbeddingResponse,
         )
@@ -34,7 +34,7 @@ class Embeddings(SyncResource):
 
         return self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/embeddings",
+            endpoint="/embeddings",
             request_data=request,
             response_cls=EmbeddingResponse,
         )

@@ -17,7 +17,7 @@ class AsyncTranscriptions(AsyncResource):
 
         return await self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/audio/transcriptions",
+            endpoint="/audio/transcriptions",
             request_data=request,
             response_cls=AudioTranscriptionResponse,
         )
@@ -36,7 +36,7 @@ class SyncTranscriptions(SyncResource):
 
         return self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/audio/transcriptions",
+            endpoint="/audio/transcriptions",
             request_data=request,
             response_cls=AudioTranscriptionResponse,
         )

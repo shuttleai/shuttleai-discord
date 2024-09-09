@@ -16,7 +16,7 @@ class AsyncModerations(AsyncResource):
 
         return await self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/moderations",
+            endpoint="/moderations",
             request_data=request,
             response_cls=ModerationResponse,
         )
@@ -34,7 +34,7 @@ class Moderations(SyncResource):
 
         return self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/moderations",
+            endpoint="/moderations",
             request_data=request,
             response_cls=ModerationResponse,
         )

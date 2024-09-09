@@ -15,7 +15,7 @@ class AsyncSpeech(AsyncResource):
 
         return await self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/audio/speech",
+            endpoint="/audio/speech",
             request_data=request,
             response_cls=AudioSpeechResponse,
         )
@@ -32,7 +32,7 @@ class SyncSpeech(SyncResource):
 
         return self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/audio/speech",
+            endpoint="/audio/speech",
             request_data=request,
             response_cls=AudioSpeechResponse,
         )

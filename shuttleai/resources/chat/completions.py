@@ -83,7 +83,7 @@ class AsyncCompletions(AsyncResource):
 
         return await self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/chat/completions",
+            endpoint="/chat/completions",
             request_data=request,
             response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse,  # type: ignore
             stream=stream,
@@ -149,7 +149,7 @@ class SyncCompletions(SyncResource):
 
         return self.handle_request(  # type: ignore
             method="post",
-            endpoint="v1/chat/completions",
+            endpoint="/chat/completions",
             request_data=request,
             response_cls=ChatCompletionStreamResponse if stream else ChatCompletionResponse,  # type: ignore
             stream=stream,

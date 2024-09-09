@@ -11,7 +11,7 @@ class AsyncInsults(AsyncResource):
     ) -> InsultResponse:
         return await self.handle_request(  # type: ignore
             method="get",
-            endpoint=f"v1/insults?key={self._client.api_key}&model={model}",
+            endpoint=f"/insults?key={self._client.api_key}&model={model}",
             request_data=None,
             response_cls=InsultResponse,
         )
@@ -24,7 +24,7 @@ class Insults(SyncResource):
     ) -> InsultResponse:
         return self.handle_request(  # type: ignore
             method="get",
-            endpoint=f"v1/insults?key={self._client.api_key}&model={model}",
+            endpoint=f"/insults?key={self._client.api_key}&model={model}",
             request_data=None,
             response_cls=InsultResponse,
         )

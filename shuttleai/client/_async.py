@@ -180,7 +180,7 @@ class AsyncShuttleAI(ClientBase):
         Returns:
             BaseModelCard, None]: The model if it exists
         """
-        singleton_response = self._request("get", {}, f"v1/models/{model_id}")
+        singleton_response = self._request("get", {}, f"/models/{model_id}")
         try:
             return BaseModelCard(**(await singleton_response.__anext__())["data"])
         except (pydantic_core.ValidationError, StopAsyncIteration) as e:
@@ -192,7 +192,7 @@ class AsyncShuttleAI(ClientBase):
         Returns:
             ListModelsResponse: A response object containing the list of models.
         """
-        return await self._fetch_and_process_models("v1/models", ListModelsResponse)
+        return await self._fetch_and_process_models("/models", ListModelsResponse)
 
     async def list_models_verbose(
         self,
@@ -202,7 +202,7 @@ class AsyncShuttleAI(ClientBase):
         Returns:
             ListVerboseModelsResponse: A response object containing the list of models.
         """
-        return await self._fetch_and_process_models("v1/models/verbose", ListVerboseModelsResponse)
+        return await self._fetch_and_process_models("/models/verbose", ListVerboseModelsResponse)
 
     async def _fetch_and_process_models(
         self,
