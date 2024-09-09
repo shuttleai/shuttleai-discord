@@ -77,8 +77,6 @@ STREAM_URL='' # Stream URL, e.g. https://www.twitch.tv/username
 STREAM_NAME='' # Stream Name, e.g. /imagine
 
 MONGO_URI='' # Your MongoDB URI, e.g. mongodb://localhost:27017
-
-OWNER_IDS='' # Bot owner discord IDs, separated by comma (,)
 ```
 
 ### Step 6. 📦 Install the requirements
@@ -102,13 +100,3 @@ python main.py
 If you encounter any issues or need further assistance, create an issue in this repository. We're here to help!
 
 Enjoy your new AI-powered Discord bot!
-
-## ⭐ Star History
-
-<a href="https://star-history.com/#shuttleai/shuttleai-discord&Timeline">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=shuttleai/shuttleai-discord&type=Timeline" />
- </picture>
-</a>

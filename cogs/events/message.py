@@ -75,7 +75,7 @@ class MessageCog(commands.Cog):
             
             # Check settings
             user_settings = user_settings_manager.get_or_create_user_settings(discord_id)
-            model = user_settings.get('model', 'shuttle-2-turbo')
+            model = user_settings.get('model', 'shuttle-2.5')
             # TODO: Guild settings
 
             # Get personality
@@ -91,14 +91,14 @@ class MessageCog(commands.Cog):
             instructions = create_instructions_for_personality(personality, guild_name, guild_owner_name, channel_name, message_author_name, discord_id)
 
             # Send warning if needed
-            if personality in ["Rude", "Discord Kitten"]:
-                if model != "airoboros-70b":
-                    embed = discord.Embed(
-                        title="Warning",
-                        description=f"Model `airoboros-70b` is recommended to be used with **{personality}** mode.",
-                        color=discord.Color.yellow()
-                    )
-                    await message.channel.send(embed=embed)
+            # if personality in ["Rude", "Discord Kitten"]:
+            #     if model != "airoboros-70b":
+            #         embed = discord.Embed(
+            #             title="Warning",
+            #             description=f"Model `airoboros-70b` is recommended to be used with **{personality}** mode.",
+            #             color=discord.Color.yellow()
+            #         )
+            #         await message.channel.send(embed=embed)
 
             # Try the request
             try:
@@ -202,10 +202,13 @@ class MessageCog(commands.Cog):
                             can_send_embed = True
 
                         if can_send_embed:
-                            embed = discord.Embed(title="🎨 Imagine", description="Generate AI images using `/imagine` back up and working again!", color=discord.Color(0x2b2d31))
-                            await message.channel.send(embed=embed)
+                            embed = discord.Embed(title=":poop: Imagine", description="Generate AI images using `/imagine` back up and working again! (fr this time). i used poop emoji to catch ur attention fr", color=discord.Color(0x2b2d31))
+                            button = discord.ui.Button(label="Powered by ShuttleAI", url="https://shuttleai.app/?utm_source=discord&utm_medium=chat&utm_campaign=ShuttleAI+Discord+Bot", style=discord.ButtonStyle.url)
+                            view = discord.ui.View()
+                            view.add_item(button)
+                            await message.channel.send(embed=embed, view=view)
                         else:
-                            plain_message = "> **🎨 Imagine\n> Generate AI images using `/imagine` back up and working again!**"
+                            plain_message = "> **:poop: Imagine\n> Generate AI images using `/imagine` back up and working again!**"
                             await message.channel.send(plain_message)
                     if self.user_response_counter[discord_id] == 5:
                         self.user_response_counter[discord_id] = 0 

@@ -4,15 +4,44 @@ import orjson
 import discord
 from discord.ext import commands
 from discord import app_commands
+import aiohttp
+import os
+from dotenv import load_dotenv
 
 from utils import SHUTTLEAI_API_KEY, mongo, log
 
 from backend.shuttle import shuttle_client
 
+load_dotenv()
+
+top_gg_token = os.getenv('TOP_GG_TOKEN')
+
+def create_vote_embed():
+    embed = discord.Embed(
+        title="Vote for ShuttleAI",
+        description="Please vote for ShuttleAI before using the `/imagine` command.\n\nPurchase premium to remove voting for this entire server using `/premium`. Voting for ShuttleAI on top.gg helps promote our discord bot.",
+        color = discord.Color(0x2b2d31)
+    )
+    button = discord.ui.Button(label="\U0001F90D Vote Now", url="https://top.gg/bot/1100203264957497427/vote", style=discord.ButtonStyle.url)
+    view = discord.ui.View()
+    view.add_item(button)
+    return embed, view
+
+async def check_user_voted(user_id):
+    async with aiohttp.ClientSession() as session:
+        url = f"https://top.gg/api/bots/1100203264957497427/check?userId={user_id}"
+        headers = {'Authorization': top_gg_token}
+        async with session.get(url, headers=headers) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data['voted']  
+            else:
+                return None
 
 current_job = None
 
 IMAGINE_MODEL_TO_CHOICE_MAP = {
+    "`🪐 ShuttleAI Diffusion`": app_commands.Choice(name='🪐 Shuttle Diffusion', value='shuttle-diffusion'),
     "`🚀 ShuttleAI Pro`": app_commands.Choice(name='🚀 ShuttleAI Pro', value='sdxl'),
     "`🌸 ShuttleAI Anime`": app_commands.Choice(name='🌸 ShuttleAI Anime', value='anything-v4'),
     "`💪 ShuttleAI Anything`": app_commands.Choice(name='💪 ShuttleAI Anything', value='deliberate'),
@@ -37,6 +66,11 @@ class Imagine(commands.Cog):
         try:
             user_id = str(interaction.user.id)
 
+            if await check_user_voted(user_id):
+                Voted = True
+            else:
+                Voted = False
+
             is_premium = False
             if interaction.guild:
                 try:
@@ -46,6 +80,10 @@ class Imagine(commands.Cog):
                     log.error(f"An error occurred: {e}")
                     is_premium = False
 
+            if not is_premium and not Voted:
+                    embed, view = create_vote_embed()
+                    await interaction.response.send_message(embed=embed, view=view)
+
             a = await mongo.is_user_in_imggendb(user_id)
             if a is False:
                 await mongo.add_user_to_imggendb(user_id)
@@ -54,7 +92,7 @@ class Imagine(commands.Cog):
                count: int = await mongo.increment_user_imggen(user_id) or 0
             if count > 10 and not is_premium:
                 embed = discord.Embed(
-                    description="You have reached your daily limit of 10 image generations. Please upgrade to premium for unlimited image generations.",
+                    description="You have reached your daily limit of 10 image generations. Did you know you can generate **unlimited** images by using ShuttleAI in https://discord.gg/shuttleai",
                     color=discord.Color(0x2b2d31)
                 )
                 await interaction.response.send_message(embed=embed)
@@ -93,7 +131,7 @@ class Imagine(commands.Cog):
             embed = discord.Embed(
                 color = discord.Color(0x2b2d31)
             )
-            embed.set_image(url="https://cdn.shuttleai.app/generating.gif")  
+            embed.set_image(url="https://media.discordapp.net/attachments/1164078703450521680/1196158940526944386/copy_4E357BFD-DAA3-4DFB-A3E9-5B6A62B98147.gif?ex=66465052&is=6644fed2&hm=1f0c7f5ab0138908dea9a83eebcaf817b819783284b80fa8696dc12500fb876a&")  
             message = await interaction.followup.send(embed=embed)
 
             model_uid = model.value
@@ -121,8 +159,13 @@ class Imagine(commands.Cog):
 
             final_embed.set_image(url="attachment://generated_image.png")
 
+            button = discord.ui.Button(label="Powered by ShuttleAI", url="https://shuttleai.app/?utm_source=discord&utm_medium=imagine&utm_campaign=ShuttleAI+Discord+Bot", style=discord.ButtonStyle.url)
+            view = discord.ui.View()
+            view.add_item(button)
+
             await interaction.followup.send(
                 embed=final_embed,
+                view=view,
                 file=discord.File(image_data, filename="generated_image.png"),
                 # view=self.MyView(bot=self.bot)
             )

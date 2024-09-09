@@ -19,5 +19,5 @@ from .prompts import (
 from .env import (
     SHUTTLEAI_API_KEY, DISCORD_BOT_TOKEN,
     STREAM_URL, STREAM_NAME,
-    MONGO_URI, OWNER_IDS
+    MONGO_URI
 )
