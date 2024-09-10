@@ -140,7 +140,7 @@ class AsyncShuttleAI(ClientBase):
         if self.default_headers:
             headers.update(self.default_headers)
 
-        url = posixpath.join(self.base_url, path)
+        url = f"{self._base_url}{path}"
 
         self._logger.debug(f"Sending request: {method} {url} {json}")
 
@@ -227,7 +227,7 @@ class AsyncShuttleAI(ClientBase):
         return list_models_response
 
     @overload
-    async def ez_chat(  # type: ignore
+    async def ez_chat(
         self, text: str, model: Optional[str] = None, stream: Literal[False] = False
     ) -> ChatCompletionResponse: ...
 

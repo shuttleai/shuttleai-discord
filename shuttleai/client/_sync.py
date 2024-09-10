@@ -1,4 +1,3 @@
-import posixpath
 from json import JSONDecodeError
 from typing import Any, Dict, Iterable, Iterator, Literal, Mapping, Optional, Type, Union, overload
 
@@ -127,7 +126,7 @@ class ShuttleAI(ClientBase):
         if self.default_headers:
             headers.update(self.default_headers)
 
-        url = posixpath.join(self.base_url, path)
+        url = f"{self._base_url}{path}"
 
         self._logger.debug(f"Sending request: {method} {url} {json}")
 

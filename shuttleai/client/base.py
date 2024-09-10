@@ -39,8 +39,6 @@ class ClientBase(ABC):  # noqa: B024
         self._base_url = base_url or os.getenv("SHUTTLEAI_API_BASE")
         if not self._base_url:
             self._base_url = "https://api.shuttleai.com/v1"
-        elif self._base_url.endswith("/"):  # remove trailing slash
-            self._base_url = self._base_url[:-1]
 
         self.api_key = self._api_key
         self.base_url = self._base_url
