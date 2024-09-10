@@ -55,6 +55,7 @@ class ChatMessage(BaseModel):
     tool_calls: Optional[List[ToolCall]] = None
     # tool_call_id: Optional[str] = None
 
+
 class ChatResponseMessage(BaseModel):
     role: str = "assistant"
     content: Optional[str] = None
