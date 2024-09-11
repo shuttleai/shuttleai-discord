@@ -434,6 +434,7 @@ class MusicCog(commands.Cog):
             }).decode(),
             headers={'Authorization': f'Bearer {SHUTTLEAI_API_KEY}', 'Content-Type': 'application/json'}
         ) as response:
+            response.raise_for_status()
             return (await response.json(loads=orjson.loads, encoding="utf-8"))["choices"][0]["message"]["content"]
         # a = "No." # TODO: Fix ai summary
         # a = ask_sync(f"You are an AI Music DJ/Host bot. You will summarize and give information on the songs provided. You will be provided lyircs, artist, and title. Please summarize the song and give information on the song. Lyrics: {lyrics} Artist: {author} Title: {title}", [], None, "gemini-pro")
