@@ -424,7 +424,7 @@ class MusicCog(commands.Cog):
         async with self.bot.session.post(
             "https://api.shuttleai.app/v1/chat/completions",
             data=orjson.dumps({
-                'model': "shuttle-2.5",
+                'model': "shuttle-2.5-mini",
                 'messages': [
                     {"role": "system", "content": "You are an AI Music DJ/Host bot. You will summarize and give information on the songs provided. You will be provided lyircs, artist, and title. Please summarize the song and give information on the song."},
                     {"role": "user", "content": f"Song to summarize -> Lyrics: {lyrics} Artist: {author} Title: {title}"}

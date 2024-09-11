@@ -75,7 +75,7 @@ class MessageCog(commands.Cog):
             
             # Check settings
             user_settings = user_settings_manager.get_or_create_user_settings(discord_id)
-            model = user_settings.get('model', 'shuttle-2.5')
+            model = user_settings.get('model', 'shuttle-2.5-mini')
             # TODO: Guild settings
 
             # Get personality

@@ -63,7 +63,7 @@ class UserSettingsManger:
         if discord_id in self.user_settings:
             return self.user_settings[discord_id]
         else:
-            user_settings = UserSettings(discord_id, "shuttle-2.5", "ShuttleAI", False)
+            user_settings = UserSettings(discord_id, "shuttle-2.5-mini", "ShuttleAI", False)
             self.add_user_settings(user_settings)
             return user_settings.to_dict()[discord_id]
 

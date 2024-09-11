@@ -56,7 +56,7 @@ class Settings(commands.Cog):
             user_settings = user_settings_manager.get_or_create_user_settings(discord_id)
 
             current_model = user_settings['model']
-            models = ["shuttle-2.5"]
+            models = ["shuttle-2.5-mini"]
             current_index = models.index(current_model)
             next_index = (current_index + 1) % len(models)
             next_model = models[next_index]
