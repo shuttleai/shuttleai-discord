@@ -3,9 +3,11 @@ from discord import app_commands
 import discord
 import requests
 import urllib
+import orjson
 import random
 from typing import cast
 from discord.ui import Button, View
+from utils import SHUTTLEAI_API_KEY
 import asyncio
 import wavelink
 
@@ -418,10 +420,24 @@ class MusicCog(commands.Cog):
         return voice_channel, player
     
 
-async def ask_ai_to_summarize_song(lyrics, author, title):
-    a = "No." # TODO: Fix ai summary
-    # a = ask_sync(f"You are an AI Music DJ/Host bot. You will summarize and give information on the songs provided. You will be provided lyircs, artist, and title. Please summarize the song and give information on the song. Lyrics: {lyrics} Artist: {author} Title: {title}", [], None, "gemini-pro")
-    return a
+    async def ask_ai_to_summarize_song(self, lyrics, author, title):
+        async with self.bot.session.post(
+            "https://api.shuttleai.app/v1/chat/completions",
+            data=orjson.dumps({
+                'model': "shuttle-2.5",
+                'messages': [
+                    {"role": "system", "content": "You are an AI Music DJ/Host bot. You will summarize and give information on the songs provided. You will be provided lyircs, artist, and title. Please summarize the song and give information on the song."},
+                    {"role": "user", "content": f"Song to summarize -> Lyrics: {lyrics} Artist: {author} Title: {title}"}
+                ],
+                'stream': False,
+                'internet': False
+            }).decode(),
+            headers={'Authorization': f'Bearer {SHUTTLEAI_API_KEY}', 'Content-Type': 'application/json'}
+        ) as response:
+            return (await response.json(loads=orjson.loads, encoding="utf-8"))["choices"][0]["message"]["content"]
+        # a = "No." # TODO: Fix ai summary
+        # a = ask_sync(f"You are an AI Music DJ/Host bot. You will summarize and give information on the songs provided. You will be provided lyircs, artist, and title. Please summarize the song and give information on the song. Lyrics: {lyrics} Artist: {author} Title: {title}", [], None, "gemini-pro")
+        # return a
 
 async def setup(bot):
     if 'music' in bot.all_commands:
