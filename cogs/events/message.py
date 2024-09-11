@@ -125,7 +125,7 @@ class MessageCog(commands.Cog):
                     build_messages = [{'role': 'system', 'content': instructions}] + conversation.get_messages()
                     try:
                         async with self.bot.session.post("https://api.shuttleai.app/v1/chat/completions", data=orjson.dumps({'model': model, 'messages': build_messages, 'stream': True, 'internet': False}).decode(), headers={'Authorization': f'Bearer {SHUTTLEAI_API_KEY}', 'Content-Type': 'application/json'}) as response:
-                            async for line in response.content.__aiter__():
+                            async for line in response.content:
                                 try:
                                     # Check if line is valid
                                     if line.startswith(b'data: '):
