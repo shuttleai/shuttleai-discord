@@ -422,7 +422,7 @@ class MusicCog(commands.Cog):
 
     async def ask_ai_to_summarize_song(self, lyrics, author, title):
         async with self.bot.session.post(
-            "https://api.shuttleai.app/v1/chat/completions",
+            "https://api.shuttleai.com/v1/chat/completions",
             data=orjson.dumps({
                 'model': "shuttle-2.5-mini",
                 'messages': [
