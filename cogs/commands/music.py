@@ -299,7 +299,7 @@ class MusicCog(commands.Cog):
         title = r.json().get("title")
         author = r.json().get("author")
         summary = "AI Summary could not be generated."
-        summary = await ask_ai_to_summarize_song(lyrics, author, title)
+        summary = await self.ask_ai_to_summarize_song(lyrics, author, title)
         embed = discord.Embed(description=f"Summary of `{title}` by `{author}`: {summary}", color=discord.Color(0x2b2d31))
         await interaction.followup.send(embed=embed)
     # VOLUME
