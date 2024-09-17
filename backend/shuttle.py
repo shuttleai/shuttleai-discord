@@ -1,6 +1,5 @@
 from utils import SHUTTLEAI_API_KEY
-from shuttleai import ShuttleAsyncClient, ShuttleClient
-from shuttleai.schemas import ChatChunk, ShuttleError, Image
+from shuttleai import AsyncShuttleAI, ShuttleAI
 
 from typing import AsyncGenerator, List, Union, Dict, Any, Literal
 
@@ -16,7 +15,7 @@ This one session will be used for all calls, chat and non-chat.
 
 class ShuttleAIManager:
     def __init__(self):
-        self.client: ShuttleAsyncClient = ShuttleAsyncClient()
+        self.client: AsyncShuttleAI = AsyncShuttleAI()
         self.session_opened = False
 
     async def _ensure_session(self):
@@ -57,12 +56,8 @@ class ShuttleAIManager:
         """
         await self._ensure_session()
         try:
-            response = await self.client.images_generations(model, prompt)
-            if isinstance(response, Image):
-                image = response.data[0].url
-            else:
-                image = "https://developers.google.com/static/maps/documentation/maps-static/images/error-image-generic.png"
-            
+            response = await self.client.images.generations.generate(model, prompt)
+            image = response.data[0].url
             if response_format == "url":
                 return image
             else:
