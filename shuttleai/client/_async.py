@@ -1,4 +1,3 @@
-import posixpath
 from typing import Any, AsyncIterable, AsyncIterator, Dict, Literal, Mapping, Optional, Type, Union, overload
 
 import aiohttp
