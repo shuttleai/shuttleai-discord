@@ -40,6 +40,7 @@ WebSearchImageResults = List[WebSearchImageResult]
 
 EitherWebSearchResults = Union[WebSearchResults, WebSearchImageResults]
 
+
 class WebSearchResponse(BaseModel):
     model: str
     """The model used for the search."""
