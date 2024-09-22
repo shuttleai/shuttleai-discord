@@ -34,11 +34,14 @@ class WebSearchImageResult(BaseModel):
     """The MIME type of the image search result."""
 
 
-WebSearchResponses = List[WebSearchResult]
-WebSearchImageResponses = List[WebSearchImageResult]
+WebSearchResults = List[WebSearchResult]
+WebSearchImageResults = List[WebSearchImageResult]
 
 
-EitherWebSearchResponses = Union[WebSearchResponses, WebSearchImageResponses]
+EitherWebSearchResults = Union[WebSearchResults, WebSearchImageResults]
 
-# TODO: Remake web search api format on API side to have a consistent formatting throughout
-# both DDG and Google search APIs including both general web search and image search.
+class WebSearchResponse(BaseModel):
+    model: str
+    """The model used for the search."""
+
+    data: EitherWebSearchResults

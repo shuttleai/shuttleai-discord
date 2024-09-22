@@ -65,6 +65,7 @@ class AsyncShuttleAI(ClientBase):
         self.embeddings: resources.AsyncEmbeddings = resources.AsyncEmbeddings(self)
         self.insults: resources.AsyncInsults = resources.AsyncInsults(self)
         self.jokes: resources.AsyncJokes = resources.AsyncJokes(self)
+        self.web: resources.AsyncWeb = resources.AsyncWeb(self)
 
     async def __aenter__(self) -> "AsyncShuttleAI":
         if self._session is None:
