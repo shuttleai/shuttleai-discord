@@ -25,7 +25,7 @@ if __name__ == "__main__":
     tools = [convert_function_json_to_tool_json(serialize_function_to_json(web_search))]
     trigger_response = shuttleai.chat.completions.create(
         model="shuttle-2.5",
-        messages=[{"role": "user", "content": prompt}],
+        messages=messages,
         tools=tools,
         tool_choice="auto"
     )
@@ -58,3 +58,6 @@ if __name__ == "__main__":
         else:
             print(messages)
             print("No answer found.")
+    else:
+        print("No tool calls found.")
+        print(trigger_first.content)
