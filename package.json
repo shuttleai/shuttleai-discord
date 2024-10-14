@@ -61,6 +61,7 @@
             "exe": "ShuttleChat.exe",
             "setupExe": "shuttlechat-1.0.0.exe",
             "setupIcon": "./icon.ico",
+            "iconUrl": "https://shuttleai.com/favicon.ico",
             "noMsi": true
           }
         }
