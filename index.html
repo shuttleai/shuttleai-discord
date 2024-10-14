@@ -26,7 +26,23 @@
 
 </head>
 
-<body class="m-0 p-0 h-screen w-screen">
+<body class="m-0 p-0 h-screen w-screen relative">
+
+    <div id="update-modal" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-30 hidden">
+        <div class="p-6 rounded-xl text-white w-1/3 bg-black/90">
+            <h3 class="text-xl font-bold mb-4">Update Available</h3>
+            <p id="update-message" class="mb-4">Downloading update...</p>
+            
+            <div class="h-3 w-full bg-neutral-700 rounded-lg overflow-hidden mb-4">
+                <div id="download-progress-fill" class="h-full bg-white rounded-lg" style="width: 0%;"></div>
+            </div>
+            
+            <button id="restart-btn"
+                class="bg-white hover:bg-neutral-300 text-black py-2 px-4 rounded-2xl hidden">
+                Restart Now
+            </button>
+        </div>
+    </div>
 
     <div id="title-bar" class="text-white h-10 flex justify-between items-center px-4">
         <div class="flex flex-row gap-2 items-center">
@@ -37,60 +53,79 @@
 
 
             <button id="minimize" class="title-bar-button p-1 hover:bg-gray-600 rounded" data-feather="minus"></button>
-      
+
             <button id="close" class="title-bar-button p-1 hover:bg-red-600 rounded" data-feather="x"></button>
 
         </div>
     </div>
 
     <div class="webview-container w-full h-[calc(100%-40px)]">
-        <webview src="https://chat.shuttleai.com/" class="w-full h-full rounded-xl overflow-hidden" allowpopups></webview>
+        <webview src="https://chat.shuttleai.com/" class="w-full h-full rounded-xl overflow-hidden" allowpopups>
+        </webview>
     </div>
 
     <script>
-
         feather.replace();
-    
+
         document.getElementById('minimize').addEventListener('click', () => {
-          window.electronAPI.minimizeWindow();
+            window.electronAPI.minimizeWindow();
         });
-    
+
         document.getElementById('close').addEventListener('click', () => {
-          window.electronAPI.closeWindow();
+            window.electronAPI.closeWindow();
         });
-    
+
         const webview = document.querySelector('webview');
-        
         webview.addEventListener('dom-ready', () => {
-    
             webview.insertCSS(`
-                body {
-                    background-color: rgba(0, 0, 0, 0.3) !important;
-                }
-
-                .electron {
-                    background-color: transparent !important;
-                }
-                
-                .electron-dark {
-                    background-color: rgba(0, 0, 0, 0.3) !important;
-                }
-
-                .electron-rounded {
-                    border-radius: 0.5rem !important;
-                }
-
-                .electron-noborder {
-                    border: none !important;
-                }
-
-                .electron-hidden {
-                    display: none !important;
-                }
-            `);
+          body {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+          }
+          .electron {
+            background-color: transparent !important;
+          }
+          .electron-dark {
+            background-color: rgba(0, 0, 0, 0.3) !important;
+          }
+          .electron-rounded {
+            border-radius: 0.5rem !important;
+          }
+          .electron-noborder {
+            border: none !important;
+          }
+          .electron-hidden {
+            display: none !important;
+          }
+        `);
         });
-      </script>
 
+        window.electronAPI.onUpdateAvailable(() => {
+            console.log('Update Available');
+            const modal = document.getElementById('update-modal');
+            modal.classList.remove('hidden');
+        });
+
+        window.electronAPI.onUpdateDownloaded(() => {
+            console.log('Update Downloaded');
+            const button = document.getElementById('restart-btn');
+            button.addEventListener('click', () => {
+                window.electronAPI.closeWindow();
+            });
+        });
+
+        window.electronAPI.onProgressUpdate((event, progressInfo) => {
+            const progressFill = document.getElementById('download-progress-fill');
+            const message = document.getElementById('update-message');
+
+            const progressPercent = Math.floor(progressInfo.percent);
+            progressFill.style.width = `${progressPercent}%`;
+
+            message.textContent = `Downloading update: ${progressPercent}%`;
+
+            if (progressPercent === 100) {
+                progressFill.style.width = `100%`;
+                document.getElementById('restart-btn').classList.remove('hidden');
+            }
+        });
+    </script>
 </body>
-
-</html>
