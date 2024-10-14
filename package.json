@@ -50,7 +50,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "arch": "x64"
+        "icon": "./icon.ico",
+        "arch": ["ia32", "x64"]
       },
       "makers": [
         {
