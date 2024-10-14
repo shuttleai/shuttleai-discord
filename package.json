@@ -1,0 +1,52 @@
+{
+  "name": "shuttlechat",
+  "version": "1.0.0",
+  "description": "ShuttleChat Windows",
+  "main": "main.js",
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./input.css -o ./output.css --watch",
+    "build:prod": "npx tailwindcss -i ./input.css -o ./output.css --minify",
+    "start": "electron .",
+    "make": "electron-forge make"
+  },
+  "build": {
+    "appId": "com.electron.myapp",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "shuttleai",
+        "repo": "shuttlechat-client",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "electron": "^32.2.0",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "tailwindcss": "^3.4.13"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ShuttleChat",
+            "authors": "ShuttleAI, Inc.",
+            "exe": "ShuttleChat.exe",
+            "setupExe": "shuttlechat-1.0.0.exe",
+            "setupIcon": "./path-to-your-icon.ico",
+            "noMsi": true
+          }
+        }
+      ]
+    }
+  }
+}

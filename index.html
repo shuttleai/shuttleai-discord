@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShuttleChat</title>
+    <link href="output.css" rel="stylesheet">
+
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        #title-bar {
+            -webkit-app-region: drag;
+        }
+
+        .title-bar-button {
+            -webkit-app-region: no-drag;
+        }
+
+        .feather-icon {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+
+</head>
+
+<body class="m-0 p-0 h-screen w-screen">
+
+    <div id="title-bar" class="text-white h-10 flex justify-between items-center px-4">
+        <div class="flex flex-row gap-2 items-center">
+            <img src="https://shuttleai.com/logo.png" class="h-4" alt="ShuttleChat Logo">
+            <div id="title" class="text-md">ShuttleChat</div>
+        </div>
+        <div id="title-bar-buttons" class="flex gap-2">
+
+
+            <button id="minimize" class="title-bar-button p-1 hover:bg-gray-600 rounded" data-feather="minus"></button>
+      
+            <button id="close" class="title-bar-button p-1 hover:bg-red-600 rounded" data-feather="x"></button>
+
+        </div>
+    </div>
+
+    <div class="webview-container w-full h-[calc(100%-40px)]">
+        <webview src="https://shuttlechat.com/" class="w-full h-full rounded-xl overflow-hidden" allowpopups></webview>
+    </div>
+
+    <script>
+
+        feather.replace();
+    
+        document.getElementById('minimize').addEventListener('click', () => {
+          window.electronAPI.minimizeWindow();
+        });
+    
+        document.getElementById('close').addEventListener('click', () => {
+          window.electronAPI.closeWindow();
+        });
+    
+        const webview = document.querySelector('webview');
+        
+        webview.addEventListener('dom-ready', () => {
+    
+            webview.insertCSS(`
+                body {
+                    background-color: rgba(0, 0, 0, 0.3) !important;
+                }
+
+                .electron {
+                    background-color: transparent !important;
+                }
+                
+                .electron-dark {
+                    background-color: rgba(0, 0, 0, 0.3) !important;
+                }
+
+                .electron-rounded {
+                    border-radius: 0.5rem !important;
+                }
+
+                .electron-noborder {
+                    border: none !important;
+                }
+
+                .electron-hidden {
+                    display: none !important;
+                }
+            `);
+        });
+      </script>
+
+</body>
+
+</html>
