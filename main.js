@@ -2,6 +2,10 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 
+if (require("electron-squirrel-startup")) {
+  app.quit();
+}
+
 // require('electron-reload')(__dirname, {
 //     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
 //  });
