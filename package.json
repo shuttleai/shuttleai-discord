@@ -1,6 +1,6 @@
 {
   "name": "shuttlechat",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "ShuttleChat Windows",
   "main": "main.js",
   "scripts": {
@@ -42,7 +42,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "arch": "x64"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",

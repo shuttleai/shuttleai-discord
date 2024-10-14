@@ -62,8 +62,6 @@ ipcMain.on('close-window', () => {
 });
 
 app.on('ready', () => {
-  createWindow();
-
   autoUpdater.checkForUpdatesAndNotify();
 });
 
