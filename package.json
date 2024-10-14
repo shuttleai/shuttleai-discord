@@ -13,10 +13,10 @@
   "build": {
     "appId": "com.shuttleai.chat",
     "win": {
-      "icon": "favicon.ico"
+      "icon": "./icon.ico"
     },
     "mac": {
-      "icon": "logo.icns"
+      "icon": "./icon.icns"
     },
     "publish": [
       {
@@ -60,7 +60,7 @@
             "authors": "ShuttleAI, Inc.",
             "exe": "ShuttleChat.exe",
             "setupExe": "shuttlechat-1.0.0.exe",
-            "setupIcon": "./favicon.ico",
+            "setupIcon": "./icon.ico",
             "noMsi": true
           }
         }

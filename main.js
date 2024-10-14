@@ -25,7 +25,7 @@ app.on('ready', () => {
     vibrancy: 'fullscreen-ui',
     backgroundMaterial: 'acrylic',
     maximizable: false,
-    icon: path.join(__dirname, 'favicon.ico'),
+    icon: path.join(__dirname, 'icon.ico'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
