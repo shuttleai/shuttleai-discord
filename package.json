@@ -1,13 +1,14 @@
 {
   "name": "shuttlechat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ShuttleChat Windows",
   "main": "main.js",
   "scripts": {
     "build:css": "npx tailwindcss -i ./input.css -o ./output.css --watch",
     "build:prod": "npx tailwindcss -i ./input.css -o ./output.css --minify",
-    "start": "electron .",
-    "make": "electron-forge make"
+    "start": "electron-forge start",
+    "make": "electron-forge make",
+    "package": "electron-forge package"
   },
   "build": {
     "appId": "com.electron.myapp",
@@ -23,11 +24,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-rpm": "^7.5.0",
     "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "@electron-forge/plugin-fuses": "^7.5.0",
+    "@electron/fuses": "^1.8.0",
     "electron": "^32.2.0",
     "electron-reload": "^2.0.0-alpha.1"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.3.9",
     "tailwindcss": "^3.4.13"
   },
@@ -42,7 +51,7 @@
             "authors": "ShuttleAI, Inc.",
             "exe": "ShuttleChat.exe",
             "setupExe": "shuttlechat-1.0.0.exe",
-            "setupIcon": "./path-to-your-icon.ico",
+            "setupIcon": "./favicon.ico",
             "noMsi": true
           }
         }

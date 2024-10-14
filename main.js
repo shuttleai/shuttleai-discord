@@ -2,9 +2,9 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 
-require('electron-reload')(__dirname, {
-    electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
- });
+// require('electron-reload')(__dirname, {
+//     electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+//  });
 
 let mainWindow;
 
