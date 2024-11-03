@@ -89,7 +89,6 @@ class MessageCog(commands.Cog):
                     )
                     await message.channel.send(embed=embed)
 
-                    await message.delete()
                     return
             
             
