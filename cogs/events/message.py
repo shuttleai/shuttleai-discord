@@ -64,18 +64,38 @@ class MessageCog(commands.Cog):
                 time_left = self.rate_limiter.block_time - (time.time() - self.rate_limiter.blocked_users[message.author.id])
                 rate_limit_end = int(time.time() + time_left)
                 embed = discord.Embed(
-                    title="⏱ Rate Limited",
+                    title="â± Rate Limited",
                     description=f"You can send another message <t:{rate_limit_end}:R>.",
                     color=0xFF0000
                 )
                 await message.channel.send(embed=embed)
                 self.sent_rate_limit_embed_user_ids.add(message.author.id)
                 return
+
+        if message.guild:
+
+            with open("nsfw.txt", "r") as f:
+                nsfw_words = f.read().splitlines()
+
+            message_words = message.content.lower().split()
+            if any(word in message_words for word in nsfw_words):
+  
+                if not message.channel.is_nsfw():
+
+                    embed = discord.Embed(
+                        title="NSFW Content Detected!",
+                        description="Please post in an NSFW-marked channel or enable NSFW for this channel.",
+                        color=discord.Color.red()
+                    )
+                    await message.channel.send(embed=embed)
+
+                    await message.delete()
+                    return
             
             
             # Check settings
             user_settings = user_settings_manager.get_or_create_user_settings(discord_id)
-            model = user_settings.get('model', 'shuttle-2.5-mini')
+            model = user_settings.get('model', 'shuttle-3-mini')
             # TODO: Guild settings
 
             # Get personality
@@ -190,28 +210,28 @@ class MessageCog(commands.Cog):
                     assistant_response = "".join(chunks)
                     conversation.add_message("assistant", assistant_response)
 
-                    # Send DYK embed if able
-                    if discord_id not in self.user_response_counter:
-                        self.user_response_counter[discord_id] = 0
-                    self.user_response_counter[discord_id] += 1   
-                    if self.user_response_counter[discord_id] == 1:
-                        if message.guild:
-                            permissions = message.channel.permissions_for(message.guild.me)
-                            can_send_embed = permissions.embed_links
-                        else:
-                            can_send_embed = True
+                    # # Send DYK embed if able
+                    # if discord_id not in self.user_response_counter:
+                    #     self.user_response_counter[discord_id] = 0
+                    # self.user_response_counter[discord_id] += 1   
+                    # if self.user_response_counter[discord_id] == 1:
+                    #     if message.guild:
+                    #         permissions = message.channel.permissions_for(message.guild.me)
+                    #         can_send_embed = permissions.embed_links
+                    #     else:
+                    #         can_send_embed = True
 
-                        if can_send_embed:
-                            embed = discord.Embed(title=":poop: Imagine", description="Generate AI images using `/imagine` back up and working again! (fr this time). i used poop emoji to catch ur attention fr", color=discord.Color(0x2b2d31))
-                            button = discord.ui.Button(label="Powered by ShuttleAI", url="https://shuttleai.app/?utm_source=discord&utm_medium=chat&utm_campaign=ShuttleAI+Discord+Bot", style=discord.ButtonStyle.url)
-                            view = discord.ui.View()
-                            view.add_item(button)
-                            await message.channel.send(embed=embed, view=view)
-                        else:
-                            plain_message = "> **:poop: Imagine\n> Generate AI images using `/imagine` back up and working again!**"
-                            await message.channel.send(plain_message)
-                    if self.user_response_counter[discord_id] == 5:
-                        self.user_response_counter[discord_id] = 0 
+                    #     if can_send_embed:
+                    #         embed = discord.Embed(title=":poop: Imagine", description="Generate AI images using `/imagine` back up and working again! (fr this time). i used poop emoji to catch ur attention fr", color=discord.Color(0x2b2d31))
+                    #         button = discord.ui.Button(label="Powered by ShuttleAI", url="https://shuttleai.app/?utm_source=discord&utm_medium=chat&utm_campaign=ShuttleAI+Discord+Bot", style=discord.ButtonStyle.url)
+                    #         view = discord.ui.View()
+                    #         view.add_item(button)
+                    #         await message.channel.send(embed=embed, view=view)
+                    #     else:
+                    #         plain_message = "> **:poop: Imagine\n> Generate AI images using `/imagine` back up and working again!**"
+                    #         await message.channel.send(plain_message)
+                    # if self.user_response_counter[discord_id] == 5:
+                    #     self.user_response_counter[discord_id] = 0 
                     
                     # Handle TTS if enabled
                     if user_settings.get('tts', False) and assistant_response < 200:
